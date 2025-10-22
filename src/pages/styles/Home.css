@@ -1,0 +1,196 @@
+/* styles/Home.css */
+
+.home-container {
+  display: flex;
+  height: 82vh;
+  width: 100vw;
+  background: rgba(255 255 255 / 0.8);
+  backdrop-filter: blur(8px);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  position: relative;
+}
+
+/* Menú lateral desktop */
+.home-menu {
+  width: 250px;
+  background-color: #fff;
+  box-shadow: 2px 0 8px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.5rem;
+  border-right: 1px solid #ccc;
+  position: sticky;
+  top: 0;
+  height: 82vh;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+/* Botones menú */
+.menu-btn {
+  background: none;
+  border: none;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #0053a0;
+  font-weight: 600;
+  border-left: 4px solid transparent;
+}
+
+.menu-btn:hover {
+  background-color: #e1e9f8;
+  color: #003f7f;
+}
+
+.menu-btn.active {
+  background-color: #0053a0;
+  color: #fff;
+  border-left-color: #ffb703;
+}
+
+/* Contenido principal */
+.home-content {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+  box-shadow: inset 0 0 15px rgb(0 0 0 / 0.05);
+  animation: fadeInContent 0.4s ease forwards;
+}
+
+.section h2 {
+  margin-bottom: 1rem;
+  color: #0053a0;
+  border-bottom: 2px solid #ffb703;
+  padding-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.data-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.data-list li {
+  margin-bottom: 0.7rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Animación */
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scrollbar custom */
+.home-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.home-content::-webkit-scrollbar-thumb {
+  background-color: #0053a0;
+  border-radius: 4px;
+}
+
+.home-content::-webkit-scrollbar-track {
+  background-color: #f0f4fb;
+}
+
+/* --- MOBILE --- */
+
+.hamburger-btn {
+  display: none; /* oculto en desktop */
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 50;
+  width: 32px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.hamburger-line {
+  display: block;
+  height: 4px;
+  background-color: #0053a0;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Animación hamburguesa abierta */
+.hamburger-line.open:nth-child(1) {
+  transform: translateY(12px) rotate(45deg);
+}
+.hamburger-line.open:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-line.open:nth-child(3) {
+  transform: translateY(-12px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  /* Mostrar botón hamburguesa */
+  .hamburger-btn {
+    display: flex;
+  }
+
+  /* Ocultar menú lateral normalmente */
+  .home-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #fff;
+    height: 100vh;
+    width: 240px;
+    padding-top: 4rem;
+    box-shadow: 2px 0 12px rgb(0 0 0 / 0.25);
+    transform: translateX(-260px);
+    transition: transform 0.3s ease;
+    z-index: 40;
+    flex-direction: column;
+  }
+
+  /* Mostrar menú si está abierto */
+  .home-menu.open {
+    transform: translateX(0);
+  }
+
+  .menu-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-left: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .menu-btn.active {
+    background-color: #0053a0;
+    color: #fff;
+    border-left: none;
+  }
+
+  .home-content {
+    padding: 4rem 1.5rem 2rem 1.5rem; /* espacio para hamburguesa arriba */
+    height: calc(100vh - 4rem);
+  }
+}

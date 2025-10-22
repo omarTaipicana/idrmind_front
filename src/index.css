@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet');
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  scroll-behavior: smooth;
+  background: url("/images/fondo.jpg") center center fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #fff;
+  width: 100%;
+}
+
+:root {
+  --plomo-color: #373737;
+  --plomo2-color: #767676;
+  --plomo2-color: #9d9d9d;
+  --plomo2-color: #b8b8b8;
+  --blue-color: #5b8bbd;
+  --blue2-color: #022c5b;
+  --green-color: #a1c357;
+  --green2-color: #8fdc29;
+  --green3-color: #218838;
+  --green3-color: #054321;
+  --red-color: #e30513;
+  --orange-color: #ff9e15;
+  --yellow-color: #ffce01;
+  --black-color: black;
+  --white-color: white;
+
+  --alert1-color: #e30513;
+  --alert2-color: #054321;
+  --alert3-color: #ff9e15;
+  --alert4-color: #022c5b;
+}
+
+* {
+  box-sizing: border-box;
+  font-size: 1.1rem;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+hr {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+input,
+button,
+select {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}

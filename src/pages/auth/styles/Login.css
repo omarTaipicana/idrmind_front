@@ -1,0 +1,310 @@
+.contenedor {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2em;
+}
+
+.content_background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 65vh;
+}
+
+.title__user__info {
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.user__info__content {
+  padding: 1em;
+  background: rgba(255, 255, 255, 0.582);
+  color: #000;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 60%;
+}
+
+.user__login__content {
+  padding: 1em 2em;
+  background: rgba(255, 255, 255, 0.582);
+  color: #000;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.form__login {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+  padding: 1.5em;
+  border-radius: 0.5em;
+}
+
+.form__user__info {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  padding: 1em;
+  border-radius: 0.5em;
+}
+
+.form__user__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  width: 100%;
+  max-width: 50em;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8em;
+}
+.input__form__info {
+  padding: 0.625em;
+  font-size: 0.8em;
+  border: none;
+  border-radius: 0.25em;
+  background-color: #ffffff;
+  color: #003366;
+  margin-top: 0.3125em;
+}
+
+.input__form__login {
+  padding: 0.625em;
+  font-size: 1em;
+  border: none;
+  border-radius: 0.25em;
+  background-color: #ffffff;
+  color: #003366;
+  margin-top: 0.3125em;
+}
+
+.input__form__login__password {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3em;
+  font-size: 1em;
+  border: none;
+  border-radius: 0.25em;
+  background-color: #ffffff;
+  color: #003366;
+  margin-top: 0.3125em;
+}
+
+.input__form__login__password:focus {
+  border: none;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  outline: 0.125em solid #00509e;
+}
+
+.btn__form__login {
+  background-color: #cc7a00;
+  color: #ffffff;
+  padding: 0.625em;
+  border: none;
+  border-radius: 0.3125em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn__logout__user {
+  background-color: #05116e;
+  margin-top: 1.5em;
+  color: #ffffff;
+  padding: 0.5em;
+  border: none;
+  border-radius: 0.3125em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn__logout__user:hover {
+  background-color: #263988;
+}
+
+.btn__form__login:hover,
+.btn__logout__user__cerrar__sesion:hover:hover {
+  background-color: #ff9900;
+}
+
+.btn__logout__user__cerrar__sesion {
+  margin: 0em auto;
+  background-color: #cc7a00;
+  color: #ffffff;
+  padding: 0.625em;
+  border: none;
+  border-radius: 0.3125em;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.label__user__info {
+  margin-bottom: 0.3em;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+.span__user__info {
+  font-size: 1.1em;
+}
+
+a {
+  color: #1039bf;
+  text-decoration: none;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.img__show {
+  width: 1.25em;
+  height: 1.25em;
+  margin-left: 0.3125em;
+  cursor: pointer;
+}
+
+.isLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 1024px) {
+  .contenedor {
+    margin-bottom: 5em;
+    margin-top: 2em;
+  }
+  .user__info__content,
+  .user__login__content {
+    width: 70%;
+    padding: 1em;
+  }
+
+  .form__user__info {
+    flex-direction: column;
+    padding: 1em;
+  }
+
+  .form__user__seccion {
+    max-width: 100%;
+    padding: 0 1em;
+  }
+}
+
+@media (max-width: 768px) {
+  .content_background {
+    flex-direction: column;
+    padding: 1em;
+  }
+
+  .user__info__content,
+  .user__login__content {
+    width: 90%;
+    margin-top: 2em;
+  }
+
+  .form__user__info {
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .form__login {
+    padding: 1em;
+  }
+
+  .form__user__seccion {
+    padding: 0 1em;
+  }
+
+  .input__form__login,
+  .input__form__info,
+  .input__form__login__password {
+    font-size: 0.95em;
+  }
+
+  .btn__form__login,
+  .btn__logout__user,
+  .btn__logout__user__cerrar__sesion {
+    width: 100%;
+  }
+
+  .title__user__info {
+    font-size: 1.2em;
+  }
+
+  .span__user__info {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .user__info__content,
+  .user__login__content {
+    width: 95%;
+  }
+
+  .form__login,
+  .form__user__info {
+    padding: 0.5em;
+  }
+
+  .input__form__login,
+  .input__form__info,
+  .input__form__login__password {
+    padding: 0.5em;
+  }
+
+  .btn__form__login,
+  .btn__logout__user,
+  .btn__logout__user__cerrar__sesion {
+    font-size: 0.9em;
+  }
+
+  .img__show {
+    width: 1em;
+    height: 1em;
+  }
+
+  label {
+    font-size: 0.8em;
+  }
+
+  .title__user__info {
+    font-size: 1em;
+  }
+
+  .span__user__info {
+    font-size: 0.9em;
+  }
+}

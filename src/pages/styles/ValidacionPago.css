@@ -1,0 +1,428 @@
+.vp-container {
+  display: flex;
+  flex-direction: row;
+  height: 80vh;
+  font-family: Arial, sans-serif;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  position: relative;
+}
+
+.vp-menu {
+  width: 240px;
+  background: #fff;
+  border-right: 1px solid #ccc;
+  padding: 1.5rem 1rem;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+.vp-menu h3 {
+  margin-bottom: 1rem;
+  color: #0053a0;
+}
+
+.vp-menu-btn {
+  display: block;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #0053a0;
+  border-left: 4px solid transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.vp-menu-btn:hover {
+  background-color: #eaf1fb;
+}
+
+.vp-menu-btn.active {
+  background-color: #0053a0;
+  color: white;
+  border-left: 4px solid #ffb703;
+}
+
+.vp-content {
+  flex-grow: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+  width: 100%;
+  color: #1a1a1a;
+  box-shadow: inset 0 0 15px rgb(0 0 0 / 0.05);
+  animation: fadeInContent 0.4s ease forwards;
+  font-size: 1.2rem;
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dashboard-hamburger-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-hamburger-inner.open span:nth-child(1) {
+  transform: translateY(18px) rotate(45deg);
+}
+
+.dashboard-hamburger-inner.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.dashboard-hamburger-inner.open span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.vp-hamburger-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  width: 30px;
+  height: 24px;
+}
+
+.vp-hamburger-line {
+  width: 30px;
+  height: 3px;
+  background: #0053a0;
+  margin: 5px 0;
+  transition: 0.4s ease;
+  display: block;
+}
+
+/* Animación individual */
+.line1.open {
+  transform: translateY(9px) rotate(45deg);
+}
+.line2.open {
+  opacity: 0;
+}
+.line3.open {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Contenedor de filtros - línea horizontal con fondo y borde redondeado */
+.vp-filtros {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #eaf1fb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap; /* <-- Para mantener en línea horizontal en escritorio */
+  align-items: flex-end;
+  overflow-x: auto; /* Si hay demasiados filtros en pantallas pequeñas */
+}
+
+/* Cada filtro con label y control */
+.vp-filtro {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: #0053a0;
+  min-width: 120px;
+}
+
+/* Label destacado */
+.vp-filtro label {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+/* Select e input con bordes y padding para mejor UX */
+.vp-filtro select,
+.vp-filtro input[type="text"] {
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.7rem;
+  color: #1a1a1a;
+  outline-offset: 2px;
+  outline-color: #0053a0;
+  cursor: pointer;
+}
+.vp-filtro input[type="date"] {
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.7rem;
+  color: #1a1a1a;
+  outline-offset: 2px;
+  outline-color: #0053a0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Tabla con fuente más pequeña y centrado */
+.vp-pagos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.55rem;
+  table-layout: fixed;
+}
+
+.vp-pagos-table th,
+.vp-pagos-table td {
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 0.7rem;
+}
+
+.vp-pagos-table th {
+  background-color: #0053a0;
+  color: white;
+  font-weight: 600;
+}
+
+/* Enlaces comprobante */
+.vp-pagos-table a {
+  color: #0077cc;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* Inputs dentro de tabla */
+.vp-pagos-table input[type="number"] {
+  width: 70px;
+  padding: 3px 5px;
+  font-size: 0.85rem;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.vp-pagos-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
+}
+
+.vp-pagos-table input[type="text"] {
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+/* Botones con un tamaño menor y padding ajustado */
+.vp-btn-edit,
+.vp-btn-save,
+.vp-btn-cancel {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.vp-btn-edit {
+  background-color: #0053a0;
+  color: white;
+  font-size: 1em;
+}
+.vp-btn-edit:hover {
+  background-color: #003d70;
+}
+
+.vp-btn-save {
+  background-color: #2e7d32;
+  color: white;
+}
+.vp-btn-save:hover {
+  background-color: #225522;
+}
+
+.vp-btn-cancel {
+  background-color: #b00020;
+  color: white;
+}
+.vp-btn-cancel:hover {
+  background-color: #7a0013;
+}
+
+/* Responsividad tabla: scroll horizontal en pantallas pequeñas */
+.vp-validar-pagos-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.vp-btn-clear {
+  background-color: #888;
+  color: white;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  height: fit-content;
+}
+
+.vp-btn-clear:hover {
+  background-color: #555;
+}
+
+/* Delete Modal */
+/* Fondo oscuro detrás del modal */
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 80vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* o más si es necesario */
+}
+
+/* Contenido del modal */
+.user_delete_content {
+  background: linear-gradient(to bottom right, #ffffff, #9a9a9a);
+  padding: 2em;
+  border-radius: 1em;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 25em;
+  text-align: center;
+  font-size: 1.1em;
+  color: #333;
+  z-index: 1000;
+}
+
+.btn_content {
+  margin-top: 1.5em;
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}
+
+.btn {
+  padding: 0.6em 1.4em;
+  font-size: 1em;
+  border: none;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn.yes {
+  background-color: #e53935;
+  color: white;
+}
+
+.btn.no {
+  background-color: #b0bec5;
+  color: #263238;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.papelera_btn {
+  width: 3em;
+}
+
+.restaurar_btn{
+  width: 1.5em;
+}
+
+/* En móviles, filtros en columna */
+@media screen and (max-width: 768px) {
+  .vp-container {
+    flex-direction: column;
+  }
+
+  .vp-hamburger-btn {
+    display: flex;
+  }
+
+  .vp-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 240px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    background: #fff;
+    padding-top: 4rem;
+    box-shadow: 2px 0 12px rgb(0 0 0 / 0.25);
+    flex-direction: column;
+  }
+
+  .vp-menu.open {
+    transform: translateX(0);
+  }
+
+  .vp-menu-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-left: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .vp-menu-btn.active {
+    background-color: #0053a0;
+    color: #fff;
+    border-left: none;
+  }
+
+  .vp-content {
+    padding: 4rem 1.5rem 2rem 1.5rem;
+    height: calc(100vh - 4rem);
+  }
+
+  .vp-filtro {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .vp-filtro {
+    min-width: 100%;
+  }
+  /* Contenedor para la tabla con scroll horizontal */
+  .vp-tabla-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tabla con ancho mínimo y fuente pequeña en móviles */
+  .vp-pagos-table {
+    min-width: 800px; /* asegura que la tabla no colapse */
+    width: max-content; /* ajusta al contenido sin romper el diseño */
+    font-size: 0.6rem;
+  }
+}

@@ -1,0 +1,38 @@
+.isLoading {
+  position: fixed !important;
+  z-index: 99999999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.794);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img__loading {
+  width: 10%; /* Tamaño por defecto */
+  max-width: 100px; /* Límite máximo en dispositivos grandes */
+}
+
+.text__loading {
+  font-size: 2.5em; /* Tamaño base */
+  font-weight: 700;
+  color: #2357c6;
+  text-shadow: 2px 2px 5px black;
+  text-align: center; /* Centrar texto */
+}
+
+/* --- Responsividad --- */
+
+@media (max-width: 768px) {
+  .img__loading {
+    width: 50%; 
+  }
+
+  .text__loading {
+    font-size: 1.5em; /* Texto más pequeño */
+  }
+}
+

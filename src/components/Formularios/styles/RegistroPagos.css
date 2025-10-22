@@ -1,0 +1,334 @@
+/* BASE - Desktop */
+
+.formulario_registro {
+  width: 100%;
+}
+
+.felicitacion_mensaje {
+  background: rgba(255, 255, 255, 0.15);
+  color: #e0f2ff;
+  padding: 1.2em;
+  border-left: 5px solid #00cfff;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.label_cedula {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.label_cedula > span {
+  width: 50%;
+  margin: 0.5em auto;
+}
+
+.input_cedula {
+  text-align: center;
+  font-size: 1.5em !important;
+}
+
+.felicitacion_mensaje h2 {
+  font-size: 1.5em;
+  color: #ffffff;
+  margin-bottom: 0.5em;
+}
+
+.felicitacion_mensaje p {
+  font-size: 0.8em;
+}
+
+/* FORMULARIO CON DOS COLUMNAS */
+.doble_columna {
+  display: flex;
+  gap: 2em;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+/* Columna de datos del usuario */
+.datos_usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  height: 90%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1em;
+  box-shadow: 0 0 8px rgba(0, 96, 192, 0.4);
+  margin: auto 0;
+}
+
+.datos_usuario h2 {
+  font-size: 1.2em;
+  margin-bottom: 1em;
+  color: #ffffff;
+}
+
+.datos_usuario p {
+  color: #c9ddeb;
+  margin-bottom: 0.5em;
+  font-size: 0.9em;
+}
+
+.datos_usuario p > strong {
+  color: #c9ddeb;
+  margin-bottom: 0.5em;
+  font-size: 0.9em;
+}
+
+.total_pagar {
+  font-size: 1.2em !important;
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1em;
+  color: #deed07 !important;
+}
+
+/* Columna de opciones de pago */
+.inputs_pago {
+  flex: 2;
+}
+
+.inputs_pago label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.7em;
+  color: #e3f5ff;
+  font-size: 0.8em;
+}
+
+.inputs_pago span {
+  width: 80%;
+  font-size: 1em;
+  text-align: right;
+  margin-right: 1.5em;
+}
+
+.inputs_pago input[type="file"] {
+  width: 35%;
+  font-size: 0.7em;
+  padding: 0.4em;
+  background-color: #eaf2fb;
+  color: #003366;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  text-align-last: center;
+}
+
+.inputs_pago input[type="number"] {
+  background-color: #eaf2fb;
+  border-radius: 6px;
+  padding: 0.5em 0.6em;
+  width: 30%;
+  margin-top: 0.3em;
+  margin-bottom: 1em;
+  border: none;
+  color: #003366;
+  font-size: 1em;
+  text-align: center;
+}
+
+.inputs_pago p {
+  font-size: 1em;
+  color: #ffffff;
+  margin-top: 1em;
+}
+
+.inputs_pago span {
+  width: 70%;
+}
+
+/* Checkbox inputs */
+.inputs_pago input[type="checkbox"] {
+  height: 1em;
+  margin-left: 0.6em;
+  transform: scale(1.2);
+  accent-color: #00cfff;
+  width: 30%;
+  outline: none;
+  display: flex;
+}
+
+.form_button {
+  display: flex;
+  justify-content: center;
+}
+
+/* Botón */
+.form_button button {
+  width: 40%;
+  margin-top: 1em;
+  padding: 0.7em 2em;
+  background: #00aaff;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1em;
+
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form_button button:hover {
+  background: #008fcc;
+}
+
+/* Ajuste para fondo derecho */
+.registro_right {
+  width: 50%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.registro_right h3 {
+  text-align: center;
+  margin: 0.5em;
+}
+
+.curso_fondo_pago {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 140, 255, 0.4);
+}
+
+.curso_imagen {
+  width: 100%;
+  height: 100%;
+  background-size: cover; /* Cubre todo el contenedor */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que se repita */
+}
+
+.form_error {
+  color: red !important;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+
+/* ------------------- */
+/* RESPONSIVE */
+/* ------------------- */
+
+/* Pantallas medianas (tablets) */
+@media (max-width: 992px) {
+  .doble_columna {
+    flex-direction: column;
+    gap: 1.5em;
+  }
+
+  /* Cambiar el orden: imagen primero */
+  .registro_right {
+    order: -1;
+    width: 100%;
+    height: auto;
+    margin-top: 0;
+    margin-bottom: 2em;
+  }
+
+  .datos_usuario,
+  .inputs_pago {
+    width: 100%;
+    flex: none;
+    height: auto;
+  }
+
+  .inputs_pago label {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inputs_pago span {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0.3em;
+    text-align: center;
+  }
+
+  .inputs_pago input[type="file"],
+  .inputs_pago input[type="number"] {
+    width: 50% !important;
+    font-size: 0.9em !important;
+  }
+
+  .form_button button {
+    width: 80%;
+  }
+}
+
+/* Pantallas pequeñas (móviles) */
+@media (max-width: 600px) {
+  .label_cedula {
+    width: 90%;
+  }
+
+  .label_cedula > span {
+    width: 100%;
+    margin: 0.5em 0;
+  }
+
+  .input_cedula {
+    font-size: 1.3em !important;
+  }
+
+  .doble_columna {
+    flex-direction: column;
+  }
+
+  .datos_usuario,
+  .inputs_pago {
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+
+  .inputs_pago label {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inputs_pago span {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0.3em;
+    text-align: center;
+  }
+
+  .inputs_pago input[type="file"],
+  .inputs_pago input[type="number"] {
+    width: 50% !important;
+    font-size: 0.9em !important;
+  }
+
+  .form_button button {
+    width: 90%;
+  }
+
+  .registro_right {
+    width: 100%;
+    height: auto;
+    margin-top: 1.5em;
+  }
+}

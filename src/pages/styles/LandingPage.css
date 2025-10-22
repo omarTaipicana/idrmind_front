@@ -1,0 +1,567 @@
+.app {
+  text-align: center;
+  width: 100%;
+  caret-color: transparent;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 5em;
+
+  background: linear-gradient(180deg, #273c75cc, #00a8ffcc);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  z-index: 10001;
+  backdrop-filter: blur(5px);
+}
+
+.logo_navbar {
+  height: 4.5rem;
+}
+
+.menu_icon {
+  display: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.navbar_links {
+  display: flex;
+  gap: 2rem;
+}
+
+.navbar_links button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.navbar_links a {
+  color: white;
+  font-size: 1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+  text-decoration: none !important;
+  background: none;
+  border: none;
+}
+
+.navbar_links button::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #00a8ff;
+  transition: width 0.3s ease;
+}
+
+.navbar_links a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #00a8ff;
+  transition: width 0.3s ease;
+}
+
+.navbar_links button:hover {
+  color: #00a8ff;
+  font-weight: bold;
+}
+
+.navbar_links a:hover {
+  color: #00a8ff;
+  font-weight: bold;
+}
+
+.navbar_links button:hover::after {
+  width: 100%;
+}
+
+.navbar_links a:hover::after {
+  width: 100%;
+}
+
+/* Header */
+.header {
+  padding: 8rem 1rem 4rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.header > h1 {
+  font-size: 2.5em;
+}
+
+.header > p {
+  font-size: 2em;
+}
+
+.logo {
+  width: 20rem;
+  margin-bottom: 1rem;
+}
+
+.cta_button {
+  margin-top: 1rem;
+  display: inline-block;
+  background: #00a8ff;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background 0.3s ease-in-out;
+}
+
+.cta_button:hover {
+  background: #0097e6;
+}
+
+/* Secciones */
+.contacto,
+.nosotros,
+.cursos {
+  scroll-margin-top: 10rem;
+  padding: 2rem;
+  margin: 0 auto 2rem;
+  width: 95%;
+  max-width: 1100px;
+  background: rgba(255, 255, 255, 0.582);
+  color: #000;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #273c75;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.912);
+}
+
+/* Cursos */
+.curso_lista {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.curso_lista > a {
+  width: 48%;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem); /* 20px */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.giscopnsc {
+  background-image: url("/images/giscopensc.png");
+}
+.accv {
+  background-image: url("/images/accv.png");
+}
+.curso_card {
+  position: relative;
+  background-size: 110%;
+  background-position: center;
+  border-radius: 1rem;
+  overflow: hidden;
+  height: 25em;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.729);
+  margin: 1rem;
+  transition: transform 0.3s, box-shadow 0.3s, background-size 0.3s;
+}
+
+.curso_card:hover {
+  transform: translateY(-0.5rem);
+  box-shadow: 0 0.625rem 1.5625rem rgba(0, 255, 255, 0.3);
+  background-size: 115%;
+}
+
+.curso_card_overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.102), rgba(0, 0, 0, 0.563));
+  color: white;
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(0.1875rem);
+  box-shadow: inset 0 0 1.25rem rgba(0, 0, 0, 0.893);
+  text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.8);
+  animation: fadeUp 0.8s ease-in-out both;
+
+  /* centrado vertical */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.curso_title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.curso_title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.4rem;
+  width: 0;
+  height: 0.2rem;
+  background-color: #d5f507;
+  border-radius: 0.125rem;
+  transition: width 0.4s ease;
+}
+
+.curso_card:hover .curso_title::after {
+  width: 4rem;
+}
+
+a {
+  text-decoration: none !important;
+  color: white;
+}
+
+a:hover {
+  text-decoration: none;
+  color: inherit !important;
+}
+
+.curso_description {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: inherit;
+  text-decoration: none;
+}
+
+.curso_btn {
+  margin: 1.5em auto;
+    padding: 0.6rem 1.2rem;
+  background-color: #f9d342; /* amarillo brillante */
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  align-self: flex-start;
+}
+
+.curso_btn:hover {
+  background-color: #fff76a;
+  transform: translateY(-2px);
+}
+
+
+/* Nosotros */
+.nosotros {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nosotros h2 {
+  font-size: 2rem;
+  color: #00509e;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.nosotros p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 1.2rem;
+  text-align: justify;
+  font-weight: 500;
+}
+
+/* Contacto */
+.formulario_landing {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #0a2647;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.formulario_titulo {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.formulario_landing input,
+.formulario_landing textarea {
+  padding: 0.9rem;
+  border: none;
+  border-radius: 0.625rem;
+  font-size: 1rem;
+  background: #f0f8ff;
+  color: #000;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.formulario_landing input:focus,
+.formulario_landing textarea:focus {
+  box-shadow: 0 0 0 2px #1e90ff;
+}
+
+.formulario_landing button {
+  background: #1e90ff;
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.formulario_landing button:hover {
+  background: #1565c0;
+  transform: scale(1.03);
+}
+
+.formulario input,
+.formulario textarea {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.625rem;
+  font-size: 1rem;
+}
+
+.formulario button {
+  background: #273c75;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.formulario button:hover {
+  background: #192a56;
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(180deg, #273c75cc, #00a8ffcc);
+  color: white;
+  padding: 2rem 1rem;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  padding-bottom: 2.5em;
+}
+
+.redes_sociales {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.redes_sociales a svg {
+  font-size: 2rem;
+  color: white;
+  transition: color 0.3s;
+}
+
+.redes_sociales a:hover {
+  color: #00a8ff;
+}
+
+.btn_acceso {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.whatsapp_button,
+.plataforma_button {
+  display: inline-block;
+  margin: 0.5rem 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+}
+
+.whatsapp_button {
+  background: #25d366;
+  color: white;
+  transition: background 0.3s;
+}
+
+.whatsapp_button:hover {
+  background: #1ebe5b;
+}
+
+.plataforma_button {
+  background: #273c75;
+  color: white;
+  letter-spacing: 1px;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.plataforma_button:hover {
+  background: #192a56;
+}
+
+.menu_link {
+  color: white;
+  font-size: 1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+  text-decoration: none;
+  background: none;
+  border: none;
+  display: inline-block;
+}
+
+.menu_link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #00a8ff;
+  transition: width 0.3s ease;
+}
+
+.menu_link:hover {
+  color: #00a8ff;
+  font-weight: bold;
+}
+
+.menu_link:hover::after {
+  width: 100%;
+}
+
+/* Responsive */
+
+/* Responsive navbar */
+@media (max-width: 768px) {
+  .menu_icon {
+    display: block;
+  }
+
+  .logo {
+    width: 10em;
+  }
+
+  .header > h1 {
+    font-size: 1.6em;
+  }
+
+  .header > p {
+    font-size: 1.6em;
+  }
+
+  .navbar_links {
+    position: absolute;
+    top: 5em; /* Altura de la navbar */
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 168, 255, 0.95);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+    gap: 1rem;
+    display: none; /* Oculto por defecto */
+  }
+
+  .navbar_links.open {
+    display: flex; /* Visible cuando menuOpen es true */
+  }
+
+  .navbar_links button {
+    font-size: 1.2rem;
+  }
+  .curso_lista {
+    flex-direction: row;
+    width: 100%;
+  }
+  .curso_lista > a {
+    width: 100%;
+  }
+
+  .curso_card {
+    width: 100%;
+    height: 35em;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nosotros > p {
+    font-size: 0.8em;
+  }
+
+  .formulario_landing {
+    margin: 0;
+  }
+
+  .formulario_landing > h2 {
+    font-size: 1.3em;
+  }
+
+  .formulario_landing > input {
+    font-size: 0.7em;
+  }
+
+  .formulario_landing > textarea {
+    font-size: 0.6em;
+  }
+}

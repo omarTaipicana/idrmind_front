@@ -1,0 +1,171 @@
+.contenedor_register {
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0.5em;
+  overflow: hidden;
+  width: 100%;
+  height: calc(100dvh - 120px); /* Ajustado por header y footer */
+}
+
+.form__register {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  width: 100%;
+  max-width: 35%;
+  padding: 0.5em 2em;
+  margin: 0 auto;
+  background-color: #ffffff7c;
+  border: 0.1em solid #ccc;
+  border-radius: 0.8em;
+  box-shadow: 0 0.3em 0.5em rgba(0, 0, 0, 0.1);
+}
+
+.register__title {
+  text-align: center;
+  color: rgb(243, 192, 61);
+  font-size: 1.3em;
+  margin-bottom: 0.2em;
+}
+
+.label__form__register {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95em;
+  font-weight: 700;
+  color: #000000;
+}
+
+.span__form__register {
+  margin-bottom: 0em;
+}
+
+.input__form__register {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 0.4em;
+  padding: 0.3em;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.input__form__register input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.85em;
+}
+
+.input__password {
+  text-align: center;
+  font-size: 0.85em;
+}
+
+.input__form__register img {
+  cursor: pointer;
+  width: 1.3em;
+  height: 1.3em;
+  margin-left: 0.4em;
+}
+
+.btn__form__register {
+  background-color: var(--blue2-color);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.25em;
+  padding: 0.6em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 50%;
+  margin: 0.5em auto 0 auto;
+}
+
+.btn__form__register:hover {
+  background-color: var(--blue-color);
+}
+
+.img__show {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .form__register {
+    max-width: 70%;
+    padding: 1em 1.2em;
+  }
+
+  .btn__form__register {
+    width: 60%;
+  }
+}
+
+/* Móviles medianos */
+@media (max-width: 768px) {
+  .contenedor_register {
+    padding: 1em;
+    height: calc(100dvh - 100px);
+  }
+
+  .form__register {
+    max-width: 90%;
+    gap: 0.4em;
+    padding: 0.8em 1em;
+  }
+
+  .btn__form__register {
+    width: 70%;
+  }
+
+  .register__title {
+    font-size: 1.2em;
+  }
+
+  .input__form__register {
+    font-size: 0.9em;
+  }
+
+  .input__password {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .contenedor_register {
+    padding: 0.5em;
+  }
+
+  .form__register {
+    width: 100%;
+    padding: 0.6em 0.8em;
+    gap: 0.3em;
+  }
+
+  .btn__form__register {
+    width: 100%;
+  }
+
+  .register__title {
+    font-size: 1.1em;
+  }
+
+  .input__form__register {
+    font-size: 0.85em;
+  }
+
+  .input__form__register img {
+    width: 1em;
+    height: 1em;
+  }
+}
