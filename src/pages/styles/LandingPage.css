@@ -11,7 +11,7 @@
   width: 100%;
   height: 5em;
 
-  background: linear-gradient(180deg, #273c75cc, #00a8ffcc);
+  background: linear-gradient(180deg, #ffffff, #ffffffb7);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,7 +27,7 @@
 .menu_icon {
   display: none;
   font-size: 1.5rem;
-  color: white;
+  color: rgb(18, 1, 1);
   cursor: pointer;
 }
 
@@ -39,7 +39,8 @@
 .navbar_links button {
   background: none;
   border: none;
-  color: white;
+  color: rgb(11, 11, 11);
+  font-weight: 600;
   font-size: 1rem;
   padding: 8px 12px;
   cursor: pointer;
@@ -104,20 +105,29 @@
   padding: 8rem 1rem 4rem;
   background: rgba(0, 0, 0, 0.5);
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.header > h1 {
+.header_img {
+  border-radius: 3em;
+}
+
+.header_text>h1 {
   font-size: 2.5em;
+  margin-bottom: 1em;
+  width: 80%;
+  margin: 0 auto 1em auto;
 }
 
-.header > p {
-  font-size: 2em;
+.header_text>p {
+  font-size: 1.5em;
+  width: 90%;
+  margin: auto;
 }
 
-.logo {
-  width: 20rem;
-  margin-bottom: 1rem;
-}
+
 
 .cta_button {
   margin-top: 1rem;
@@ -142,13 +152,14 @@
   scroll-margin-top: 10rem;
   padding: 2rem;
   margin: 0 auto 2rem;
-  width: 95%;
-  max-width: 1100px;
-  background: rgba(255, 255, 255, 0.582);
+  width: 100%;
+  max-width: 95%;
+  background: rgba(241, 241, 241, 0.626);
   color: #000;
-  border-radius: 1.25rem;
+  border-radius: 1em;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
+
 
 h2 {
   font-size: 2rem;
@@ -159,22 +170,76 @@ h2 {
 }
 
 /* Cursos */
+/* Lista de cursos en grid */
 .curso_lista {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.curso_lista > a {
-  width: 48%;
+/* Cada item ocupa 3 por fila (33%) */
+.curso_item {
+  width: 30%;
+  animation: fadeUp 0.8s ease forwards;
 }
 
+/* Tarjeta de curso */
+.curso_card {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.curso_card:hover {
+  transform: translateY(-0.5rem);
+  box-shadow: 0 0.625rem 1.5625rem rgba(0, 255, 255, 0.3);
+}
+
+/* Imagen del curso */
+.curso_img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Overlay con botón */
+.curso_card_overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.curso_btn {
+  background: #308cef;
+  color: #fff;
+  width: 80%;
+  margin: 0 auto;
+  border: none;
+  padding: 0.7em 1.5em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.curso_btn:hover {
+  background: #0056b3;
+}
+
+/* Animación fadeUp */
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(1.25rem); /* 20px */
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -182,48 +247,6 @@ h2 {
   }
 }
 
-.giscopnsc {
-  background-image: url("/images/giscopensc.png");
-}
-.accv {
-  background-image: url("/images/accv.png");
-}
-.curso_card {
-  position: relative;
-  background-size: 110%;
-  background-position: center;
-  border-radius: 1rem;
-  overflow: hidden;
-  height: 25em;
-  display: flex;
-  align-items: flex-end;
-  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.729);
-  margin: 1rem;
-  transition: transform 0.3s, box-shadow 0.3s, background-size 0.3s;
-}
-
-.curso_card:hover {
-  transform: translateY(-0.5rem);
-  box-shadow: 0 0.625rem 1.5625rem rgba(0, 255, 255, 0.3);
-  background-size: 115%;
-}
-
-.curso_card_overlay {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.102), rgba(0, 0, 0, 0.563));
-  color: white;
-  padding: 2rem;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(0.1875rem);
-  box-shadow: inset 0 0 1.25rem rgba(0, 0, 0, 0.893);
-  text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.8);
-  animation: fadeUp 0.8s ease-in-out both;
-
-  /* centrado vertical */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 
 .curso_title {
   font-size: 1.2rem;
@@ -266,33 +289,21 @@ a:hover {
   text-decoration: none;
 }
 
-.curso_btn {
-  margin: 1.5em auto;
-    padding: 0.6rem 1.2rem;
-  background-color: #f9d342; /* amarillo brillante */
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #000;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  align-self: flex-start;
-}
 
-.curso_btn:hover {
-  background-color: #fff76a;
-  transform: translateY(-2px);
-}
 
 
 /* Nosotros */
 .nosotros {
-  max-width: 900px;
-  margin: 3rem auto;
+  width: 100%;
+  margin: 1rem auto;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  width: 15rem;
+  margin-bottom: 1rem;
 }
 
 .nosotros h2 {
@@ -303,25 +314,81 @@ a:hover {
 }
 
 .nosotros p {
-  font-size: 1.125rem;
+  width: 80%;
+  margin: auto;
+  font-size: 1.3rem;
   line-height: 1.8;
-  color: #333;
+  color: #363636;
   margin-bottom: 1.2rem;
-  text-align: justify;
-  font-weight: 500;
+  text-align: center;
+  font-weight: 700;
 }
 
 /* Contacto */
+.contacto {
+  background-color: #00000073;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2em 5em;
+}
+
+.contacto_text {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.contacto_text h3,
+p,
+span {
+  color: rgb(248, 239, 239);
+  text-align: left;
+  font-weight: 600;
+}
+
+.contacto_text p {
+  color: rgb(203, 201, 204);
+
+}
+
+.ul_contactanos {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: auto;
+  align-items: first baseline;
+  gap: 1em;
+}
+
+
+.contacto_text h3 {
+
+  font-size: 2em;
+}
+
+.img_contctanos {
+  margin-right: 1em;
+  width: 2em;
+  filter: invert(1);
+}
+
+.span_contactanos {
+  font-size: 0.9em;
+  margin-top: 0.9em;
+}
+
 .formulario_landing {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  max-width: 500px;
+  width: 50%;
   margin: 2rem auto;
   padding: 2rem;
-  background: #0a2647;
+  /* background: #0a2647; */
   border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); */
 }
 
 .formulario_titulo {
@@ -345,11 +412,11 @@ a:hover {
 
 .formulario_landing input:focus,
 .formulario_landing textarea:focus {
-  box-shadow: 0 0 0 2px #1e90ff;
+  box-shadow: 0 0 0 2px #53a2f0;
 }
 
 .formulario_landing button {
-  background: #1e90ff;
+  background: #066fd8;
   color: white;
   border: none;
   padding: 0.9rem;
@@ -361,7 +428,7 @@ a:hover {
 }
 
 .formulario_landing button:hover {
-  background: #1565c0;
+  background: #052c59;
   transform: scale(1.03);
 }
 
@@ -390,7 +457,7 @@ a:hover {
 
 /* Footer */
 .footer {
-  background: linear-gradient(180deg, #273c75cc, #00a8ffcc);
+  background: linear-gradient(180deg, #0a1228cc, #000405cc);
   color: white;
   padding: 2rem 1rem;
   text-align: center;
@@ -445,16 +512,31 @@ a:hover {
 }
 
 .plataforma_button {
-  background: #273c75;
-  color: white;
-  letter-spacing: 1px;
+  background: linear-gradient(135deg, #5b7cfa, #8fa9ff);
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   font-size: 1rem;
-  transition: background 0.3s;
+  padding: 0.9em 2em;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(91, 124, 250, 0.3);
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
 }
 
 .plataforma_button:hover {
-  background: #192a56;
+  background: linear-gradient(135deg, #4a6ef5, #7895ff);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 110, 245, 0.4);
 }
+
+.plataforma_button:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 8px rgba(74, 110, 245, 0.3);
+}
+
 
 .menu_link {
   color: white;
@@ -501,40 +583,45 @@ a:hover {
     width: 10em;
   }
 
-  .header > h1 {
+  .header>h1 {
     font-size: 1.6em;
   }
 
-  .header > p {
-    font-size: 1.6em;
+  .header>p {
+    font-size: 1.3em;
   }
 
   .navbar_links {
     position: absolute;
-    top: 5em; /* Altura de la navbar */
+    top: 5em;
+    /* Altura de la navbar */
     left: 0;
     width: 100%;
-    background-color: rgba(0, 168, 255, 0.95);
+    background-color: rgb(255, 255, 255);
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 1rem 0;
     gap: 1rem;
-    display: none; /* Oculto por defecto */
+    display: none;
+    /* Oculto por defecto */
   }
 
   .navbar_links.open {
-    display: flex; /* Visible cuando menuOpen es true */
+    display: flex;
+    /* Visible cuando menuOpen es true */
   }
 
   .navbar_links button {
     font-size: 1.2rem;
   }
+
   .curso_lista {
     flex-direction: row;
     width: 100%;
   }
-  .curso_lista > a {
+
+  .curso_lista>a {
     width: 100%;
   }
 
@@ -545,7 +632,7 @@ a:hover {
     margin: 0;
   }
 
-  .nosotros > p {
+  .nosotros>p {
     font-size: 0.8em;
   }
 
@@ -553,15 +640,15 @@ a:hover {
     margin: 0;
   }
 
-  .formulario_landing > h2 {
+  .formulario_landing>h2 {
     font-size: 1.3em;
   }
 
-  .formulario_landing > input {
+  .formulario_landing>input {
     font-size: 0.7em;
   }
 
-  .formulario_landing > textarea {
+  .formulario_landing>textarea {
     font-size: 0.6em;
   }
 }

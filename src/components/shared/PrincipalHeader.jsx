@@ -93,7 +93,7 @@ const PrincipalHeader = () => {
       <section className="principal__header__section">
         <Link to="/" onClick={closeMenu}>
           <img
-            src="/images/idrmind_sf.png"
+            src="/images/idrmind_logo_sf.png"
             alt="Logo iDr.Mind."
             className="logo_navbar"
           />
@@ -183,8 +183,11 @@ const PrincipalHeader = () => {
 
           {!token && (
             <>
+             <Link to="/" onClick={closeMenu}>
+                Página Principal
+              </Link>
               <Link to="/register" onClick={closeMenu}>
-                Register
+                Registrate
               </Link>
               <Link to="/login" onClick={closeMenu}>
                 Login

@@ -23,8 +23,12 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
+  const [courses, getCourses] = useCrud();
+
 
   const PATH_CONTACTANOS = "/contactanos";
+  const PATH_COURSES = "/courses";
+
   const [, , , loggedUser, , , , , , , , , , user, setUserLogged] = useAuth();
 
   useEffect(() => {
@@ -100,13 +104,17 @@ const LandingPage = () => {
     }
   };
 
+  useEffect(() => {
+    getCourses(PATH_COURSES)
+  }, [])
+
   return (
     <div className="app">
       {isLoading && <IsLoading />}
 
       <nav className="navbar">
         <img
-          src="/images/idrmind_sf.png"
+          src="/images/idrmind_logo_sf.png"
           alt="Logo iDr.Mind."
           className="logo_navbar"
         />
@@ -133,25 +141,30 @@ const LandingPage = () => {
       </nav>
 
       <header className="header" ref={inicioRef}>
+
+        <div className="header_text">
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            Transformamos el Talento en Productividad
+          </motion.h1>
+          <p>Cursos diseñados para reconocer y potenciar tus Habilidades Blandas y las competencias del talento humano, preparado para personas y empresas que buscan la excelencia y el crecimiento continuo en su productividad laboral.</p>
+          <a onClick={() => scrollToSection(contactoRef)} className="cta_button">
+            Contáctanos
+          </a>
+
+        </div>
         <motion.img
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.8 }}
-          src="/images/eduka_sf.png"
-          alt="Logo Eduka"
-          className="logo"
+          src="/images/IMG-20240801-WA0001.jpg"
+          alt="Logo iDr.Mind."
+          className="header_img"
         />
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          Tu camino al conocimiento empieza aquí
-        </motion.h1>
-        <p>Aprende, crece, y mejora con nuestros cursos.</p>
-        <a onClick={() => scrollToSection(contactoRef)} className="cta_button">
-          Contáctanos
-        </a>
+
       </header>
 
       <motion.section
@@ -163,45 +176,24 @@ const LandingPage = () => {
       >
         <h2>Nuestros Cursos</h2>
         <div className="curso_lista">
-          <Link to="/giscopensc">
-            <div className="curso_card giscopnsc">
-              <div className="curso_card_overlay">
-                <h3 className="curso_title">
-                  Gestión Integral de la Seguridad Ciudadana y el Orden Público
-                  con enfoque en Negociación en Situación de Crisis
-                </h3>
-                <p className="curso_description">
-                  Capacitar a los servidores policiales en la gestión integral
-                  de la seguridad ciudadana y el orden público, dotándolos de
-                  conocimientos teóricos, herramientas técnicas y habilidades
-                  prácticas para diseñar, implementar y evaluar políticas y
-                  estrategias efectivas que contribuyan a la prevención,
-                  investigación del delito, la reducción de la violencia y la
-                  construcción de entornos seguros y pacíficos para la
-                  ciudadanía.
-                </p>
-                <button className="curso_btn">Ver mas</button>
+
+          {courses.map((c, index) => (
+            <Link key={c.sigla} to={`/curso/${c.sigla}`} className="curso_item" style={{ animationDelay: `${index * 0.15}s` }}>
+              <div className="curso_card">
+                <img
+                  src={`/cursos/${c.sigla}.jpg`}
+                  alt={c.nombre}
+                  className="curso_img"
+                />
+                <div className="curso_card_overlay">
+                  <button className="curso_btn">VER CURSO</button>
+                </div>
               </div>
-            </div>
-          </Link>
-          <Link to="/accv">
-            <div className="curso_card accv">
-              <div className="curso_card_overlay">
-                <h3 className="curso_title">
-                  ANALISIS EN CONDUCTA CRIMINAL Y VICTIMOLOGÍA
-                </h3>
-                <p className="curso_description">
-                  Brindar a los funcionarios de las fuerzas del orden y
-                  seguridad una formación integral en victimología y
-                  criminología mediante el análisis e intervención profesional a
-                  los fenómenos delictivos, sus causas, consecuencias y las
-                  dinámicas de victimización, promoviendo una atención ética,
-                  interdisciplinaria y centrada en los derechos de las víctimas.
-                </p>
-                <button className="curso_btn">Ver mas</button>
-              </div>
-            </div>
-          </Link>
+            </Link>
+          ))}
+
+
+
         </div>
       </motion.section>
       <motion.section
@@ -211,38 +203,22 @@ const LandingPage = () => {
         className="nosotros"
         ref={nosotrosRef}
       >
-        <h2>Nosotros</h2>
-        <p>
-          <strong>Eduka</strong> es una plataforma de formación en línea
-          comprometida con el fortalecimiento de las capacidades profesionales
-          de los servidores policiales del Ecuador. Nuestra misión es
-          proporcionar programas educativos actualizados y de alta calidad que
-          respondan a los desafíos actuales en materia de seguridad ciudadana,
-          derechos humanos, y gestión del orden público.
+        <motion.img
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.8 }}
+          src="/images/idrmind_sf.png"
+          alt="Logo iDr.Mind."
+          className="logo"
+        />
+        <p >
+          Somos especialistas en ofrecer capacitaciones integrales que impulsan el desarrollo de Habilidades Blandas, Técnicas y Emocionales.
+          Nuestro enfoque está en diseñar soluciones a medida para maximizar la productividad y fomentar la mejora continua con nuestras modalidades presencial y en línea.
+          Somos reconocidos por nuestro compromiso con la excelencia, ayudando a transformar el talento humano en un motor clave para el éxito empresarial.
+
+          «¡Pensamos positivo y actuamos para avanzar juntos!»
         </p>
-        <p>
-          Contamos con la colaboración de un equipo docente internacional
-          conformado por expertos y académicos de reconocidas instituciones en
-          América Latina y Europa. Esta cooperación multinacional nos permite
-          ofrecer una perspectiva comparada, moderna y práctica, adaptada a la
-          realidad operativa de la Policía Nacional del Ecuador.
-        </p>
-        <p>
-          A través de nuestras aulas virtuales, los participantes acceden a
-          contenidos interactivos, estudios de caso, simulaciones y recursos
-          actualizados, diseñados para fortalecer sus conocimientos en áreas
-          estratégicas como inteligencia policial, liderazgo operativo,
-          mediación de conflictos, uso progresivo de la fuerza, ciberseguridad y
-          gestión de crisis.
-        </p>
-        <p>
-          En <strong>Eduka</strong>, creemos firmemente que una policía mejor
-          preparada es clave para construir comunidades más seguras, justas y
-          resilientes. Por ello, seguimos innovando en nuestras metodologías y
-          expandiendo alianzas académicas con el fin de contribuir de forma
-          sostenible al desarrollo profesional de quienes protegen y sirven a
-          nuestra sociedad.
-        </p>
+
       </motion.section>
 
       <motion.section
@@ -252,17 +228,78 @@ const LandingPage = () => {
         className="contacto"
         ref={contactoRef}
       >
+
+        <section className="contacto_text">
+          <h3>Contáctanos</h3>
+          <p>Si tienes alguna consulta o necesitas información adicional sobre nuestros cursos y servicios, no dudes en escribirnos o llamarnos. Responderemos a la brevedad para atender todas tus necesidades. ¡Contáctanos hoy mismo!</p>
+          <article>
+            <ul className="ul_contactanos">
+              <span>Contáctenos a través de</span>
+
+              <li className="li_footer">
+                <a
+                  href="https://maps.app.goo.gl/hG4735yfLTV5MdVD8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link_footer"
+                >
+                  <img
+                    className="img_contctanos"
+                    src="../../../location.png"
+                    alt="Ubicación"
+                  />
+                  <span className="span_contactanos">
+                    Mitad del Mundo - Quito, Ecuador
+                  </span>
+                </a>
+              </li>
+              <li> <a
+                href="https://api.whatsapp.com/send?phone=593979002223&text=Hola%20quiero%20más%20información"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  className="img_contctanos"
+                  src="../../../whatsapp2.png"
+                  alt="WhatsApp"
+                />
+                <span className="span_contactanos">
+                  +593979002223
+                </span>
+              </a></li>
+              <li className="li_footer">
+                <a
+                  href="mailto:info@idrmind.com"
+                  className="link_footer"
+                >
+                  <img
+                    className="img_contctanos"
+                    src="../../../mensaje.png"
+                    alt="Correo"
+                  />
+                  <span className="span_contactanos">
+                    info@idrmind.com
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </article>
+
+        </section>
+
+
         <form onSubmit={handleSubmit(submit)} className="formulario_landing">
-          <h2 className="formulario_titulo">Contáctanos</h2>
+          <h2 className="formulario_titulo">¡ Déjanos tu comentario !
+          </h2>
           <input
             type="text"
-            placeholder="Nombre completo"
+            placeholder="Nombres"
             required
             {...register("nombres")}
           />
           <input
             type="email"
-            placeholder="Correo electrónico"
+            placeholder="Email"
             required
             {...register("email")}
           />
@@ -278,50 +315,53 @@ const LandingPage = () => {
 
       <footer className="footer">
         <p>Síguenos en redes sociales</p>
-        <div className="redes_sociales">
-          <a
-            href="https://www.facebook.com/share/19srLS1HBi/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaFacebookF />
-          </a>
-          <a
-            href="https://www.tiktok.com/@eduka397?_t=ZM-8xGVPfqbdOK&_r=1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaTiktok />
-          </a>
-          <a
-            href="https://www.instagram.com/eduka_ce?igsh=cDR2dnM5ejZnZnc4"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaInstagram />
-          </a>
-        </div>
+        <a
+          className="plataforma_button"
+          href="https://moodle.idrmind.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Accede a nuestra Plataforma Educativa MOODLE
+        </a>
         <div className="btn_acceso">
           <a
             className="whatsapp_button"
-            href="https://wa.me/593980773229"
+            href="https://wa.me/593979002223"
             target="_blank"
             rel="noopener noreferrer"
           >
             Contáctanos por WhatsApp
           </a>
 
+
+        </div>
+        <div className="redes_sociales">
+
           <a
-            className="plataforma_button"
-            href="https://acadexeduc.com/"
+            href="https://www.facebook.com/profile.php?id=100054880556231&mibextid=ZbWKwL"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Accede a nuestra Plataforma Educativa MOODLE ACADEX
+            <FaFacebookF />
+          </a>
+          <a
+            href="https://www.tiktok.com/@idr.mind?_t=8rXF11o0DPs&_r=1"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaTiktok />
+          </a>
+          <a
+            href="https://www.instagram.com/idr.mind/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaInstagram />
           </a>
         </div>
 
-        <p>&copy; 2025 Eduka. Todos los derechos reservados.</p>
+
+        <p>&copy; 2024. iDr. Mind. by NASK-Corp. All Rights Reserved.</p>
       </footer>
     </div>
   );

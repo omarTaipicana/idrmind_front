@@ -1,5 +1,5 @@
 .ul_footer {
-  background: linear-gradient(180deg, #0377b1cc, #010e32cc);
+  background: linear-gradient(180deg, #040404, #2e2e2ecc);
   color: white;
   display: flex;
   justify-content: right;
@@ -47,6 +47,7 @@
   height: 3vh;
   filter: invert(1);
 }
+
 .img_footer_c {
   height: 2vh;
   filter: invert(1);
@@ -55,6 +56,10 @@
 .span_footer {
   font-size: 0.7em;
   margin-top: 0.7em;
+}
+
+.logo_footer {
+  width: 1.5em;
 }
 
 
@@ -66,7 +71,8 @@
     height: auto;
     padding: 1em 0;
     gap: 1em;
-    position: static; /* Para que no esté fijo en móviles */
+    position: static;
+    /* Para que no esté fijo en móviles */
   }
 
   .li_footer,
@@ -76,7 +82,8 @@
   }
 
   .li_footer_icon a img {
-    height: 4vh; /* iconos un poco más grandes en móvil */
+    height: 4vh;
+    /* iconos un poco más grandes en móvil */
   }
 
   .img_footer {

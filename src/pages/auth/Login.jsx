@@ -260,7 +260,6 @@ const Login = () => {
       cellular: celularLimpio,
     };
 
-    console.log(formattedData);
 
     if (
       data?.dateBirth &&
@@ -303,6 +302,7 @@ const Login = () => {
       setIsInfoComplete(false);
     }
   }, [firstChargeVar]);
+
 
   return (
     <div className="contenedor">

@@ -11,10 +11,8 @@ import Verify from "./pages/auth/Verify";
 import ResetPasswordSendEmail from "./pages/auth/ResetPasswordSendEmail";
 import ChangePassword from "./pages/auth/ChangePassword";
 import Footer from "./components/shared/Footer";
-import Giscopnsc from "./components/Cursos/Giscopnsc";
 import RegistroAlumnos from "./components/Formularios/RegistroAlumnos";
 import { RegistroPagos } from "./components/Formularios/RegistroPagos";
-import Accv from "./components/Cursos/Accv";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import ValidadorProtectedRoute from "./routes/ValidadorProtectedRoute";
 import SubAdminProtectedRoutes from "./routes/SubAdminProtectedRoutes";
@@ -22,6 +20,7 @@ import ValidacionPago from "./pages/ValidacionPago";
 import Dashboard from "./pages/Dashboard";
 import Secretaria from "./pages/Secretaria";
 import SecretariaRoutes from "./routes/SecretariaRoutes";
+import CursoInfo from "./components/Cursos/CursoInfo";
 
 const App = () => {
   const location = useLocation();
@@ -39,8 +38,9 @@ const App = () => {
         <Route path="/register_discente/:code" element={<RegistroAlumnos />} />
         <Route path="/register_pago/:code" element={<RegistroPagos />} />
 
-        <Route path="/giscopensc" element={<Giscopnsc />} />
-        <Route path="/accv" element={<Accv />} />
+
+        <Route path="/curso/:code" element={<CursoInfo />} />
+
         <Route path="/login" element={<Login />} />
 
         <Route element={<SecretariaRoutes />}>

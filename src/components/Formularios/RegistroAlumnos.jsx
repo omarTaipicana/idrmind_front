@@ -226,7 +226,7 @@ const RegistroAlumnos = () => {
   return (
     <div
       className="registro_container"
-      style={{ backgroundImage: `url(/images/fondo_${code}.jpg)` }}
+      style={{ backgroundImage: `url(/images/inscipcion.jpg)` }}
     >
       {isLoading2 && <IsLoading />}
 
@@ -281,7 +281,7 @@ const RegistroAlumnos = () => {
                 <div
                   className="curso_imagen"
                   style={{
-                    backgroundImage: `url(/images/${code}.jpg)`,
+                    backgroundImage: `url(/cursos/${code}.jpg)`,
                   }}
                 />
               </div>
@@ -483,7 +483,7 @@ const RegistroAlumnos = () => {
                 <div
                   className="curso_imagen"
                   style={{
-                    backgroundImage: `url(/images/${code}.jpg)`,
+                    backgroundImage: `url(/cursos/${code}.jpg)`,
                   }}
                 />
               </div>

@@ -1,0 +1,191 @@
+/* Wrapper principal */
+.curso_info_wrapper {
+    max-width: 98%;
+    margin: 1em auto;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(145deg, #ffffffa3, #84aeedbe);
+    backdrop-filter: blur(6px);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Contenedor de columnas */
+.curso_info_container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Sección Izquierda */
+.curso_info_left {
+    flex: 1;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Sección Derecha */
+.curso_info_right {
+    flex: 1;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título del curso */
+.curso_info_title {
+    font-size: 2rem;
+    color: #0b2e59;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+/* Descripción / objetivo */
+.curso_info_section {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #1c1c1c;
+    margin-bottom: 2rem;
+    text-align: justify;
+}
+
+/* Grupo de botones */
+.button_group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Botones base */
+.btn_inscribirse,
+.btn_registrar_pago,
+.btn_descargar_pdf {
+    text-decoration: none;
+    background: linear-gradient(135deg, #0b2e59, #1e73be);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 12px rgba(11, 46, 89, 0.25);
+}
+
+/* Colores diferenciados por acción */
+.btn_inscribirse {
+    background: linear-gradient(135deg, #0072ff, #0b2e59);
+}
+
+.btn_registrar_pago {
+    background: linear-gradient(135deg, #0072ff, #0b2e59);
+}
+
+.btn_descargar_pdf {
+    background: linear-gradient(135deg,#0b2e59, #0072ff);
+}
+
+/* Hover elegante */
+.btn_inscribirse:hover,
+.btn_registrar_pago:hover,
+.btn_descargar_pdf:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    filter: brightness(1.1);
+}
+
+/* PDF elegante */
+.pdf_frame {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #0b2e59;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    text-align: center;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+/* Controles de paginación */
+.pagination_controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.pagination_controls button {
+    background: linear-gradient(135deg, #0b2e59, #1e73be);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 10px rgba(11, 46, 89, 0.25);
+}
+
+.pagination_controls button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1e73be, #0b2e59);
+    transform: scale(1.05);
+}
+
+.pagination_controls button:disabled {
+    background-color: #c8d8ee;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.pagination_controls span {
+    font-weight: 600;
+    color: #1c1c1c;
+}
+
+/* Responsive */
+@media screen and (max-width: 992px) {
+    .curso_info_container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .curso_info_left,
+    .curso_info_right {
+        width: 100%;
+    }
+
+    .pdf_frame {
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .curso_info_wrapper {
+        padding: 20px;
+    }
+
+    .curso_info_title {
+        font-size: 1.6rem;
+    }
+
+    .curso_info_section {
+        font-size: 0.95rem;
+    }
+
+    .btn_inscribirse,
+    .btn_registrar_pago,
+    .btn_descargar_pdf {
+        width: 100%;
+        text-align: center;
+    }
+}
