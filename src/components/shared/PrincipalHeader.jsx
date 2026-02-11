@@ -299,11 +299,24 @@ const PrincipalHeader = () => {
     }
 
     return (
-      <>
-        <button type="button" className="topbar-link" onClick={() => navigate("/login")}>
-          Mi cuenta
-        </button>
-      </>
+       <>
+              <Link to="/login" onClick={closeMenu}>
+                <img
+                  className="user__icon"
+                  src="../../../user.png"
+                  alt="User Icon"
+                />
+              </Link>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  closeMenu();
+                }}
+                className="logout__button"
+              >
+                Salir
+              </button>
+            </>
     );
   };
 

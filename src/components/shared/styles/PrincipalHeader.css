@@ -85,6 +85,32 @@
   width: 100%;
 }
 
+
+
+.user__icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.logout__button {
+  background-color: #1b326b;
+  border: 1px solid #ffffff;
+  border-radius: 999px;
+  padding: 0.3rem 1rem;
+  color: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.logout__button:hover {
+  background-color: #ffffff;
+  color: #1b326b;
+  border: 1px solid #464a5e;
+  font-weight: 800;
+}
 /* derecha (auth igual Landing) */
 .topbar-right {
   display: flex;
