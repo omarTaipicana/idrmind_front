@@ -10,10 +10,8 @@ import Verify from "./pages/auth/Verify";
 import ResetPasswordSendEmail from "./pages/auth/ResetPasswordSendEmail";
 import ChangePassword from "./pages/auth/ChangePassword";
 import Footer from "./components/shared/Footer";
-import Giscopnsc from "./components/Cursos/Giscopnsc";
 import RegistroAlumnos from "./components/Formularios/RegistroAlumnos";
 import { RegistroPagos } from "./components/Formularios/RegistroPagos";
-import Accv from "./components/Cursos/Accv";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import ValidadorProtectedRoute from "./routes/ValidadorProtectedRoute";
 import SubAdminProtectedRoutes from "./routes/SubAdminProtectedRoutes";
@@ -23,7 +21,6 @@ import Secretaria from "./pages/Secretaria";
 import SecretariaRoutes from "./routes/SecretariaRoutes";
 
 import Gkm from "./components/shared/Gkm";
-import Ciccenic from "./components/Cursos/Ciccenic";
 import Instituto from "./pages/Instituto";
 import InstitutoProtectedRoute from "./routes/InstitutoProtectedRoute";
 import SuperAdminProtectedRoute from "./routes/SuperAdminProtectedRoute";
@@ -64,9 +61,6 @@ const App = () => {
         <Route path="/register_discente/:code" element={<RegistroAlumnos />} />
         <Route path="/register_pago/:code" element={<RegistroPagos />} />
 
-        <Route path="/giscopensc" element={<Giscopnsc />} />
-        <Route path="/ciccenic" element={<Ciccenic />} />
-        <Route path="/accv" element={<Accv />} />
         <Route path="/curso/:code" element={<CursoInfo />} />
         <Route path="/login" element={<Login />} />
 

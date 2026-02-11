@@ -102,7 +102,7 @@ const Home = () => {
         >
           <div className="homeMenuHeader">
             <img
-              src="/images/eduka_sf.png"
+              src="/images/idrmind_sf.png"
               alt="Eduka"
               className="homeMenuLogo"
             />
@@ -215,21 +215,6 @@ const Home = () => {
                     </span>
                   </li>
 
-                  <li className="homeDataItem">
-                    <span className="homeDataLabel">Grado</span>
-                    <span className="homeDataValue">
-                      {user.grado || <span className="homeWarn">Complete información</span>}
-                    </span>
-                  </li>
-
-                  <li className="homeDataItem">
-                    <span className="homeDataLabel">Eje Policial</span>
-                    <span className="homeDataValue">
-                      {user.subsistema || (
-                        <span className="homeWarn">Complete información</span>
-                      )}
-                    </span>
-                  </li>
                 </ul>
               ) : (
                 <IsLoading />

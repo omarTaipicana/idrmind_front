@@ -284,7 +284,7 @@ export const RegistroPagos = () => {
                     <strong>Cédula:</strong> {usuario.cI}
                   </p>
 
-                  <div className="pagos_box_1">
+                  {/* <div className="pagos_box_1">
                     <label className="pagos_check_row">
                       <span>Servidor Policial</span>
                       <input
@@ -309,7 +309,7 @@ export const RegistroPagos = () => {
                         }}
                       />
                     </label>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="pagos_box">
                   <label className="pagos_check_row">

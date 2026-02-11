@@ -5,6 +5,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-bottom: 3rem;
 }
 
 .ue_shell {
@@ -21,7 +22,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("/images/eduka_sf.png");
+  background-image: url("/images/idrmind_logo_sf.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 45%;

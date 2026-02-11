@@ -269,17 +269,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="dashChartBox">
-              <h4 className="dashChartTitle">Inscritos por grado</h4>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={inscripcionDashboard?.inscritosPorGrado || []}>
-                  <XAxis dataKey="grado" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="cantidad" fill="#0f2a63" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+        
 
             <div className="dashChartBox">
               <h4 className="dashChartTitle">Franja horaria de inscripción</h4>
@@ -317,19 +307,7 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
 
-            <div className="dashChartBox">
-              <h4 className="dashChartTitle">Inscritos por subsistema</h4>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart
-                  data={inscripcionDashboard?.inscritosPorSubsistema || []}
-                >
-                  <XAxis dataKey="subsistema" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="cantidad" fill="#0f2a63" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+  
 
             <div className="dashChartBox">
               <h4 className="dashChartTitle">Evolutivo diario de inscripciones</h4>
@@ -508,17 +486,7 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
 
-            <div className="dashChartBox">
-              <h4 className="dashChartTitle">Pagos por grado</h4>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={pagosPorGrado}>
-                  <XAxis dataKey="grado" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="cantidad" fill="#0f2a63" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+    
           </section>
         );
       }
@@ -751,7 +719,7 @@ const Dashboard = () => {
           ref={menuRef}
         >
           <div className="secMenuHeader">
-            <img src="/images/eduka_sf.png" alt="Eduka" className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="Eduka" className="secMenuLogo" />
             <p className="secMenuSubtitle">Dashboard</p>
           </div>
 

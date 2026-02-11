@@ -202,7 +202,7 @@ const Instituto = () => {
         >
           <div className="institutoMenuHeader">
             <img
-              src="/images/eduka_sf.png"
+              src="/images/idrmind_sf.png"
               alt="Eduka"
               className="institutoMenuLogo"
             />

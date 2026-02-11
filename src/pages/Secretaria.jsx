@@ -282,27 +282,27 @@ const Secretaria = () => {
   };
 
   // Al seleccionar sugerencia llenamos input y vaciamos sugerencias
-const seleccionarSugerencia = (sug) => {
-  const nombre = `${sug.user?.firstName || ""} ${sug.user?.lastName || ""}`.trim();
-  const ci = sug.user?.cI || "";
+  const seleccionarSugerencia = (sug) => {
+    const nombre = `${sug.user?.firstName || ""} ${sug.user?.lastName || ""}`.trim();
+    const ci = sug.user?.cI || "";
 
-  // 1) llenar inputs visibles (opcional pero recomendado)
-  setInputNombre(nombre);
-  setInputCedula(ci);
+    // 1) llenar inputs visibles (opcional pero recomendado)
+    setInputNombre(nombre);
+    setInputCedula(ci);
 
-  // 2) aplicar filtros reales
-  setNombreBuscado(nombre);
-  setCedulaBuscada(ci);
+    // 2) aplicar filtros reales
+    setNombreBuscado(nombre);
+    setCedulaBuscada(ci);
 
-  // 3) ocultar sugerencias
-  setSugerencias([]);
+    // 3) ocultar sugerencias
+    setSugerencias([]);
 
-  // 4) ✅ activar resultados (clave)
-  setBusquedaRealizada(true);
+    // 4) ✅ activar resultados (clave)
+    setBusquedaRealizada(true);
 
-  // 5) ✅ opcional: reset a página 1
-  setPaginaActual(1);
-};
+    // 5) ✅ opcional: reset a página 1
+    setPaginaActual(1);
+  };
 
 
 
@@ -418,7 +418,7 @@ const seleccionarSugerencia = (sug) => {
           ref={menuRef}
         >
           <div className="secMenuHeader">
-            <img src="/images/eduka_sf.png" alt="Eduka" className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="Eduka" className="secMenuLogo" />
             <p className="secMenuSubtitle">Panel Secretaría</p>
           </div>
 
@@ -518,9 +518,7 @@ const seleccionarSugerencia = (sug) => {
                         <p>
                           <strong>Subsistema:</strong> {i.subsistema}
                         </p>
-                        <p>
-                          <strong>Grado:</strong> {i.grado}
-                        </p>
+
                         <p>
                           <strong>Email:</strong> {i.email}
                         </p>
@@ -554,7 +552,7 @@ const seleccionarSugerencia = (sug) => {
                                 <span>
                                   <strong>Matricula:</strong>{" "}
                                   {curso.matriculado
-                                    ? "Matriculado en Acadex"
+                                    ? "Matriculado en Moodle"
                                     : "Aun no registra matricula"}
                                 </span>
                                 <br />
@@ -675,7 +673,7 @@ const seleccionarSugerencia = (sug) => {
                     onChange={(e) => setFiltroUltimoAcceso(e.target.value)}
                     className="buscador_input secInput"
                   >
-                    <option value="">Acceso a Acadex</option>
+                    <option value="">Acceso a Moodle</option>
                     <option value="true">Accede</option>
                     <option value="false">No Accede</option>
                   </select>
@@ -834,13 +832,12 @@ const seleccionarSugerencia = (sug) => {
                   <thead>
                     <tr>
                       <th>Cédula</th>
-                      <th>Grado</th>
                       <th className="col-curso">Nombre</th>
                       <th className="col-curso">Celular</th>
                       <th className="col-curso">Curso</th>
                       <th>Calificacion</th>
                       <th className="col-curso">Matriculado</th>
-                      <th>Ingresa a Acadex</th>
+                      <th>Ingresa a Moodle</th>
                       <th>Pagos</th>
                       <th>Certificado</th>
                       <th>Observacion</th>
@@ -856,7 +853,6 @@ const seleccionarSugerencia = (sug) => {
                         return (
                           <tr key={usuario.id}>
                             <td>{usuario.cI}</td>
-                            <td>{usuario.grado}</td>
                             <td className="col-curso">
                               {usuario.firstName} {usuario.lastName}
                             </td>
@@ -873,7 +869,6 @@ const seleccionarSugerencia = (sug) => {
                           {idx === 0 && (
                             <>
                               <td rowSpan={cursos.length}>{usuario.cI}</td>
-                              <td rowSpan={cursos.length}>{usuario.grado}</td>
                               <td className="col-curso" rowSpan={cursos.length}>
                                 {usuario.firstName} {usuario.lastName}
                               </td>
@@ -1028,9 +1023,7 @@ const seleccionarSugerencia = (sug) => {
                       <p>
                         <strong>Cédula:</strong> {c.cedula}
                       </p>
-                      <p>
-                        <strong>Grado:</strong> {c.grado}
-                      </p>
+
                       <p>
                         <strong>Curso:</strong>{" "}
                         {(() => {

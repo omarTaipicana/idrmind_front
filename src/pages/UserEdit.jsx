@@ -389,6 +389,11 @@ const UserEdit = () => {
                     />
                   </label>
 
+
+                </article>
+
+                {/* col 2 */}
+                <article className="ue_col">
                   <label className="ue_label">
                     <span className="ue_span">Cédula</span>
                     <input
@@ -400,10 +405,6 @@ const UserEdit = () => {
                       type="text"
                     />
                   </label>
-                </article>
-
-                {/* col 2 */}
-                <article className="ue_col">
                   <label className="ue_label">
                     <span className="ue_span">Celular</span>
                     <input
@@ -449,26 +450,7 @@ const UserEdit = () => {
                     )}
                   </label>
 
-                  <label className="ue_label">
-                    <span className="ue_span">Género</span>
-                    {!userEdit ? (
-                      <input className="ue_input" readOnly style={{ border: "none" }} value={selectedGenero || ""} />
-                    ) : (
-                      <select
-                        className="ue_input"
-                        style={{ border: "2px solid #cfd5e6" }}
-                        value={selectedGenero}
-                        onChange={(e) => setSelectedGenero(e.target.value)}
-                      >
-                        <option value="">Seleccione</option>
-                        {variablesVal?.filter((v) => v.genero).map((g) => (
-                          <option key={g.id} value={g.genero}>
-                            {g.genero}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </label>
+
                 </article>
 
                 {/* col 3 */}
@@ -516,46 +498,27 @@ const UserEdit = () => {
                   </label>
 
                   <label className="ue_label">
-                    <span className="ue_span">Subsistema</span>
+                    <span className="ue_span">Género</span>
                     {!userEdit ? (
-                      <input className="ue_input" readOnly style={{ border: "none" }} value={selectedSubsistema || ""} />
+                      <input className="ue_input" readOnly style={{ border: "none" }} value={selectedGenero || ""} />
                     ) : (
                       <select
                         className="ue_input"
                         style={{ border: "2px solid #cfd5e6" }}
-                        value={selectedSubsistema}
-                        onChange={(e) => setSelectedSubsistema(e.target.value)}
+                        value={selectedGenero}
+                        onChange={(e) => setSelectedGenero(e.target.value)}
                       >
                         <option value="">Seleccione</option>
-                        {variablesVal?.filter((v) => v.subsistema).map((s) => (
-                          <option key={s.id} value={s.subsistema}>
-                            {s.subsistema}
+                        {variablesVal?.filter((v) => v.genero).map((g) => (
+                          <option key={g.id} value={g.genero}>
+                            {g.genero}
                           </option>
                         ))}
                       </select>
                     )}
                   </label>
 
-                  <label className="ue_label">
-                    <span className="ue_span">Grado</span>
-                    {!userEdit ? (
-                      <input className="ue_input" readOnly style={{ border: "none" }} value={selectedGrado || ""} />
-                    ) : (
-                      <select
-                        className="ue_input"
-                        style={{ border: "2px solid #cfd5e6" }}
-                        value={selectedGrado}
-                        onChange={(e) => setSelectedGrado(e.target.value)}
-                      >
-                        <option value="">Seleccione</option>
-                        {variablesVal?.filter((v) => v.grado).map((g) => (
-                          <option key={g.id} value={g.grado}>
-                            {g.grado}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </label>
+
                 </article>
 
                 <div className="ue_footer">

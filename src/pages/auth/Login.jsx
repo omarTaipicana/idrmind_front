@@ -381,23 +381,7 @@ const Login = () => {
                     />
                   </label>
 
-                  <label className="label__user__info">
-                    <span className="span__user__info">
-                      Fecha de Nacimiento:{" "}
-                    </span>
-                    <input
-                      readOnly={!userEdit}
-                      style={{
-                        border: userEdit ? "2px solid #cfd5e6" : "none",
-                      }}
-                      required
-                      {...register("dateBirth", {
-                        setValueAs: (value) => (value === "" ? null : value),
-                      })}
-                      className="input__form__info"
-                      type="date"
-                    />
-                  </label>
+
                 </article>
 
                 <article className="form__user__seccion">
@@ -471,8 +455,8 @@ const Login = () => {
                     {userEdit
                       ? "Actualizar"
                       : isInfoComplete
-                      ? "Editar perfil"
-                      : "Completar Perfil"}{" "}
+                        ? "Editar perfil"
+                        : "Completar Perfil"}{" "}
                     <span className="btn_arrow">➜</span>
                   </button>
                 </article>
@@ -537,65 +521,26 @@ const Login = () => {
                   </label>
 
                   <label className="label__user__info">
-                    <span className="span__user__info">Eje Policial:</span>
-                    {!userEdit ? (
-                      <input
-                        className="input__form__info"
-                        readOnly={!userEdit}
-                        {...register("subsistema")}
-                        style={{ border: "none" }}
-                      />
-                    ) : (
-                      <select
-                        style={{ border: "2px solid #cfd5e6" }}
-                        {...register("subsistema")}
-                        className="input__form__info"
-                        value={selectedSubsistema}
-                        onChange={(e) => setSelectedSubsistema(e.target.value)}
-                      >
-                        <option value="">Seleccione el Eje Policial</option>
-                        {variables
-                          ?.filter((e) => e.subsistema)
-                          .map((subsistema) => (
-                            <option
-                              key={subsistema.id}
-                              value={subsistema.subsistema}
-                            >
-                              {subsistema.subsistema}
-                            </option>
-                          ))}
-                      </select>
-                    )}
+                    <span className="span__user__info">
+                      Fecha de Nacimiento:{" "}
+                    </span>
+                    <input
+                      readOnly={!userEdit}
+                      style={{
+                        border: userEdit ? "2px solid #cfd5e6" : "none",
+                      }}
+                      required
+                      {...register("dateBirth", {
+                        setValueAs: (value) => (value === "" ? null : value),
+                      })}
+                      className="input__form__info"
+                      type="date"
+                    />
                   </label>
 
-                  <label className="label__user__info">
-                    <span className="span__user__info">Grado:</span>
-                    {!userEdit ? (
-                      <input
-                        className="input__form__info"
-                        readOnly={!userEdit}
-                        {...register("grado")}
-                        style={{ border: "none" }}
-                      />
-                    ) : (
-                      <select
-                        style={{ border: "2px solid #cfd5e6" }}
-                        {...register("grado")}
-                        className="input__form__info"
-                        value={selectedGrado}
-                        onChange={(e) => setSelectedGrado(e.target.value)}
-                      >
-                        <option value="">Seleccione su Grado</option>
-                        {variables
-                          ?.filter((e) => e.grado)
-                          .map((grado) => (
-                            <option key={grado.id} value={grado.grado}>
-                              {grado.grado}
-                            </option>
-                          ))}
-                      </select>
-                    )}
-                  </label>
+
+
+
                 </article>
               </form>
             </section>

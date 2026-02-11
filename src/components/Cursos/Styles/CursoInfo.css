@@ -1,210 +1,253 @@
-
-
 /* Wrapper principal */
 .curso_info_wrapper {
-    max-width: 98%;
-    margin: 0.5em auto;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(145deg, #ffffffa3, #84aeedbe);
-    backdrop-filter: blur(6px);
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease-in-out;
+  max-width: 98%;
+  margin: 0.5em auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #ffffffa3, #84aeedbe);
+  backdrop-filter: blur(6px);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
 }
 
 /* Contenedor de columnas */
 .curso_info_container {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: nowrap; /* desktop real en 2 columnas */
+  align-items: stretch;
 }
 
 /* Sección Izquierda */
 .curso_info_left {
-    flex: 1;
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* centra horizontalmente */
-    text-align: center;
-    /* centra los textos */
-    padding: 1.5rem 2rem;
-    background-color: rgba(255, 255, 255, 0.521);
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+  flex: 0 0 42%;
+  width: 42%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 2rem;
+  background-color: rgba(255, 255, 255, 0.521);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-/* Sección Derecha (sin cambios) */
+/* Sección Derecha */
 .curso_info_right {
-    flex: 1;
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  flex: 1;
+  width: 58%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0; /* IMPORTANTÍSIMO para que el PDF no se desborde en flex */
 }
 
 /* Título del curso */
 .curso_info_title {
-    font-size: 2rem;
-    color: #0b2e59;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    line-height: 1.3;
+  font-size: 2rem;
+  color: #0b2e59;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 /* Descripción / objetivo */
 .curso_info_section {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #1c1c1c;
-    margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #1c1c1c;
+  margin-bottom: 1.7rem;
 }
 
-/* Grupo de botones: todos en línea */
+/* Grupo de botones */
 .button_group {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: nowrap;
-    /* mantener en línea */
-    justify-content: center;
-    margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
 }
 
-/* Botones base (sin cambiar colores) */
+/* Botones base */
 .btn_inscribirse,
 .btn_registrar_pago,
 .btn_descargar_pdf {
-    text-decoration: none;
-    color: #fff;
-    border: none;
-    padding: 0.85rem 2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.35s ease;
-    box-shadow: 0 4px 12px rgba(11, 46, 89, 0.25);
-    font-size: 1rem;
+  text-decoration: none;
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.4rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  box-shadow: 0 4px 12px rgba(11, 46, 89, 0.25);
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 /* Hover elegante */
 .btn_inscribirse:hover,
 .btn_registrar_pago:hover,
 .btn_descargar_pdf:hover {
-    transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-    filter: brightness(1.1);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  filter: brightness(1.08);
 }
 
-/* Colores diferenciados por acción */
+/* Colores */
 .btn_inscribirse {
-    background: linear-gradient(135deg, #0072ff, #0b2e59);
+  background: linear-gradient(135deg, #0072ff, #0b2e59);
 }
-
 .btn_registrar_pago {
-    background: linear-gradient(135deg, #0072ff, #0b2e59);
+  background: linear-gradient(135deg, #0072ff, #0b2e59);
 }
-
 .btn_descargar_pdf {
-    background: linear-gradient(135deg, #0b2e59, #0072ff);
+  background: linear-gradient(135deg, #0b2e59, #0072ff);
 }
 
 /* PDF elegante */
 .pdf_frame {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #0b2e59;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-    text-align: center;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #0b2e59;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  text-align: center;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+
+  overflow: hidden; /* evita que se salga en mobile */
+}
+
+/* Asegura que el canvas del PDF no se pase */
+.pdf_frame canvas {
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 /* Controles de paginación */
 .pagination_controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 0.2rem;
+  width: 100%;
 }
 
 .pagination_controls button {
-    background: linear-gradient(135deg, #0b2e59, #1e73be);
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1.2rem;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 3px 10px rgba(11, 46, 89, 0.25);
+  background: linear-gradient(135deg, #0b2e59, #1e73be);
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(11, 46, 89, 0.25);
 }
 
 .pagination_controls button:hover:not(:disabled) {
-    background: linear-gradient(135deg, #1e73be, #0b2e59);
-    transform: scale(1.05);
+  background: linear-gradient(135deg, #1e73be, #0b2e59);
+  transform: scale(1.03);
 }
 
 .pagination_controls button:disabled {
-    background-color: #c8d8ee;
-    cursor: not-allowed;
-    box-shadow: none;
+  background-color: #c8d8ee;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .pagination_controls span {
-    font-weight: 600;
-    color: #1c1c1c;
+  font-weight: 700;
+  color: #1c1c1c;
 }
 
-/* Responsive */
+/* =======================
+   RESPONSIVE
+======================= */
+
+/* Tablet / pequeños laptops */
 @media screen and (max-width: 992px) {
-    .curso_info_container {
-        flex-direction: column;
-        align-items: center;
-    }
+  .curso_info_container {
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 
-    .curso_info_left,
-    .curso_info_right {
-        width: 100%;
-    }
+  .curso_info_left,
+  .curso_info_right {
+    width: 100%;
+    flex: 1 1 auto;
+  }
 
-    .pdf_frame {
-        max-width: 100%;
-    }
+  .curso_info_left {
+    padding: 1.25rem 1.25rem;
+  }
 }
 
+/* Mobile */
 @media screen and (max-width: 600px) {
-    .curso_info_wrapper {
-        padding: 20px;
-    }
+  .curso_info_wrapper {
+    padding: 16px;
+    margin: 0.5rem auto;
+  }
 
-    .curso_info_title {
-        font-size: 1.8rem;
-    }
+  .curso_info_title {
+    font-size: 1.45rem;
+    margin-bottom: 0.75rem;
+  }
 
-    .curso_info_section {
-        font-size: 1rem;
-        line-height: 1.6;
-    }
+  .curso_info_section {
+    font-size: 0.98rem;
+    line-height: 1.55;
+    margin-bottom: 1.2rem;
+  }
 
-    .button_group {
-        flex-wrap: wrap;
-        /* ahora apilan en móvil */
-        justify-content: center;
-    }
+  /* Botones en columna, full width, cómodo para el dedo */
+  .button_group {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
 
-    .btn_inscribirse,
-    .btn_registrar_pago,
-    .btn_descargar_pdf {
-        width: auto;
-        flex: 1 1 auto;
-        min-width: 120px;
-    }
+  .btn_inscribirse,
+  .btn_registrar_pago,
+  .btn_descargar_pdf {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    font-size: 1.02rem;
+    border-radius: 12px;
+  }
+
+  .pdf_frame {
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .pagination_controls {
+    gap: 0.6rem;
+  }
+
+  .pagination_controls button {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .pagination_controls span {
+    width: 100%;
+    text-align: center;
+  }
 }

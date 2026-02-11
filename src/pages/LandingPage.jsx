@@ -24,6 +24,7 @@ import useAuth from "../hooks/useAuth";
 const LandingPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const token = localStorage.getItem("token");
 
   const PATH_CONTACTANOS = "/contactanos";
@@ -31,11 +32,25 @@ const LandingPage = () => {
 
   const [, , , loggedUser, , , , , , , , , , user, setUserLogged] = useAuth();
   const [courses, getCourses] = useCrud();
+  const [, , postApi, , , , isLoading, newReg, , ,] = useCrud();
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+
+
+  const inicioRef = useRef(null);
+  const cursosRef = useRef(null);
+  const nosotrosRef = useRef(null);
+  const contactoRef = useRef(null);
+
+  // Cargar cursos
   useEffect(() => {
-    getCourses(PATH_COURSES)
-  }, [])
+    getCourses(PATH_COURSES);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // Validar token
   useEffect(() => {
     const checkToken = async () => {
       if (!token) return;
@@ -48,10 +63,10 @@ const LandingPage = () => {
         setUserLogged(null);
       }
     };
-    checkToken();
-  }, [token]);
 
-  const [, , postApi, , , , isLoading, newReg, , ,] = useCrud();
+    checkToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const {
     register,
@@ -74,34 +89,28 @@ const LandingPage = () => {
         })
       );
     }
-  }, [newReg]);
+  }, [newReg, dispatch]);
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  // Cerrar menú si se agranda a desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 768 && menuOpen) setMenuOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [menuOpen]);
 
-  const inicioRef = useRef(null);
-  const cursosRef = useRef(null);
-  const nosotrosRef = useRef(null);
-  const contactoRef = useRef(null);
-
-  const handleLoginClick = () => {
-    navigate("/login");
-  };
-  const handleRegisterClick = () => {
-    navigate("/register");
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
-  };
-
+  // Scroll con offset real (navbar fija)
   const scrollToSection = (ref) => {
-    const offset = 120; // 9rem ≈ 144px
     const element = ref.current;
-
     if (!element) return;
 
-    const elementPosition =
-      element.getBoundingClientRect().top + window.scrollY;
+    const navbar = document.querySelector(".navbar");
+    const navH = navbar ? navbar.offsetHeight : 0;
+    const extra = 16; // separación visual
+    const offset = navH + extra;
+
+    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
     const offsetPosition = elementPosition - offset;
 
     window.scrollTo({
@@ -112,40 +121,46 @@ const LandingPage = () => {
     setMenuOpen(false);
   };
 
+  const handleLoginClick = () => navigate("/login");
+  const handleRegisterClick = () => navigate("/register");
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+
   return (
     <div className="app">
       {isLoading && <IsLoading />}
 
-      {/* FRANJA BLANCA SUPERIOR */}
-      <div className="topbars">
-        <div className="topbar-left">
-          <a
-            href="https://www.google.com/maps?q=-0.200737103819847,-78.4886245727539"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link_footer"
-          >
-            <span className="topbar-item">
-              <FaMapMarkerAlt />
-              Reina Victoria y Cristobal Colón / Quito - Ecuador
-            </span>
-          </a>
-          <a
-            href="https://wa.me/593980773229"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="topbar-item">
-              <FaWhatsapp />
-              +593 980 773 229
-            </span>
-          </a>
+      <nav className="navbar">
+        <img
+          src="/images/idrmind_logo_sf.png"
+          alt="Logo iDr.Mind"
+          className="logo_navbar"
+          onClick={() => scrollToSection(inicioRef)}
+        />
+
+        <div className="menu_icon" onClick={toggleMenu} aria-label="Abrir menú">
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </div>
+
+        <div className="navbar_links">
+          <button type="button" onClick={() => scrollToSection(inicioRef)}>
+            Inicio
+          </button>
+          <button type="button" onClick={() => scrollToSection(nosotrosRef)}>
+            Nosotros
+          </button>
+          <button type="button" onClick={() => scrollToSection(cursosRef)}>
+            Cursos
+          </button>
+          <button type="button" onClick={() => scrollToSection(contactoRef)}>
+            Contactos
+          </button>
         </div>
 
         <div className="topbar-right">
           {!token ? (
             <>
-              <button className="topbar-link" onClick={handleRegisterClick}>
+              <button type="button" className="topbar-link" onClick={handleRegisterClick}>
                 <img
                   className="user_icon"
                   src="../../../user.png"
@@ -154,57 +169,65 @@ const LandingPage = () => {
                 />
                 Registrarse
               </button>
+
               <span className="topbar-separator">|</span>
-              <button className="topbar-link" onClick={handleLoginClick}>
+
+              <button type="button" className="topbar-link" onClick={handleLoginClick}>
                 Ingresar
               </button>
             </>
           ) : (
-            <button className="topbar-link" onClick={handleRegisterClick}>
+            <button type="button" className="topbar-link" onClick={handleRegisterClick}>
               Mi cuenta
             </button>
           )}
         </div>
-      </div>
-
-      <nav className="navbar">
-        <div className="menu_icon" onClick={toggleMenu}>
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </div>
-
-        <div className="navbar_links navbar_links-left">
-          <button onClick={() => scrollToSection(inicioRef)}>Inicio</button>
-          <button onClick={() => scrollToSection(nosotrosRef)}>Nosotros</button>
-        </div>
-
-        <img
-          src="/images/eduka_sf.png"
-          alt="Logo Eduka"
-          className="logo_navbar"
-          onClick={() => scrollToSection(inicioRef)}
-        />
-
-        <div className="navbar_links navbar_links-right">
-          <button onClick={() => scrollToSection(cursosRef)}>Cursos</button>
-          <button onClick={() => scrollToSection(contactoRef)}>
-            Contactos
-          </button>
-        </div>
       </nav>
 
-      <div
-        className={`navbar_mobile_menu ${menuOpen ? "navbar_mobile_menu--open" : ""
-          }`}
-      >
-        <button onClick={() => scrollToSection(inicioRef)}>Inicio</button>
-        <button onClick={() => scrollToSection(nosotrosRef)}>Nosotros</button>
-        <button onClick={() => scrollToSection(cursosRef)}>Cursos</button>
-        <button onClick={() => scrollToSection(contactoRef)}>Contactos</button>
+      <div className={`navbar_mobile_menu ${menuOpen ? "navbar_mobile_menu--open" : ""}`}>
+        <button type="button" onClick={() => scrollToSection(inicioRef)}>
+          Inicio
+        </button>
+        <button type="button" onClick={() => scrollToSection(nosotrosRef)}>
+          Nosotros
+        </button>
+        <button type="button" onClick={() => scrollToSection(cursosRef)}>
+          Cursos
+        </button>
+        <button type="button" onClick={() => scrollToSection(contactoRef)}>
+          Contactos
+        </button>
+
+        <div className="navbar_mobile_auth">
+          {!token ? (
+            <>
+              <button type="button" onClick={handleRegisterClick}>
+                Registrarse
+              </button>
+              <button type="button" onClick={handleLoginClick}>
+                Ingresar
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="buttonMiCuenta" type="button" onClick={handleRegisterClick}>
+                Mi cuenta
+              </button>
+              <button
+                type="button"
+                className="logout__button"
+                onClick={() => {
+                  closeMenu();
+                }}
+              >
+                Cerrar
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
-
       <header className="header" ref={inicioRef}>
-
         <div className="header_text">
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
@@ -213,12 +236,18 @@ const LandingPage = () => {
           >
             Transformamos el Talento en Productividad
           </motion.h1>
-          <p>Cursos diseñados para reconocer y potenciar tus Habilidades Blandas y las competencias del talento humano, preparado para personas y empresas que buscan la excelencia y el crecimiento continuo en su productividad laboral.</p>
+
+          <p>
+            Cursos diseñados para reconocer y potenciar tus Habilidades Blandas y las
+            competencias del talento humano, preparado para personas y empresas que
+            buscan la excelencia y el crecimiento continuo en su productividad laboral.
+          </p>
+
           <a onClick={() => scrollToSection(contactoRef)} className="cta_button">
             Contáctanos
           </a>
-
         </div>
+
         <motion.img
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -227,7 +256,6 @@ const LandingPage = () => {
           alt="Logo iDr.Mind."
           className="header_img"
         />
-
       </header>
 
       <motion.section
@@ -237,11 +265,16 @@ const LandingPage = () => {
         className="cursos"
         ref={cursosRef}
       >
-        <h2>Nuestros Cursos</h2>
-        <div className="curso_lista">
+        <h2 className="nosotros-title">Nuestros Cursos</h2>
 
-          {courses.map((c, index) => (
-            <Link key={c.sigla} to={`/curso/${c.sigla}`} className="curso_item" style={{ animationDelay: `${index * 0.15}s` }}>
+        <div className="curso_lista">
+          {(courses || []).map((c, index) => (
+            <Link
+              key={c.sigla}
+              to={`/curso/${c.sigla}`}
+              className="curso_item"
+              style={{ animationDelay: `${index * 0.15}s` }}
+            >
               <div className="curso_card">
                 <img
                   src={`/cursos/${c.sigla}.jpg`}
@@ -249,14 +282,13 @@ const LandingPage = () => {
                   className="curso_img"
                 />
                 <div className="curso_card_overlay">
-                  <button className="curso_btn">VER CURSO</button>
+                  <button type="button" className="curso_btn">
+                    VER CURSO
+                  </button>
                 </div>
               </div>
             </Link>
           ))}
-
-
-
         </div>
       </motion.section>
 
@@ -269,236 +301,159 @@ const LandingPage = () => {
       >
         <div className="nosotros-inner">
           <div className="nosotros-header">
-            <img src="/mano_1.png" alt="hand" className="mano_1" />
-            <h2 className="nosotros-title">¿Por qué elegir a EDUKA?</h2>
+            <h2 className="nosotros-title">¿Por qué elegir a iDr.Mind?</h2>
           </div>
 
           <div className="nosotros-content">
             <p>
-              <strong>Eduka</strong> es una plataforma de formación en línea
-              comprometida con el fortalecimiento de las capacidades
-              profesionales de los servidores policiales del Ecuador. Nuestra
-              misión es proporcionar programas educativos actualizados y de alta
-              calidad que respondan a los desafíos actuales en materia de
-              seguridad ciudadana, derechos humanos, y gestión del orden
-              público.
-            </p>
-
-            <p>
-              A través de nuestras aulas virtuales, los participantes acceden a
-              contenidos interactivos, estudios de caso, simulaciones y recursos
-              actualizados, diseñados para fortalecer sus conocimientos en áreas
-              estratégicas como inteligencia policial, liderazgo operativo,
-              mediación de conflictos, uso progresivo de la fuerza,
-              ciberseguridad y gestión de crisis.
-            </p>
-
-            <p>
-              Contamos con la colaboración de un equipo docente internacional
-              conformado por expertos y académicos de reconocidas instituciones
-              en América Latina y Europa. Esta cooperación multinacional nos
-              permite ofrecer una perspectiva comparada, moderna y práctica,
-              adaptada a la realidad operativa de la Policía Nacional del
-              Ecuador.
-            </p>
-
-            <p>
-              En <strong>Eduka</strong>, creemos firmemente que una policía
-              mejor preparada es clave para construir comunidades más seguras,
-              justas y resilientes. Por ello, seguimos innovando en nuestras
-              metodologías y expandiendo alianzas académicas con el fin de
-              contribuir de forma sostenible al desarrollo profesional de
-              quienes protegen y sirven a nuestra sociedad.
+              <strong>iDr.Mind</strong> Somos especialistas en ofrecer capacitaciones
+              integrales que impulsan el desarrollo de Habilidades Blandas, Técnicas y
+              Emocionales. Nuestro enfoque está en diseñar soluciones a medida para
+              maximizar la productividad y fomentar la mejora continua con nuestras
+              modalidades presencial y en línea. Somos reconocidos por nuestro
+              compromiso con la excelencia, ayudando a transformar el talento humano
+              en un motor clave para el éxito empresarial. «¡Pensamos positivo y
+              actuamos para avanzar juntos!»
             </p>
           </div>
         </div>
 
         <div className="mvv-section">
           <div className="mvv-card">
-            <img src="/flecha.png" alt="flecha" className="mvv-icon" />
-            <h3 className="mvv-title">Misión</h3>
+            <h3 className="mvv-title">¡Empieza Tu Formación Hoy Mismo!</h3>
             <p className="mvv-text">
-              Fortalecer las capacidades profesionales de los servidores
-              policiales del Ecuador mediante programas de formación en línea
-              actualizados, accesibles y orientados a la práctica. Impulsamos el
-              desarrollo de competencias técnicas y éticas que respondan a los
-              retos contemporáneos de la seguridad ciudadana, promoviendo un
-              servicio más eficiente, humano y comprometido con la sociedad.
-            </p>
-          </div>
-
-          <div className="mvv-card">
-            <img src="/foco.png" alt="foco" className="mvv-icon" />
-            <h3 className="mvv-title">Visión</h3>
-            <p className="mvv-text">
-              Convertirnos en la plataforma líder en capacitación policial y
-              seguridad pública en la región, reconocida por su calidad
-              académica, su enfoque innovador y su capacidad para generar
-              aprendizajes significativos. Aspiramos a transformar la formación
-              profesional de los servidores policiales y contribuir al
-              fortalecimiento de una fuerza pública preparada, responsable y
-              alineada con las necesidades actuales del país.
-            </p>
-          </div>
-
-          <div className="mvv-card">
-            <img src="/mano_2.png" alt="hand" className="mvv-icon" />
-            <h3 className="mvv-title">Valores</h3>
-            <p className="mvv-text">
-              Nos guiamos por la excelencia académica, asegurando contenidos de
-              alto nivel y pertinencia. Fomentamos la innovación en cada proceso
-              formativo, promovemos una práctica profesional ética y respetuosa
-              de los derechos humanos, e impulsamos la cooperación internacional
-              para enriquecer nuestras propuestas. Estos valores sostienen
-              nuestro compromiso con una policía más capacitada, consciente y
-              orientada al bienestar de la comunidad.
+              No te pierdas la oportunidad de mejorar tus Habilidades Blandas y avanzar
+              con nuestros cursos especializados para mejorar la productividad laboral.
+              Regístrate ahora y accede a una formación de calidad que te ayudará a
+              sobresalir en tu campo.
             </p>
           </div>
         </div>
       </motion.section>
 
-     
-
       <motion.section
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2 }}
+        transition={{ duration: 0.6 }}
         className="contacto"
         ref={contactoRef}
       >
-        <div className="contacto-inner">
-          {/* FORMULARIO */}
-          <form onSubmit={handleSubmit(submit)} className="contacto-form">
-            <h2 className="contacto-title">Contáctanos</h2>
-            <p className="contacto-subtitle">
-              Para nosotros es un placer poder solucionar tus dudas.
-            </p>
+        <section className="contacto_text">
+          <h3>Contáctanos</h3>
+          <p>
+            Si tienes alguna consulta o necesitas información adicional sobre nuestros
+            cursos y servicios, no dudes en escribirnos o llamarnos. Responderemos a la
+            brevedad para atender todas tus necesidades. ¡Contáctanos hoy mismo!
+          </p>
 
-            <input
-              type="text"
-              placeholder="Ingresa tu nombre completo"
-              required
-              {...register("nombres")}
-            />
+          <article>
+            <ul className="ul_contactanos">
+              <span>Contáctenos a través de</span>
 
-            <input
-              type="text"
-              placeholder="Ingresa tu número de celular"
-              required
-              {...register("celular")}
-            />
+              <li className="li_footer">
+                <a
+                  href="https://maps.app.goo.gl/hG4735yfLTV5MdVD8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link_footer"
+                >
+                  <img
+                    className="img_contctanos"
+                    src="../../../location.png"
+                    alt="Ubicación"
+                  />
+                  <span className="span_contactanos">
+                    Mitad del Mundo - Quito, Ecuador
+                  </span>
+                </a>
+              </li>
 
-            <input
-              type="email"
-              placeholder="Ingresa tu email"
-              required
-              {...register("email")}
-            />
+              <li>
+                <a
+                  href="https://api.whatsapp.com/send?phone=593979002223&text=Hola%20quiero%20más%20información"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    className="img_contctanos"
+                    src="../../../whatsapp2.png"
+                    alt="WhatsApp"
+                  />
+                  <span className="span_contactanos">+593979002223</span>
+                </a>
+              </li>
 
-            <textarea
-              rows="4"
-              placeholder="Escribe tu mensaje"
-              required
-              {...register("mensaje")}
-            ></textarea>
+              <li className="li_footer">
+                <a href="mailto:info@idrmind.com" className="link_footer">
+                  <img
+                    className="img_contctanos"
+                    src="../../../mensaje.png"
+                    alt="Correo"
+                  />
+                  <span className="span_contactanos">info@idrmind.com</span>
+                </a>
+              </li>
+            </ul>
+          </article>
+        </section>
 
-            <button type="submit" className="contacto-btn">
-              Enviar <span>➜</span>
-            </button>
-          </form>
+        <form onSubmit={handleSubmit(submit)} className="formulario_landing">
+          <h2 className="formulario_titulo">¡ Déjanos tu comentario !</h2>
 
-          {/* MAPA */}
-          <div className="contacto-map">
-            <iframe
-              title="Ubicación Eduka"
-              src="https://www.google.com/maps?q=-0.200737103819847,-78.4886245727539&z=17&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
-        </div>
+          <input type="text" placeholder="Nombres" required {...register("nombres")} />
+
+          <input type="email" placeholder="Email" required {...register("email")} />
+
+          <textarea
+            rows="4"
+            placeholder="¿Cómo podemos ayudarte?"
+            required
+            {...register("mensaje")}
+          />
+
+          <button type="submit">📩 Enviar mensaje</button>
+        </form>
       </motion.section>
 
       <footer className="footer">
         <div className="footer-inner">
-          {/* Columna izquierda: logo + suscripción */}
           <div className="footer-left">
-            <img
-              src="/images/eduka_sf.png"
-              alt="Logo Eduka"
-              className="footer-logo"
-            />
-
-            <h3 className="footer-subscribe-title">
-              Suscribirse para obtener información de cursos
-            </h3>
-
-            <div className="footer-subscribe">
-              <input
-                type="email"
-                className="footer-input"
-                placeholder="Ingresa tu correo electrónico"
-              />
-              <button type="button" className="footer-btn">
-                Enviar <span>➜</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Columna centro: menú + redes */}
-          <div className="footer-middle">
             <h4 className="footer-section-title">Menú</h4>
             <nav className="footer-menu">
-              <button
-                type="button"
-                className="footer-link"
-                onClick={() => scrollToSection(inicioRef)}
-              >
+              <button type="button" className="footer-link" onClick={() => scrollToSection(inicioRef)}>
                 Inicio
               </button>
-              <button
-                type="button"
-                className="footer-link"
-                onClick={() => scrollToSection(nosotrosRef)}
-              >
+              <button type="button" className="footer-link" onClick={() => scrollToSection(nosotrosRef)}>
                 Nosotros
               </button>
-              <button
-                type="button"
-                className="footer-link"
-                onClick={() => scrollToSection(cursosRef)}
-              >
+              <button type="button" className="footer-link" onClick={() => scrollToSection(cursosRef)}>
                 Cursos
               </button>
-              <button
-                type="button"
-                className="footer-link"
-                onClick={() => scrollToSection(contactoRef)}
-              >
+              <button type="button" className="footer-link" onClick={() => scrollToSection(contactoRef)}>
                 Contactos
               </button>
             </nav>
+          </div>
 
-            <h4 className="footer-section-title footer-social-title">
-              ¡Síguenos!
-            </h4>
+          <div className="footer-middle">
+            <h4 className="footer-section-title footer-social-title">¡Síguenos!</h4>
             <div className="footer-social">
               <a
-                href="https://www.facebook.com/share/19srLS1HBi/"
+                href="https://www.facebook.com/profile.php?id=100054880556231&mibextid=ZbWKwL"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <FaFacebookF />
               </a>
               <a
-                href="https://www.instagram.com/eduka_ce?igsh=cDR2dnM5ejZnZnc4"
+                href="https://www.instagram.com/idr.mind/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <FaInstagram />
               </a>
               <a
-                href="https://www.tiktok.com/@eduka397?_t=ZM-8xGVPfqbdOK&_r=1"
+                href="https://www.tiktok.com/@idr.mind?_t=8rXF11o0DPs&_r=1"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -507,43 +462,17 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Columna derecha: contacto + plataforma */}
           <div className="footer-right">
             <div className="footer-block">
               <h4 className="footer-section-title">¡Escríbenos!</h4>
-              <a
-                href="mailto:eduka.corporacioneducativa@gmail.com"
-                className="footer-text-link"
-              >
-                eduka.corporacioneducativa@gmail.com
-              </a>
             </div>
 
-            <div className="footer-block">
-              <h4 className="footer-section-title">¡Llámanos!</h4>
-              <a href="tel:+593980773229" className="footer-text-link">
-                +593 980 773 229
-              </a>
-            </div>
-
-            <div className="footer-block">
-              <h4 className="footer-section-title">¡Ubícanos!</h4>
-              <a
-                href="https://www.google.com/maps?q=-0.200737103819847,-78.4886245727539"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-text-link"
-              >
-                Reina Victoria y Cristobal Colón
-                <br />
-                Quito - Ecuador
-              </a>
-            </div>
+            <span className="span_contactanos">+593979002223</span>
 
             <div className="footer-block">
               <h4 className="footer-section-title">Plataforma educativa</h4>
               <a
-                href="https://acadexeduc.com/"
+                href="https://moodle.idrmind.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-text-link"
@@ -555,7 +484,7 @@ const LandingPage = () => {
         </div>
 
         <div className="footer-bottom">
-          <p>Copyright 2025 Eduka Corporación Educativa</p>
+          <p>2024. iDr. Mind. by NASK-Corp. All Rights Reserved.</p>
         </div>
       </footer>
     </div>

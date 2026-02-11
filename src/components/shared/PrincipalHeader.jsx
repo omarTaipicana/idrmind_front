@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { showAlert } from "../../store/states/alert.slice";
 import useAuth from "../../hooks/useAuth";
 
-import { FaWhatsapp, FaMapMarkerAlt } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const PrincipalHeader = () => {
   const superAdmin = import.meta.env.VITE_CI_SUPERADMIN;
@@ -49,8 +49,9 @@ const PrincipalHeader = () => {
         "Secretaria",
       ].includes(role),
     });
-  }, [user]);
+  }, [user, superAdmin]);
 
+  // Validar token
   useEffect(() => {
     const checkToken = async () => {
       if (!token) return;
@@ -65,7 +66,17 @@ const PrincipalHeader = () => {
       }
     };
     checkToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  // Cerrar menú si se agranda a desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 768 && menuOpen) setMenuOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [menuOpen]);
 
   const handleLogout = () => {
     if (user) {
@@ -90,7 +101,7 @@ const PrincipalHeader = () => {
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
 
-  /** LINKS SEGÚN ROL (misma lógica que antes, solo encapsulada) */
+  /** LINKS SEGÚN ROL (misma lógica) */
   const renderRoleLinks = (onClick) => {
     if (!token) return null;
 
@@ -106,6 +117,15 @@ const PrincipalHeader = () => {
           <Link to="/secre" onClick={onClick}>
             Secretaria
           </Link>
+          <Link to="/dashboard" onClick={onClick}>
+            Dashboard
+          </Link>
+          <Link to="/validacion" onClick={onClick}>
+            Validacion
+          </Link>
+          <Link to="/edit_user" onClick={onClick}>
+            Editar Usuario
+          </Link>
         </>
       );
     }
@@ -118,6 +138,12 @@ const PrincipalHeader = () => {
           </Link>
           <Link to="/secre" onClick={onClick}>
             Secretaria
+          </Link>
+          <Link to="/dashboard" onClick={onClick}>
+            Dashboard
+          </Link>
+          <Link to="/validacion" onClick={onClick}>
+            Validacion
           </Link>
         </>
       );
@@ -132,54 +158,64 @@ const PrincipalHeader = () => {
           <Link to="/validacion" onClick={onClick}>
             Validacion
           </Link>
+          <Link to="/secre" onClick={onClick}>
+            Secretaria
+          </Link>
         </>
       );
     }
 
     if (grados.grado4) {
       return (
+
+
         <>
           <Link to="/home" onClick={onClick}>
             Home
           </Link>
+          <Link to="/validacion" onClick={onClick}>
+            Validacion
+          </Link>
         </>
+
+
       );
     }
-
     if (grados.grado5) {
       return (
+
+
         <>
           <Link to="/home" onClick={onClick}>
             Home
           </Link>
+          <Link to="/secre" onClick={onClick}>
+            Secretaria
+          </Link>
         </>
       );
     }
-
     if (grados.grado6) {
       return (
+
+
         <>
           <Link to="/home" onClick={onClick}>
             Home
+          </Link>
+          <Link to="/instituto" onClick={onClick}>
+            Instituto
           </Link>
         </>
       );
     }
 
-    if (grados.grado7) {
-      return (
-        <Link to="/home" onClick={onClick}>
-          Home
-        </Link>
-      );
-    }
 
     return null;
   };
 
-  /** AUTH EN NAVBAR (derecha, desktop) */
-
-  const renderAuthDesktop = (onClick) => {
+  /** LINKS DE ACCIONES (misma lógica que tu renderAuthDesktop) */
+  const renderAuthActions = (onClick) => {
     if (!token) return null;
 
     if (grados.grado1) {
@@ -213,197 +249,235 @@ const PrincipalHeader = () => {
 
     if (grados.grado3) {
       return (
-        <>
-          <Link to="/secre" onClick={onClick}>
-            Secretaria
-          </Link>
-        </>
+        <Link to="/secre" onClick={onClick}>
+          Secretaria
+        </Link>
       );
     }
 
     if (grados.grado4) {
       return (
-        <>
-          <Link to="/validacion" onClick={onClick}>
-            Validacion
-          </Link>
-        </>
+        <Link to="/validacion" onClick={onClick}>
+          Validacion
+        </Link>
       );
     }
 
     if (grados.grado5) {
       return (
-        <>
-          <Link to="/secre" onClick={onClick}>
-            Secretaria
-          </Link>
-        </>
+        <Link to="/secre" onClick={onClick}>
+          Secretaria
+        </Link>
       );
     }
 
     if (grados.grado6) {
       return (
-        <>
-          <Link to="/instituto" onClick={onClick}>
-            Instituto
-          </Link>
-        </>
+        <Link to="/instituto" onClick={onClick}>
+          Instituto
+        </Link>
       );
     }
 
     return null;
   };
 
-  /** AUTH EN MOBILE MENU */
-  /** AUTH EN MOBILE MENU (igual que desktop) */
-  const renderAuthMobile = () => {
+  /** AUTH A LA DERECHA (igual LandingPage) */
+  const renderAuthRight = () => {
     if (!token) {
       return (
         <>
-          <Link to="/register" onClick={closeMenu}>
-            Register
-          </Link>
-          <Link to="/login" onClick={closeMenu}>
-            Login
-          </Link>
+          <button type="button" className="topbar-link" onClick={() => navigate("/register")}>
+            Registrarse
+          </button>
+          <span className="topbar-separator">|</span>
+          <button type="button" className="topbar-link" onClick={() => navigate("/login")}>
+            Ingresar
+          </button>
         </>
       );
     }
 
     return (
       <>
-        {/* mismos links que desktop (derecha) */}
-        {renderAuthDesktop(closeMenu)}
-
-        {/* opcional: tu perfil (lo dejas como estaba) */}
-        <Link to="/login" onClick={closeMenu}>
-          <span>Mi perfil</span>
-        </Link>
-
-        {/* logout igual */}
-        <button
-          onClick={() => {
-            handleLogout();
-            closeMenu();
-          }}
-          className="logout__button"
-        >
-          Salir
+        <button type="button" className="topbar-link" onClick={() => navigate("/login")}>
+          Mi cuenta
         </button>
       </>
     );
   };
 
+  /** MENÚ MOBILE (igual LandingPage: links + auth dentro) */
+  const renderMobileMenu = () => {
+    return (
+      <div className={`navbar_mobile_menu ${menuOpen ? "navbar_mobile_menu--open" : ""}`}>
+        {/* Links (roles) */}
+        {token ? (
+          <>
+            <button type="button" onClick={() => { closeMenu(); navigate("/home"); }}>
+              Home
+            </button>
+
+            {/* Mantener exactamente tus rutas por rol */}
+            {grados.grado1 && (
+              <>
+                <button type="button" onClick={() => { closeMenu(); navigate("/instituto"); }}>
+                  Instituto
+                </button>
+                <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
+                  Secretaria
+                </button>
+              </>
+            )}
+
+            {grados.grado2 && (
+              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
+                Secretaria
+              </button>
+            )}
+
+            {grados.grado3 && (
+              <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
+                Validacion
+              </button>
+            )}
+          </>
+        ) : (
+          <>
+            <button type="button" onClick={() => { closeMenu(); navigate("/"); }}>
+              Inicio
+            </button>
+          </>
+        )}
+
+        {/* Acciones (derecha desktop) */}
+        {token && (
+          <>
+           
+            {grados.grado1 && (
+              <>
+                <button type="button" onClick={() => { closeMenu(); navigate("/dashboard"); }}>
+                  Dashboard
+                </button>
+                <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
+                  Validacion
+                </button>
+                <button type="button" onClick={() => { closeMenu(); navigate("/edit_user"); }}>
+                  Editar Usuario
+                </button>
+              </>
+            )}
+
+            {grados.grado2 && (
+              <>
+                <button type="button" onClick={() => { closeMenu(); navigate("/dashboard"); }}>
+                  Dashboard
+                </button>
+                <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
+                  Validacion
+                </button>
+              </>
+            )}
+
+            {grados.grado3 && (
+              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
+                Secretaria
+              </button>
+            )}
+
+            {grados.grado4 && (
+              <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
+                Validacion
+              </button>
+            )}
+
+            {grados.grado5 && (
+              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
+                Secretaria
+              </button>
+            )}
+
+            {grados.grado6 && (
+              <button type="button" onClick={() => { closeMenu(); navigate("/instituto"); }}>
+                Instituto
+              </button>
+            )}
+          </>
+        )}
+
+        {/* Auth */}
+        <div className="navbar_mobile_divider" />
+
+        {!token ? (
+          <div className="navbar_mobile_auth">
+            <button type="button" onClick={() => { closeMenu(); navigate("/register"); }}>
+              Registrarse
+            </button>
+            <button type="button" onClick={() => { closeMenu(); navigate("/login"); }}>
+              Ingresar
+            </button>
+          </div>
+        ) : (
+          <div className="navbar_mobile_auth">
+            <button type="button" onClick={() => { closeMenu(); navigate("/login"); }}>
+              Mi cuenta
+            </button>
+            <button
+              type="button"
+              className="logout__button"
+              onClick={() => {
+                handleLogout();
+                closeMenu();
+              }}
+            >
+              Salir
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <header className="header_nav">
-      {/* TOPBAR BLANCA */}
-      <div className="topbar">
-        <div className="topbar-left">
-          <a
-            href="https://www.google.com/maps?q=-0.200737103819847,-78.4886245727539"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="topbar-item">
-              <FaMapMarkerAlt />
-              Reina Victoria y Cristobal Colón / Quito - Ecuador
-            </span>
-          </a>
-          <a
-            href="https://wa.me/593980773229"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="topbar-item">
-              <FaWhatsapp />
-              +593 980 773 229
-            </span>
-          </a>
+      <nav className="navbar">
+        {/* Logo izquierda (igual Landing) */}
+        <img
+          src="/images/idrmind_logo_sf.png"
+          alt="Logo iDr.Mind"
+          className="logo_navbar_ph"
+          onClick={() => {
+            closeMenu();
+            navigate("/");
+          }}
+        />
+
+        {/* Hamburguesa (mobile) */}
+        <div className="menu_icon" onClick={toggleMenu} aria-label="Abrir menú">
+          {menuOpen ? <FaTimes /> : <FaBars />}
         </div>
 
-        <div className="topbar-right">
+        {/* Links (centro) */}
+        <div className="navbar_links">
+          {/* si no hay token, puedes dejar vacío o poner "Inicio" (como Landing pone Inicio) */}
           {!token ? (
-            <>
-              <button
-                className="topbar-link"
-                onClick={() => navigate("/register")}
-              >
-                Registrarse
-              </button>
-              <span className="topbar-separator">|</span>
-              <button
-                className="topbar-link"
-                onClick={() => navigate("/login")}
-              >
-                Ingresar
-              </button>
-            </>
+            <button type="button" className="navbtn" onClick={() => navigate("/")}>
+              Inicio
+            </button>
           ) : (
             <>
-              <Link to="/login" onClick={closeMenu}>
-                <img
-                  className="user__icon"
-                  src="../../../user.png"
-                  alt="User Icon"
-                />
-              </Link>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  closeMenu();
-                }}
-                className="logout__button"
-              >
-                Salir
-              </button>
+              {/* conservas tu lógica exacta con Links */}
+              {renderRoleLinks(closeMenu)}
             </>
           )}
         </div>
-      </div>
 
-      {/* NAVBAR AZUL */}
-      <nav className="navbar">
-        {/* Hamburguesa (solo se ve en mobile con CSS) */}
-        <button
-          className={`menu_icon ${menuOpen ? "menu_icon--open" : ""}`}
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        {/* LINKS IZQUIERDA (roles) */}
-        <div className="navbar_links navbar_links-left">
-          {renderRoleLinks(closeMenu)}
-        </div>
-
-        {/* LOGO CENTRADO */}
-        <Link to="/" onClick={closeMenu} className="logo_link">
-          <img
-            src="/images/eduka_sf.png"
-            alt="Logo Eduka"
-            className="logo_navbar_ph"
-          />
-        </Link>
-
-        {/* AUTH DERECHA (desktop) */}
-        <div className="navbar_links navbar_links-right">
-          {renderAuthDesktop(closeMenu)}
-        </div>
+        {/* Auth derecha (mismo div que navbar, igual Landing) */}
+        <div className="topbar-right">{renderAuthRight()}</div>
       </nav>
 
-      {/* MENÚ MOBILE DESPLEGABLE */}
-      <div
-        className={`navbar_mobile_menu ${
-          menuOpen ? "navbar_mobile_menu--open" : ""
-        }`}
-      >
-        {renderRoleLinks(closeMenu)}
-        <hr className="navbar_mobile_divider" />
-        {renderAuthMobile()}
-      </div>
+      {/* Mobile menu */}
+      {renderMobileMenu()}
     </header>
   );
 };

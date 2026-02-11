@@ -472,7 +472,7 @@ const restoreScroll = () => {
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Grado / Nombres / Apellidos / Cédula</label>
+                <label className="vpLbl">Nombres / Apellidos / Cédula</label>
                 <input
                   className="secInput"
                   type="text"
@@ -763,7 +763,7 @@ const restoreScroll = () => {
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Grado / Nombres / Apellidos / Cédula</label>
+                <label className="vpLbl">Nombres / Apellidos / Cédula</label>
                 <input className="secInput" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="Buscar..." />
               </div>
 
@@ -937,7 +937,6 @@ const restoreScroll = () => {
               <table className="secTable vpTable">
                 <thead>
                   <tr>
-                    <th>Grado</th>
                     <th>Nombres</th>
                     <th>Apellidos</th>
                     <th>Cédula</th>
@@ -959,7 +958,6 @@ const restoreScroll = () => {
                 <tbody>
                   {pagosActivos.map((p) => (
                     <tr key={p.id}>
-                      <td>{p?.inscripcion?.user?.grado || "-"}</td>
                       <td>{p?.inscripcion?.user?.firstName || "-"}</td>
                       <td>{p?.inscripcion?.user?.lastName || "-"}</td>
                       <td>{p?.inscripcion?.user?.cI || "-"}</td>
@@ -1035,7 +1033,7 @@ const restoreScroll = () => {
 
         <nav className={`secMenu ${menuOpen ? "open" : ""}`} ref={menuRef}>
           <div className="secMenuHeader">
-            <img src="/images/eduka_sf.png" alt="Eduka" className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="Eduka" className="secMenuLogo" />
             <p className="secMenuSubtitle">Validación de Pagos</p>
           </div>
 

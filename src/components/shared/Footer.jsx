@@ -5,21 +5,22 @@ const Footer = () => {
 
   return (
     <div>
-      <section>
+     <section>
         <ul className="ul_footer">
+
           <li className="li_footer">
-            <a href="tel:+593980773229" className="link_footer">
+            <a href="tel:+593979002223" className="link_footer">
               <img
                 className="img_footer"
                 src="../../../smartphone.png"
                 alt="Llamar"
               />
-              <span className="span_footer">+593980773229</span>
+              <span className="span_footer">+593979002223</span>
             </a>
           </li>
           <li className="li_footer">
             <a
-              href="mailto:edukacorporacion@edukacorporacioneducativa.com"
+              href="mailto:info@idrmind.com"
               className="link_footer"
             >
               <img
@@ -28,13 +29,13 @@ const Footer = () => {
                 alt="Correo"
               />
               <span className="span_footer">
-                edukacorporacion@edukacorporacioneducativa.com
+                info@idrmind.com
               </span>
             </a>
           </li>
           <li className="li_footer">
             <a
-              href="https://www.google.com/maps?q=-0.200737103819847,-78.4886245727539"
+              href="https://maps.app.goo.gl/hG4735yfLTV5MdVD8"
               target="_blank"
               rel="noopener noreferrer"
               className="link_footer"
@@ -45,13 +46,13 @@ const Footer = () => {
                 alt="Ubicación"
               />
               <span className="span_footer">
-                Reina Victoria y Cristobal Colón - Quito, Ecuador
+                Mitad del Mundo - Quito, Ecuador
               </span>
             </a>
           </li>
           <li className="li_footer_icon">
             <a
-              href="https://wa.me/593980773229"
+              href="https://api.whatsapp.com/send?phone=593979002223&text=Hola%20quiero%20más%20información"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -61,8 +62,9 @@ const Footer = () => {
                 alt="WhatsApp"
               />
             </a>
+           
             <a
-              href="https://www.tiktok.com/@eduka397?_t=ZM-8xGVPfqbdOK&_r=1"
+              href="https://www.tiktok.com/@idr.mind?_t=8rXF11o0DPs&_r=1"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -73,7 +75,7 @@ const Footer = () => {
               />
             </a>
             <a
-              href="https://www.facebook.com/share/19srLS1HBi/"
+              href="https://www.facebook.com/profile.php?id=100054880556231&mibextid=ZbWKwL"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -84,7 +86,7 @@ const Footer = () => {
               />
             </a>
             <a
-              href="https://www.instagram.com/eduka_ce?igsh=cDR2dnM5ejZnZnc4"
+              href="https://www.instagram.com/idr.mind/"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -98,8 +100,18 @@ const Footer = () => {
           <li className="li_footer">
             <span className="span_footer">Copyright</span>
             <img className="img_footer_c" src="../../../copyright.png" alt="" />
-            <span className="span_footer">Eduka Corporación Educativa</span>
+            <span className="span_footer">2024. iDr. Mind. by NASK-Corp. All Rights Reserved.</span>
+            <a href="tel:+593979002223" className="link_footer">
+              <img
+                src="/images/idrmind_sf.png"
+                alt="Logo iDr.Mind."
+                className="logo_footer"
+              />
+            </a>
           </li>
+
+
+
         </ul>
       </section>
     </div>
