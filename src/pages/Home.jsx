@@ -103,7 +103,7 @@ const Home = () => {
           <div className="homeMenuHeader">
             <img
               src="/images/idrmind_sf.png"
-              alt="Eduka"
+              alt="iDr.Mind"
               className="homeMenuLogo"
             />
             <p className="homeMenuSubtitle">Panel del estudiante</p>

@@ -418,7 +418,7 @@ const Secretaria = () => {
           ref={menuRef}
         >
           <div className="secMenuHeader">
-            <img src="/images/idrmind_sf.png" alt="Eduka" className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="iDr.Mind" className="secMenuLogo" />
             <p className="secMenuSubtitle">Panel Secretaría</p>
           </div>
 

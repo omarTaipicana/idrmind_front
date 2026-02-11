@@ -203,7 +203,7 @@ const Instituto = () => {
           <div className="institutoMenuHeader">
             <img
               src="/images/idrmind_sf.png"
-              alt="Eduka"
+              alt="iDr.Mind"
               className="institutoMenuLogo"
             />
             <p className="institutoMenuSubtitle">Panel Instituto</p>

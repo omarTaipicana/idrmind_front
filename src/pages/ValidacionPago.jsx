@@ -1033,7 +1033,7 @@ const restoreScroll = () => {
 
         <nav className={`secMenu ${menuOpen ? "open" : ""}`} ref={menuRef}>
           <div className="secMenuHeader">
-            <img src="/images/idrmind_sf.png" alt="Eduka" className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="iDr.Mind" className="secMenuLogo" />
             <p className="secMenuSubtitle">Validación de Pagos</p>
           </div>
 

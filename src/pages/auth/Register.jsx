@@ -118,7 +118,7 @@ const Register = () => {
           <div className="registerHeader">
             <h2 className="registerTitle">Regístrate</h2>
             <p className="registerSubtitle">
-              Crea tu cuenta para acceder a EDUKA.
+              Crea tu cuenta para acceder a iDr.Mind.
             </p>
           </div>
 

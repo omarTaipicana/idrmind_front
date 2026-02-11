@@ -23,7 +23,7 @@ const ModalPagoExistente = ({ pagos, onClose, onRegistrarNuevo, inscrito }) => {
             lineHeight: "1.5",
           }}
         >
-          📌 <strong>Importante:</strong> Para verificar tus comprobantes de pago, accede a la plataforma <strong>EDUKA</strong> con el <strong>mismo correo</strong> con el que te inscribiste. Ahí podrás visualizar el estado y detalles de tus pagos realizados.
+          📌 <strong>Importante:</strong> Para verificar tus comprobantes de pago, accede a la plataforma <strong>iDr.Mind</strong> con el <strong>mismo correo</strong> con el que te inscribiste. Ahí podrás visualizar el estado y detalles de tus pagos realizados.
         </div>
 
         {pagosOrdenados?.map((pago, i) => {
