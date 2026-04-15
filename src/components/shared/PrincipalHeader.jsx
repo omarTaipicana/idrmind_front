@@ -210,6 +210,18 @@ const PrincipalHeader = () => {
       );
     }
 
+    if (grados.grado7) {
+      return (
+        <>
+          <Link to="/home" onClick={onClick}>
+            Home
+          </Link>
+
+        </>
+      );
+    }
+
+
 
     return null;
   };
@@ -299,24 +311,24 @@ const PrincipalHeader = () => {
     }
 
     return (
-       <>
-              <Link to="/login" onClick={closeMenu}>
-                <img
-                  className="user__icon"
-                  src="../../../user.png"
-                  alt="User Icon"
-                />
-              </Link>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  closeMenu();
-                }}
-                className="logout__button"
-              >
-                Salir
-              </button>
-            </>
+      <>
+        <Link to="/login" onClick={closeMenu}>
+          <img
+            className="user__icon"
+            src="../../../user.png"
+            alt="User Icon"
+          />
+        </Link>
+        <button
+          onClick={() => {
+            handleLogout();
+            closeMenu();
+          }}
+          className="logout__button"
+        >
+          Salir
+        </button>
+      </>
     );
   };
 
@@ -366,7 +378,7 @@ const PrincipalHeader = () => {
         {/* Acciones (derecha desktop) */}
         {token && (
           <>
-           
+
             {grados.grado1 && (
               <>
                 <button type="button" onClick={() => { closeMenu(); navigate("/dashboard"); }}>

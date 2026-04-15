@@ -301,12 +301,12 @@ const LandingPage = () => {
       >
         <div className="nosotros-inner">
           <div className="nosotros-header">
-            <h2 className="nosotros-title">¿Por qué elegir a iDr.Mind?</h2>
+            <h2 className="nosotros-title">¿Por qué elegir a iDr. Mind?</h2>
           </div>
 
           <div className="nosotros-content">
             <p>
-              <strong>iDr.Mind</strong> Somos especialistas en ofrecer capacitaciones
+              En<strong> iDr. Mind</strong> Somos especialistas en ofrecer capacitaciones
               integrales que impulsan el desarrollo de Habilidades Blandas, Técnicas y
               Emocionales. Nuestro enfoque está en diseñar soluciones a medida para
               maximizar la productividad y fomentar la mejora continua con nuestras
@@ -467,8 +467,14 @@ const LandingPage = () => {
               <h4 className="footer-section-title">¡Escríbenos!</h4>
             </div>
 
-            <span className="span_contactanos">+593979002223</span>
+            <a
+              href="https://api.whatsapp.com/send?phone=593979002223&text=Hola%20quiero%20más%20información"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
 
+              <span className="span_contactanos">+593979002223</span>
+            </a>
             <div className="footer-block">
               <h4 className="footer-section-title">Plataforma educativa</h4>
               <a

@@ -299,7 +299,7 @@ const restoreScroll = () => {
       Apellidos: p?.inscripcion?.user?.lastName || "",
       Cedula: p?.inscripcion?.user?.cI || "",
       Curso: p.curso || "",
-      "Valor Depositado": p.valorDepositado?.toFixed(2) || "0.00",
+      "Valor Depositado": p.valorDepositado || "0.00",
       Comprobante: p.pagoUrl || "",
       Verificado: p.verificado ? "Sí" : "No",
       Fecha: p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "",
@@ -546,7 +546,7 @@ const restoreScroll = () => {
                         <tr key={p.id}>
                           <td className="vpTdWrap">
                             {p
-                              ? `${p?.inscripcion?.user?.grado} ${p?.inscripcion?.user?.firstName} ${p?.inscripcion?.user?.lastName}`
+                              ? `${p?.inscripcion?.user?.firstName} ${p?.inscripcion?.user?.lastName}`
                               : "Sin Inscripción"}
                           </td>
 
@@ -566,11 +566,11 @@ const restoreScroll = () => {
 
                           <td>
                             {papelera ? (
-                              `$${p.valorDepositado?.toFixed(2) || "0.00"}`
+                              `$${p.valorDepositado  || "0.00"}`
                             ) : isEditing ? (
                               <input type="number" step="0.01" {...register("valorDepositado")} className="vpMiniInput" />
                             ) : (
-                              `$${p.valorDepositado?.toFixed(2) || "0.00"}`
+                              `$${p.valorDepositado || "0.00"}`
                             )}
                           </td>
 
@@ -665,6 +665,8 @@ const restoreScroll = () => {
                                     </button>
                                   </>
                                 ) : (
+                                  <div>
+                          
                                   <button
                                     onClick={(e) => iniciarEdicion(p, e)}
                                     className="vp-btn-edit"
@@ -672,6 +674,15 @@ const restoreScroll = () => {
                                   >
                                     Registrar Validación
                                   </button>
+
+                                                                    <button
+                                    className="vp-btn-edit"
+                                    type="button"
+                                  >
+                                    CERTIFICAR
+                                  </button>
+
+                                  </div>
 
                                 )}
                               </td>
@@ -831,7 +842,7 @@ const restoreScroll = () => {
                         <td className="vpTdWrap">{p.curso}</td>
                         <td style={{ textAlign: "center" }}>{p.moneda ? "✅" : "❌"}</td>
                         <td style={{ textAlign: "center" }}>{p.distintivo ? "✅" : "❌"}</td>
-                        <td>{`$${p.valorDepositado?.toFixed(2) || "0.00"}`}</td>
+                        <td>{`$${p.valorDepositado || "0.00"}`}</td>
                         <td style={{ textAlign: "center" }}>{p.verificado ? "✅" : "❌"}</td>
                         <td>
                           {p.pagoUrl ? (
@@ -963,7 +974,7 @@ const restoreScroll = () => {
                       <td>{p?.inscripcion?.user?.cI || "-"}</td>
                       <td>{p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "-"}</td>
                       <td className="vpTdWrap">{p.curso}</td>
-                      <td>${p.valorDepositado?.toFixed(2) || "0.00"}</td>
+                      <td>${p.valorDepositado || "0.00"}</td>
                       <td>
                         {p.pagoUrl ? (
                           <a className="vpLink" href={p.pagoUrl} target="_blank" rel="noopener noreferrer">
