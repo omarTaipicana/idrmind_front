@@ -9,6 +9,10 @@ import IsLoading from "../components/shared/isLoading";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { showAlert } from "../store/states/alert.slice";
+import axios from "axios";
+import getConfigToken from "../services/getConfigToken";
+const urlBase = import.meta.env.VITE_API_URL;
+const token = localStorage.getItem("token");
 
 
 const BASEURL = import.meta.env.VITE_API_URL;
@@ -89,15 +93,15 @@ const ValidacionPago = () => {
     scrollPosRef.current = scroller === window ? window.scrollY : scroller.scrollTop;
   };
 
-const SCROLL_OFFSET = -100; // 👈 ajusta a gusto (80, 120, 160...)
+  const SCROLL_OFFSET = -100; // 👈 ajusta a gusto (80, 120, 160...)
 
-const restoreScroll = () => {
-  const scroller = getScroller();
-  const top = Math.max(0, scrollPosRef.current - SCROLL_OFFSET);
+  const restoreScroll = () => {
+    const scroller = getScroller();
+    const top = Math.max(0, scrollPosRef.current - SCROLL_OFFSET);
 
-  if (scroller === window) window.scrollTo(0, top);
-  else scroller.scrollTop = top;
-};
+    if (scroller === window) window.scrollTo(0, top);
+    else scroller.scrollTop = top;
+  };
 
 
 
@@ -307,7 +311,7 @@ const restoreScroll = () => {
       Celular: p?.inscripcion?.user?.cellular || "",
     }));
 
-    
+
 
     const ws = XLSX.utils.json_to_sheet(datosExcel);
     const wb = XLSX.utils.book_new();
@@ -317,7 +321,7 @@ const restoreScroll = () => {
     saveAs(blob, "pagos_filtrados.xlsx");
 
 
-    
+
   };
 
   const descargarExcelInscripcion = () => {
@@ -360,6 +364,51 @@ const restoreScroll = () => {
     setFiltroFechaFin("");
     setFiltroCertificado("");
   };
+
+  const handleCertificar = async (id) => {
+    if (!id) {
+      dispatch(
+        showAlert({
+          message: "❌ No se pudo obtener el ID del pago",
+          alertType: 1,
+        })
+      );
+      return;
+    }
+
+    const ok = window.confirm("¿Deseas generar el certificado para este usuario?");
+    if (!ok) return;
+
+    try {
+      await axios.post(
+        `${urlBase}/pagos/${id}/certificado`,
+        {},
+        getConfigToken()
+      );
+
+      dispatch(
+        showAlert({
+          message: "✅ Certificado generado y enviado correctamente",
+          alertType: 2,
+        })
+      );
+
+      getPago(PATH_PAGOS);
+    } catch (error) {
+      console.error("Error certificando:", error);
+      console.error("Respuesta backend:", error?.response?.data);
+
+      dispatch(
+        showAlert({
+          message:
+            error?.response?.data?.message || "❌ Error al generar certificado",
+          alertType: 1,
+        })
+      );
+    }
+  };
+
+
 
   const renderContent = () => {
     switch (activeSection) {
@@ -566,7 +615,7 @@ const restoreScroll = () => {
 
                           <td>
                             {papelera ? (
-                              `$${p.valorDepositado  || "0.00"}`
+                              `$${p.valorDepositado || "0.00"}`
                             ) : isEditing ? (
                               <input type="number" step="0.01" {...register("valorDepositado")} className="vpMiniInput" />
                             ) : (
@@ -666,21 +715,34 @@ const restoreScroll = () => {
                                   </>
                                 ) : (
                                   <div>
-                          
-                                  <button
-                                    onClick={(e) => iniciarEdicion(p, e)}
-                                    className="vp-btn-edit"
-                                    type="button"
-                                  >
-                                    Registrar Validación
-                                  </button>
 
-                                                                    <button
-                                    className="vp-btn-edit"
-                                    type="button"
-                                  >
-                                    CERTIFICAR
-                                  </button>
+                                    <button
+                                      onClick={(e) => iniciarEdicion(p, e)}
+                                      className="vp-btn-edit"
+                                      type="button"
+                                    >
+                                      Registrar Validación
+                                    </button>
+
+                                    {p.verificado && !p.certificado && (
+                                      <button
+                                        className="btnCertificar"
+                                        onClick={() => handleCertificar(p.id)}
+                                      >
+                                        🎓 Certificar
+                                      </button>
+                                    )}
+
+                                    {p.certificado && (
+                                      <a
+                                        href={p.urlCertificado}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btnVerCertificado"
+                                      >
+                                        📄 Ver certificado
+                                      </a>
+                                    )}
 
                                   </div>
 

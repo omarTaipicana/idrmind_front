@@ -11,6 +11,20 @@
   --headerOffset: 9rem;
 }
 
+.btnCertificar {
+  background: #4f76d8;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btnCertificar:hover {
+  background: #0f2450;
+}
+
 .secPage {
   width: 100%;
 }
