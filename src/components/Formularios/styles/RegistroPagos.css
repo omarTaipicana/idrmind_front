@@ -1,334 +1,410 @@
 /* ===============================
-   REGISTRO PAGOS (AISLADO)
-================================= */
+   REGISTRO PAGO - IDR MIND
+================================ */
 
 .pagos_container {
-  width: 95%;
-  margin: 0 auto;
-  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 90px);
+  padding: 3rem 5%;
+  background:
+    linear-gradient(135deg, rgba(3, 18, 50, 0.95), rgba(8, 45, 105, 0.88)),
+    url("/images/fondo.jpg");
   background-size: cover;
   background-position: center;
+  box-sizing: border-box;
 }
 
-/* Marca de agua SOLO pagos */
-.pagos_container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("/images/idrmind_logo_sf.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 30%;
-  opacity: 0.06;
-  pointer-events: none;
-  z-index: 0;
+.pagos_shell {
+  width: 100%;
+  max-width: 1350px;
+  margin: 0 auto;
 }
 
-/* ===== Layout 2 columnas ===== */
-.pagos_wrapper {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+.pagos_brand {
+  display: flex;
+  align-items: center;
   gap: 1rem;
+  margin-bottom: 2rem;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.pagos_brand img {
+  width: 170px;
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.pagos_layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
+  gap: 2rem;
   align-items: stretch;
 }
 
-.pagos_medio_alto {
-  min-height: 520px;
-}
 
-/* ===== Cards ===== */
-.pagos_left {
-  border-radius: 1.5rem;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #ffffff;
-  padding: 1.2rem 1.1rem; /* da aire */
-  box-sizing: border-box;
-}
-
-.pagos_right {
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.14);
-  background: #ffffff;
-  box-sizing: border-box;
-}
-
-/* ===== Felicitación ===== */
-.pagos_felicitacion {
-  margin: 0.6rem 0.8rem 1rem;
+/* FILE INPUT CUSTOM */
+.pagos_file_wrapper {
+  width: 100%;
   text-align: center;
-  background: #f5f7fb;
-  border-left: 4px solid #0f2a63;
+}
+
+.pagos_file_label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 1.2rem;
   border-radius: 1rem;
-  padding: 1.2rem 1.3rem;
-  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.08);
-}
-
-.pagos_felicitacion h2 {
-  margin: 0 0 0.6rem;
-  color: #0f2a63;
-  font-size: 1.35rem;
+  background: linear-gradient(135deg, #173a8a41, #35508396);
+  color: #ffffff;
   font-weight: 900;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 12px 25px rgba(23, 58, 138, 0.35);
 }
 
-.pagos_felicitacion p {
-  margin: 0 0 0.55rem;
-  color: #3e4352;
+.pagos_file_label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 35px rgba(23, 58, 138, 0.45);
+}
+
+/* ocultamos el input real */
+.pagos_file_label input {
+  display: none;
+}
+
+/* nombre archivo */
+.pagos_file_name {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: #1b1c1d;
+  word-break: break-all;
+}
+/* ===============================
+   CARD FORMULARIO
+================================ */
+
+.pagos_form_card {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 2rem;
+  padding: 2.2rem;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.pagos_intro {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.pagos_badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: #e9f7ff;
+  color: #0873c4;
+  font-size: 0.82rem;
+  font-weight: 900;
+  margin-bottom: 0.8rem;
+}
+
+.pagos_intro h1 {
+  margin: 0 0 0.8rem;
+  color: #071b3f;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+  font-weight: 950;
+}
+
+.pagos_intro p {
+  margin: 0;
+  color: #667085;
   line-height: 1.65;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
-/* ===== Form ===== */
-.pagos_label_cedula,
-.pagos_label {
-  width: 80%;
+/* ===============================
+   FORM BUSCAR
+================================ */
+
+.pagos_form_buscar {
+  max-width: 560px;
   margin: 0 auto;
+}
+
+.pagos_label {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 .pagos_label span {
   display: block;
-  font-weight: 800;
-  color: #333743;
-  margin: 0 auto 0.35rem;
+  margin-bottom: 0.45rem;
+  color: #071b3f;
+  font-weight: 900;
   text-align: center;
 }
 
-/* Input cédula */
-.pagos_input_cedula {
-  width: 50%;
-  margin: 0.8rem auto 0.2rem;
-  border: none;
-  border-radius: 0.9rem;
-  background-color: #e8eaef;
-  padding: 0.95rem 1.1rem;
-  font-size: 1rem;
-  color: #333;
-  outline: none;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-/* Inputs generales */
+.pagos_input_cedula,
 .pagos_input,
-.pagos_left input[type="file"],
-.pagos_left input[type="number"] {
+.pagos_label input,
+.pagos_label select,
+.pagos_label textarea {
   width: 100%;
-  border: none;
-  border-radius: 0.9rem;
-  background-color: #e8eaef;
-  padding: 0.95rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  background: #eef6ff;
+  padding: 1rem 1.1rem;
+  color: #101828;
   font-size: 1rem;
-  color: #333;
   outline: none;
-  box-sizing: border-box;
   text-align: center;
+  box-sizing: border-box;
+  transition: 0.2s ease;
 }
 
-/* File input: evita overflow feo */
-.pagos_left input[type="file"] {
+.pagos_label input[type="file"] {
   text-align: left;
-  max-width: 100%;
+  cursor: pointer;
 }
 
-/* Botón row (desktop) */
-.pagos_btn_row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 0.9rem;
-  flex-wrap: wrap;
+.pagos_input_cedula:focus,
+.pagos_input:focus,
+.pagos_label input:focus,
+.pagos_label select:focus,
+.pagos_label textarea:focus {
+  background: #ffffff;
+  border-color: #28a7e8;
+  box-shadow: 0 0 0 4px rgba(40, 167, 232, 0.16);
 }
+
+/* ===============================
+   BOTONES
+================================ */
 
 .pagos_btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.9rem 1.4rem;
-  border-radius: 0.9rem;
+  min-height: 54px;
+  padding: 0.9rem 1.6rem;
   border: none;
-  background-color: #0f2a63;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #173a8a, #071b3f);
   color: #ffffff;
   font-size: 1rem;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 0.7rem 1.6rem rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s ease, background-color 0.2s ease,
-    box-shadow 0.2s ease;
-  white-space: nowrap;
+  box-shadow: 0 15px 32px rgba(23, 58, 138, 0.35);
+  transition: 0.25s ease;
 }
 
 .pagos_btn:hover {
-  background-color: #081a3f;
-  transform: translateY(-2px);
-  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 42px rgba(23, 58, 138, 0.48);
 }
 
-.pagos_error {
-  font-size: 0.85rem;
-  color: #c0392b;
-  margin-top: 0.2rem;
-  text-align: center;
-}
-
-/* ===== Vista 2 columnas internas (form 2) ===== */
-.pagos_form_dos {
+.pagos_btn_full {
   width: 100%;
+}
+
+/* ===============================
+   FORM DOS COLUMNAS
+================================ */
+
+.pagos_form_dos {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 1.4rem;
   align-items: start;
 }
 
-/* datos usuario */
+.pagos_col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pagos_col_pago {
+  position: sticky;
+  top: 1rem;
+}
+
+/* ===============================
+   DATOS USUARIO
+================================ */
+
 .pagos_datos_usuario {
+  padding: 1.4rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, #eef8ff, #ffffff);
+  border-left: 6px solid #28a7e8;
+  box-shadow: 0 12px 28px rgba(23, 58, 138, 0.12);
   text-align: center;
-  background: #f5f7fb;
-  border-radius: 1rem;
-  padding: 1.2rem 1.3rem;
-  border-left: 4px solid #0f2a63;
-  box-sizing: border-box;
 }
 
 .pagos_datos_usuario h2 {
-  margin: 0 0 0.8rem;
-  color: #0f2a63;
-  font-size: 1.15rem;
-  font-weight: 900;
+  margin: 0.3rem 0 1rem;
+  color: #071b3f;
+  font-size: 1.25rem;
+  font-weight: 950;
+  line-height: 1.25;
 }
 
 .pagos_datos_usuario p {
-  margin: 0.35rem 0;
-  color: #333743;
+  margin: 0.4rem 0;
+  color: #344054;
   font-size: 0.95rem;
 }
 
-/* Box 1 (tipo servidor) */
-.pagos_box_1 {
-  width: 70%;
-  margin: 0.8rem auto 0;
+.pagos_datos_usuario strong {
+  color: #071b3f;
 }
 
-/* Box extras */
+/* ===============================
+   BOX OPCIONES
+================================ */
+
 .pagos_box {
+  padding: 1.2rem;
+  border-radius: 1.4rem;
   background: #ffffff;
-  border-radius: 1rem;
-  padding: 1rem 1.1rem;
-  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(15, 42, 99, 0.12);
-  margin-bottom: 0.9rem;
-  box-sizing: border-box;
+  border: 1px solid rgba(40, 167, 232, 0.22);
+  box-shadow: 0 12px 25px rgba(23, 58, 138, 0.08);
 }
 
-/* Checks */
+.pagos_box h3 {
+  margin: 0 0 0.9rem;
+  color: #071b3f;
+  font-size: 1.05rem;
+  font-weight: 950;
+  text-align: center;
+}
+
 .pagos_check_row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.45rem 0;
-  color: #333743;
+  gap: 0.8rem;
+  padding: 0.65rem 0;
+  color: #071b3f;
   font-weight: 800;
   font-size: 0.95rem;
+  border-bottom: 1px solid #eef2f6;
+}
+
+.pagos_check_row:last-child {
+  border-bottom: none;
 }
 
 .pagos_check_row span {
   text-align: left;
 }
 
-.pagos_check_row input[type="checkbox"] {
-  transform: scale(1.1);
+.pagos_check_row input[type="checkbox"],
+.pagos_check_legal input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #173a8a;
   cursor: pointer;
+  flex-shrink: 0;
 }
+
+/* ===============================
+   TOTAL
+================================ */
 
 .pagos_total {
-  margin: 0.8rem 0 0.3rem;
-  font-weight: 900;
-  color: #0f2a63;
-  background: #f1f3fb;
-  border-radius: 0.8rem;
-  padding: 0.7rem 0.9rem;
+  padding: 1.2rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, #173a8a, #071b3f);
+  color: #ffffff;
   text-align: center;
+  box-shadow: 0 15px 35px rgba(23, 58, 138, 0.35);
 }
 
-/* Confirmación legal */
-.pagos_check_container {
-  margin-top: 1rem;
+.pagos_total span {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  opacity: 0.85;
+  margin-bottom: 0.3rem;
 }
+
+.pagos_total strong {
+  display: block;
+  font-size: 2.4rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+/* ===============================
+   LEGAL / ERRORES
+================================ */
 
 .pagos_check_legal {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  justify-content: center;
   align-items: center;
-  font-size: 0.92rem;
-  color: #444a5a;
-  background: #f5f7fb;
-  border-left: 4px solid #0f2a63;
-  padding: 0.9rem 1rem;
-  border-radius: 1rem;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.pagos_check_legal input[type="checkbox"] {
-  margin-top: 0.25rem;
-  transform: scale(1.1);
-  cursor: pointer;
-}
-
-/* ===== Panel derecho solo imagen ===== */
-.pagos_panel {
-  position: relative;
-  min-height: 520px;
-  height: 100%;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  background: #0f2a63;
-  display: flex;
-  align-items: stretch;
-  box-sizing: border-box;
-}
-
-.pagos_panel.solo_imagen {
-  background-color: #ffffff;
-  border-radius: 1.5rem;
   padding: 1rem;
+  border-radius: 1.2rem;
+  background: #f8fbff;
+  border-left: 6px solid #173a8a;
+  color: #475467;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.pagos_error {
+  margin: -0.4rem 0 0.5rem;
+  color: #d92d20;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ===============================
+   IMAGEN DERECHA
+================================ */
+
+.pagos_visual {
+  border-radius: 2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
 }
 
-/* Imagen responsive */
-.pagos_img_full {
-  width: 80%;
+.pagos_visual img {
+  width: 100%;
+  max-width: 680px;
   height: auto;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 1rem;
-  box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.15);
+  display: block;
+  border-radius: 1.6rem;
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.38);
 }
 
-/* ===== Animaciones ===== */
+/* ===============================
+   ANIMACIONES
+================================ */
+
 .pagos_animate_left {
-  animation: pagosSlideLeft 0.5s ease-out;
+  animation: pagosSlideLeft 0.5s ease-out both;
 }
+
 .pagos_animate_right {
-  animation: pagosSlideRight 0.5s ease-out;
+  animation: pagosSlideRight 0.5s ease-out both;
 }
 
 @keyframes pagosSlideLeft {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-24px);
   }
   to {
     opacity: 1;
@@ -339,7 +415,7 @@
 @keyframes pagosSlideRight {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(24px);
   }
   to {
     opacity: 1;
@@ -347,147 +423,91 @@
   }
 }
 
-/* =========================================================
-   RESPONSIVE (TABLET / MOBILE)
-   Objetivo:
-   - Apilar columnas
-   - Buscar cédula en columna (no fila)
-   - Botones full width
-   - Imagen adaptada y más baja
-========================================================= */
+/* ===============================
+   RESPONSIVE
+================================ */
 
-/* Tablet */
-@media (max-width: 1000px) {
-  .pagos_wrapper {
+@media (max-width: 1100px) {
+  .pagos_layout {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
-  .pagos_medio_alto {
-    min-height: auto;
+  .pagos_visual {
+    order: -1;
   }
 
-  .pagos_left {
-    padding: 1rem;
+  .pagos_visual img {
+    max-width: 760px;
   }
 
-  .pagos_panel {
-    min-height: 320px;
+  .pagos_col_pago {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .pagos_container {
+    padding: 1.5rem 1rem;
   }
 
-  .pagos_panel.solo_imagen {
-    padding: 0.8rem;
+  .pagos_brand {
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 1.4rem;
   }
 
-  .pagos_img_full {
-    width: min(520px, 92%);
+  .pagos_brand img {
+    width: 150px;
+  }
+
+  .pagos_form_card {
+    padding: 1.2rem;
+    border-radius: 1.4rem;
   }
 
   .pagos_form_dos {
     grid-template-columns: 1fr;
   }
 
-  /* inputs + labels a 100% */
-  .pagos_label,
-  .pagos_label_cedula {
-    width: 100%;
+  .pagos_intro h1 {
+    font-size: 2rem;
   }
 
-  .pagos_input_cedula {
-    width: 100%;
+  .pagos_visual {
+    padding: 0.5rem;
+    border-radius: 1.4rem;
   }
 
-  .pagos_btn {
-    width: 100%;
+  .pagos_visual img {
+    border-radius: 1.1rem;
   }
 
-  /* Importante: el row de buscar cédula debe apilar */
-  .pagos_form_buscar .pagos_btn_row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.7rem;
-    width: 100%;
-  }
-
-  .pagos_form_buscar .pagos_btn_row span {
-    text-align: center;
-  }
-
-  .pagos_form_buscar .pagos_btn_row input,
-  .pagos_form_buscar .pagos_btn_row button {
-    width: 100%;
-  }
-
-  /* Box 1 ancho completo */
-  .pagos_box_1 {
-    width: 100%;
+  .pagos_total strong {
+    font-size: 2rem;
   }
 }
 
-/* Mobile */
-@media (max-width: 480px) {
+@media (max-width: 460px) {
   .pagos_container {
-    width: 96%;
+    padding: 1rem 0.7rem;
   }
 
-  .pagos_container::before {
-    background-size: 55%;
-    opacity: 0.05;
+  .pagos_form_card {
+    padding: 1rem;
   }
 
-  .pagos_left,
-  .pagos_right {
-    border-radius: 1.2rem;
-  }
-
-  .pagos_felicitacion {
-    margin: 0.4rem 0.2rem 0.9rem;
-    padding: 1rem 1rem;
-  }
-
-  .pagos_felicitacion h2 {
-    font-size: 1.12rem;
-  }
-
-  .pagos_felicitacion p {
-    font-size: 0.92rem;
-    line-height: 1.55;
-  }
-
-  .pagos_datos_usuario {
-    padding: 1rem 1rem;
-  }
-
-  .pagos_datos_usuario p {
-    font-size: 0.92rem;
+  .pagos_datos_usuario,
+  .pagos_box,
+  .pagos_total {
+    border-radius: 1.1rem;
   }
 
   .pagos_check_row {
-    font-size: 0.92rem;
-  }
-
-  /* inputs más cómodos */
-  .pagos_input,
-  .pagos_left input[type="file"],
-  .pagos_left input[type="number"],
-  .pagos_input_cedula {
-    padding: 0.9rem 1rem;
-    border-radius: 0.85rem;
-    font-size: 0.98rem;
+    font-size: 0.88rem;
   }
 
   .pagos_btn {
-    padding: 0.95rem 1rem;
-    border-radius: 0.95rem;
-  }
-
-  /* Imagen más compacta */
-  .pagos_panel {
-    min-height: 240px;
-  }
-
-  .pagos_img_full {
-    width: 96%;
-    border-radius: 0.9rem;
+    font-size: 0.95rem;
   }
 }

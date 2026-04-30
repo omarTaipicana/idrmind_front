@@ -25,6 +25,7 @@ export const RegistroPagos = () => {
   const [pagoExistente, setPagoExistente] = useState(null);
   const [certificadoPagado, setCertificadoPagado] = useState(false);
   const [total, setTotal] = useState(0);
+  const [fileName, setFileName] = useState("");
 
   const [resUploads, getUpload, , , , , isLoading, , , , uploadPdf, newUpload] =
     useCrud();
@@ -225,81 +226,69 @@ export const RegistroPagos = () => {
         />
       )}
 
-      <div className="pagos_wrapper pagos_medio_alto">
-        {/* ===== Left ===== */}
-        <div className="pagos_left pagos_animate_left">
-          {!usuario ? (
-            <form
-              className="pagos_form_buscar"
-              onSubmit={handleSubmit(buscarCedula)}
-            >
-              <div className="pagos_felicitacion">
-                <h2>✅ ¿Ya culminaste tu curso?</h2>
-                <p>
-                  Si la respuesta es sí... ¡entonces déjanos felicitarte! 🎓 Has
-                  demostrado disciplina, esfuerzo y determinación para llegar
-                  hasta aquí.
-                </p>
-                <p>
-                  👏 ¡Felicidades por completar con éxito tu formación! Este
-                  logro representa mucho más que un certificado: es el reflejo
-                  de tu crecimiento personal y académico.
-                </p>
-                <p>
-                  Ahora estás listo para solicitar tu certificado oficial y, si
-                  lo deseas, adquirir reconocimientos adicionales. ¡Gracias por
-                  confiar en nosotros!
-                </p>
-              </div>
+      <div className="pagos_shell">
+        <div className="pagos_brand">
+          <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind" />
+          <span>Registro de pago</span>
+        </div>
 
-              <label className="pagos_label">
-                <div className="pagos_btn_row">
-                  <span>Ingrese su cédula:</span>
+        <div className="pagos_layout">
+          <section className="pagos_form_card pagos_animate_left">
+            {!usuario ? (
+              <form className="pagos_form_buscar" onSubmit={handleSubmit(buscarCedula)}>
+                <div className="pagos_intro">
+                  <span className="pagos_badge">Certificación iDr.Mind</span>
+                  <h1>Solicita tu certificado oficial</h1>
+                  <p>
+                    Ingresa tu cédula para verificar tu información y continuar
+                    con el registro del comprobante de pago.
+                  </p>
+                </div>
+
+                <label className="pagos_label">
+                  <span>Cédula</span>
                   <input
                     className="pagos_input_cedula"
+                    placeholder="Ej: 0500000000"
                     required
                     {...register("cedula")}
                   />
-                  <button className="pagos_btn" type="submit">
-                    🔍 Buscar
-                  </button>
-                </div>
-              </label>
-            </form>
-          ) : (
-            <form className="pagos_form_dos" onSubmit={handleSubmit(submit)}>
-              <div>
-                <div className="pagos_datos_usuario">
-                  {cursoActual && <h2>🎓 {cursoActual.nombre}</h2>}
-                  <p>
-                    <strong>Nombres:</strong> {usuario.firstName}
-                  </p>
-                  <p>
-                    <strong>Apellidos:</strong> {usuario.lastName}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {usuario.email}
-                  </p>
-                  <p>
-                    <strong>Cédula:</strong> {usuario.cI}
-                  </p>
+                </label>
 
-                  <div className="pagos_box_1">
+                <button className="pagos_btn pagos_btn_full" type="submit">
+                  Buscar inscripción
+                </button>
+              </form>
+            ) : (
+              <form className="pagos_form_dos" onSubmit={handleSubmit(submit)}>
+                <div className="pagos_col">
+                  <div className="pagos_datos_usuario">
+                    <span className="pagos_badge">Datos encontrados</span>
+                    {cursoActual && <h2>{cursoActual.nombre}</h2>}
+
+                    <p><strong>Nombres:</strong> {usuario.firstName}</p>
+                    <p><strong>Apellidos:</strong> {usuario.lastName}</p>
+                    <p><strong>Email:</strong> {usuario.email}</p>
+                    <p><strong>Cédula:</strong> {usuario.cI}</p>
+                  </div>
+
+                  <div className="pagos_box">
+                    <h3>Tipo de certificado</h3>
+
                     <label className="pagos_check_row">
-                      <span>CERTIFICADO POR EL MINISTERIO </span>
+                      <span>Certificado por el Ministerio</span>
                       <input
                         type="checkbox"
                         {...register("sPolicial")}
                         onChange={(e) => {
                           setValue("sPolicial", e.target.checked);
-                          if (e.target.checked)
-                            setValue("oProfesionales", false);
+                          if (e.target.checked) setValue("oProfesionales", false);
                         }}
                       />
                     </label>
 
                     <label className="pagos_check_row">
-                      <span>CERTIFICADO EXTERIOR</span>
+                      <span>Certificado exterior</span>
                       <input
                         type="checkbox"
                         {...register("oProfesionales")}
@@ -310,51 +299,73 @@ export const RegistroPagos = () => {
                       />
                     </label>
                   </div>
+
+                  <div className="pagos_box">
+                    <h3>Adicionales</h3>
+
+                    <label className="pagos_check_row">
+                      <span>Moneda conmemorativa (+$15)</span>
+                      <input type="checkbox" {...register("moneda")} />
+                    </label>
+
+                    <label className="pagos_check_row">
+                      <span>Distintivo (+$10)</span>
+                      <input type="checkbox" {...register("distintivo")} />
+                    </label>
+                  </div>
                 </div>
-                <div className="pagos_box">
-                  <label className="pagos_check_row">
-                    <span>Moneda conmemorativa (+$15)</span>
-                    <input type="checkbox" {...register("moneda")} />
-                  </label>
-                  <label className="pagos_check_row">
-                    <span>Distintivo (+$10)</span>
-                    <input type="checkbox" {...register("distintivo")} />
+
+                <div className="pagos_col pagos_col_pago">
+                  <div className="pagos_total">
+                    <span>Total a pagar</span>
+                    <strong>${total}</strong>
+                  </div>
+
+                  <label className="pagos_label">
+                    <span>Comprobante de pago</span>
+
+
+                    <div className="pagos_file_wrapper">
+                      <label className="pagos_file_label">
+                        <span>Seleccionar comprobante</span>
+
+                        <input
+                          type="file"
+                          required
+                          {...register("archivo")}
+                          onChange={(e) => {
+                            setFileName(e.target.files[0]?.name || "");
+                          }}
+                        />
+                      </label>
+
+                      {fileName && (
+                        <p className="pagos_file_name">{fileName}</p>
+                      )}
+                    </div>
+
                   </label>
 
                   <label className="pagos_label">
-                    <span>Suba su comprobante (PDF o imagen):</span>
-                    <input type="file" required {...register("archivo")} />
+                    <span>Valor depositado</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      {...register("valorDepositado", {
+                        required: "Debes ingresar el valor depositado.",
+                      })}
+                    />
                   </label>
-                </div>
-              </div>
 
-              <div className="pagos_inputs_pago">
-                <p className="pagos_total">Total a pagar: ${total}</p>
+                  {errors.valorDepositado && (
+                    <p className="pagos_error">{errors.valorDepositado.message}</p>
+                  )}
 
-                <label className="pagos_label">
-                  <span>Valor depositado:</span>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    {...register("valorDepositado", {
-                      required: "Debes ingresar el valor depositado.",
-                    })}
-                  />
-                </label>
-
-                {errors.valorDepositado && (
-                  <p className="pagos_error">
-                    {errors.valorDepositado.message}
-                  </p>
-                )}
-
-                <div className="pagos_check_container">
                   <label className="pagos_check_legal">
                     <span>
-                      Confirmo que la información mostrada es verídica y
-                      autorizo su uso para la emisión del certificado. En caso
-                      de requerir correcciones, contactar al equipo de soporte.
+                      Confirmo que la información mostrada es verídica y autorizo
+                      su uso para la emisión del certificado.
                     </span>
                     <input
                       type="checkbox"
@@ -364,30 +375,22 @@ export const RegistroPagos = () => {
                       })}
                     />
                   </label>
+
                   {errors.confirmacion && (
                     <p className="pagos_error">{errors.confirmacion.message}</p>
                   )}
-                </div>
 
-                <div className="pagos_btn_row">
-                  <button className="pagos_btn" type="submit">
-                    Confirmar
+                  <button className="pagos_btn pagos_btn_full" type="submit">
+                    Confirmar pago
                   </button>
                 </div>
-              </div>
-            </form>
-          )}
-        </div>
+              </form>
+            )}
+          </section>
 
-        {/* ===== Right ===== */}
-        <div className="pagos_right pagos_animate_right">
-          <div className="pagos_panel solo_imagen">
-            <img
-              src="/images/pago_accv_n.png"
-              alt="Información de pago"
-              className="pagos_img_full"
-            />
-          </div>
+          <aside className="pagos_visual pagos_animate_right">
+            <img src="/images/pago_info.png" alt="Información de pago" />
+          </aside>
         </div>
       </div>
     </div>

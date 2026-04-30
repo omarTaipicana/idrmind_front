@@ -283,13 +283,8 @@ const RegistroAlumnos = () => {
         <div className="registro_wrapper registro_wrapper--verifica">
           {/* Marca de agua + texto principal */}
           <div className="registro_intro">
-            <img
-              src="/verifica.png"
-              alt="Verifica tu inscripción"
-              className="registro_intro_icon"
-            />
-            <h2 className="registro_intro_title">Verifica tu inscripción</h2>
 
+            <h2 className="registro_intro_title">Inicia tu formación</h2>
             <p className="registro_intro_text">
               Ingresa tu correo electrónico para comprobar si ya te encuentras
               inscrito en este curso o si deseas registrarte para iniciar tu
@@ -330,7 +325,7 @@ const RegistroAlumnos = () => {
                   {...register("email")}
                 />
                 <button className="btn_inscripcion" type="submit">
-                  Verificar <span>➜</span>
+                  Continuar
                 </button>
               </div>
             </div>
@@ -428,7 +423,7 @@ const RegistroAlumnos = () => {
                       </label>
                     )}
 
-                 
+
                   </>
                 )}
 
@@ -449,14 +444,14 @@ const RegistroAlumnos = () => {
                     {!missing.celular && (
                       <input type="hidden" value={userRegister.cellular} {...register("celular")} />
                     )}
-                 
-                    
+
+
 
 
                   </>
                 )}
 
-                 {!userRegister && (
+                {!userRegister && (
                   <>
                     <label className="registro_label">
                       Confirmar Email
@@ -484,7 +479,7 @@ const RegistroAlumnos = () => {
                         {...register("apellidos")}
                       />
                     </label>
-              
+
 
                     <label className="registro_label">
                       Cédula
@@ -513,7 +508,7 @@ const RegistroAlumnos = () => {
                       </label>
                     )}
 
-           
+
 
                   </>
                 )}
@@ -525,7 +520,7 @@ const RegistroAlumnos = () => {
                       <input required {...register("celular")} />
                     </label>
 
-           
+
                   </>
                 )}
 
