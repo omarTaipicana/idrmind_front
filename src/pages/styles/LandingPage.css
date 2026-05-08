@@ -14,6 +14,7 @@
 .app a {
   text-decoration: none !important;
 }
+
 .app a:hover {
   text-decoration: none !important;
 }
@@ -77,6 +78,7 @@
 .navbar_links button:hover {
   color: #0f07f5;
 }
+
 .navbar_links button:hover::after {
   width: 100%;
 }
@@ -134,7 +136,8 @@
    HEADER (HERO)
 ========================= */
 .header {
-  padding: 12rem 1rem 6rem; /* deja espacio para navbar fija */
+  padding: 12rem 1rem 6rem;
+  /* deja espacio para navbar fija */
   background: rgba(0, 0, 0, 0.5);
   color: white;
   display: flex;
@@ -159,13 +162,13 @@
   max-width: 820px;
 }
 
-.header_text > h1 {
+.header_text>h1 {
   font-size: 2.5em;
   margin: 0 auto;
   width: 90%;
 }
 
-.header_text > p {
+.header_text>p {
   font-size: 1.5em;
   width: 90%;
   margin: 0 auto;
@@ -283,6 +286,202 @@
   text-align: center;
 }
 
+/* ===============================
+   SECCIÓN SERVICIOS - IDR MIND
+================================ */
+
+.servicios {
+  padding: 6rem 6%;
+  background:
+    radial-gradient(circle at top left, rgba(40, 167, 232, 0.18), transparent 34%),
+    linear-gradient(135deg, #071b3f, #0f2a63 55%, #173a8a);
+  position: relative;
+  overflow: hidden;
+}
+
+.servicios::before {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  right: -120px;
+  top: 60px;
+  border-radius: 50%;
+  background: rgba(40, 167, 232, 0.18);
+  filter: blur(10px);
+}
+
+.servicios_header {
+  position: relative;
+  z-index: 2;
+  max-width: 850px;
+  margin: 0 auto 3rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+.servicios_header span {
+  display: inline-flex;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(40, 167, 232, 0.18);
+  color: #8edcff;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.servicios_header h2 {
+  color: #ffffff;
+}
+
+.servicios_header p {
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.servicios_lista {
+  position: relative;
+  z-index: 2;
+  max-width: 1250px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.servicio_card {
+  min-height: 285px;
+  padding: 1.4rem;
+  border-radius: 1.6rem;
+  text-decoration: none;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  animation: servicioFloat 4.5s ease-in-out infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.servicio_card::before {
+  content: "";
+  position: absolute;
+  inset: auto -45% -55% -45%;
+  height: 150px;
+  background: radial-gradient(circle, rgba(40, 167, 232, 0.5), transparent 70%);
+  transition: 0.35s ease;
+}
+
+.servicio_card:hover {
+  transform: translateY(-14px) scale(1.03);
+  border-color: rgba(40, 167, 232, 0.75);
+  box-shadow: 0 30px 75px rgba(0, 0, 0, 0.45);
+}
+
+.servicio_card:hover::before {
+  inset: auto -20% -25% -20%;
+}
+
+.servicio_logo {
+  width: 100%;
+  height: auto;
+  border-radius: 1.35rem;
+  background: #ffffff;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.28);
+  transition: transform 0.3s ease;
+}
+
+.servicio_card:hover .servicio_logo {
+  transform: rotate(-4deg) scale(1.08);
+}
+
+.servicio_logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  border-radius: 1rem;
+
+  transition: transform 0.35s ease;
+}
+
+.servicio_card h3 {
+  position: relative;
+  z-index: 2;
+  margin: 1.4rem 0 0.6rem;
+  font-size: 1.25rem;
+  font-weight: 950;
+}
+
+.servicio_card p {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.servicio_link {
+  position: relative;
+  z-index: 2;
+  margin-top: 1rem;
+  color: #8edcff;
+  font-weight: 900;
+  transition: transform 0.25s ease;
+}
+
+.servicio_card:hover .servicio_link {
+  transform: translateX(8px);
+}
+
+@keyframes servicioFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1150px) {
+  .servicios_lista {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .servicios {
+    padding: 4rem 1rem;
+  }
+
+  .servicios_lista {
+    grid-template-columns: 1fr;
+  }
+
+  .servicio_card {
+    min-height: 230px;
+  }
+}
+
+
+
+
 /* =========================
    CURSOS
 ========================= */
@@ -365,6 +564,7 @@
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -603,6 +803,7 @@
    MOBILE ≤ 768px
 ========================= */
 @media (max-width: 768px) {
+
   /* NAVBAR */
   .navbar {
     height: 4rem;
@@ -644,7 +845,8 @@
   /* Menú desplegable */
   .navbar_mobile_menu {
     position: fixed;
-    top: 4rem; /* debajo navbar */
+    top: 4rem;
+    /* debajo navbar */
     left: 0;
     width: 100%;
     background: rgba(20, 38, 88, 0.96);
@@ -693,18 +895,19 @@
 
   /* HEADER */
   .header {
-    padding: 7rem 1rem 3rem; /* navbar 4rem + aire */
+    padding: 7rem 1rem 3rem;
+    /* navbar 4rem + aire */
     flex-direction: column;
     min-height: 92vh;
     text-align: center;
   }
 
-  .header_text > h1 {
+  .header_text>h1 {
     font-size: 1.8rem;
     width: 100%;
   }
 
-  .header_text > p {
+  .header_text>p {
     font-size: 1.05rem;
     width: 100%;
   }
@@ -808,7 +1011,7 @@
     font-size: 1.4rem;
   }
 
-  .navbar_mobile_auth{
+  .navbar_mobile_auth {
     display: flex;
     justify-content: center;
     align-items: center;

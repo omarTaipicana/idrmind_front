@@ -43,6 +43,7 @@ const LandingPage = () => {
   const cursosRef = useRef(null);
   const nosotrosRef = useRef(null);
   const contactoRef = useRef(null);
+  const serviciosRef = useRef(null);
 
   // Cargar cursos
   useEffect(() => {
@@ -155,6 +156,9 @@ const LandingPage = () => {
           <button type="button" onClick={() => scrollToSection(contactoRef)}>
             Contactos
           </button>
+          <button type="button" onClick={() => scrollToSection(serviciosRef)}>
+            Servicios
+          </button>
         </div>
 
         <div className="topbar-right">
@@ -196,6 +200,9 @@ const LandingPage = () => {
         </button>
         <button type="button" onClick={() => scrollToSection(contactoRef)}>
           Contactos
+        </button>
+        <button type="button" onClick={() => scrollToSection(serviciosRef)}>
+          Servicios
         </button>
 
         <div className="navbar_mobile_auth">
@@ -291,6 +298,105 @@ const LandingPage = () => {
           ))}
         </div>
       </motion.section>
+
+
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="servicios"
+        ref={serviciosRef}
+      >
+        <div className="servicios_header">
+          <span>Nuestros servicios</span>
+          <h2 className="nosotros-title">Servicios iDr. Mind</h2>
+          <p>
+            Soluciones diseñadas para acompañar el crecimiento personal,
+            académico y empresarial.
+          </p>
+        </div>
+        <div className="servicios_lista">
+
+          <a
+            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+            className="servicio_card"
+            style={{ animationDelay: `${2 * 0.15}s` }}
+          >
+            <div className="servicio_logo">
+              <img src={`/images/ipel.jpeg`} alt={`Servicio IPEL`} />
+            </div>
+            <h3>IPEL </h3>
+            <p>
+              Descripción de IPEL
+            </p>
+            <span className="servicio_link">Ver más →</span>
+          </a>
+
+          <a
+            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+            className="servicio_card"
+            style={{ animationDelay: `${2 * 0.15}s` }}
+          >
+            <div className="servicio_logo">
+              <img src={`/images/ipp.jpeg`} alt={`Servicio IPP`} />
+            </div>
+            <h3>IPP </h3>
+            <p>
+              Descripción de IPP
+            </p>
+            <span className="servicio_link">Ver más →</span>
+          </a>
+
+          <a
+            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+            className="servicio_card"
+            style={{ animationDelay: `${2 * 0.15}s` }}
+          >
+            <div className="servicio_logo">
+              <img src={`/images/membr.jpeg`} alt={`Servicio Coach`} />
+            </div>
+            <h3>COACH </h3>
+            <p>
+              Descripción de COACH
+            </p>
+            <span className="servicio_link">Ver más →</span>
+          </a>
+
+          <a
+            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+            className="servicio_card"
+            style={{ animationDelay: `${2 * 0.15}s` }}
+          >
+            <div className="servicio_logo">
+              <img src={`/images/cap.jpeg`} alt={`Servicio Capacitaciones`} />
+            </div>
+            <h3>Capacitaciones </h3>
+            <p>
+              Descripción de Capacitaciones
+            </p>
+            <span className="servicio_link">Ver más →</span>
+          </a>
+
+          <a
+            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+            className="servicio_card"
+            style={{ animationDelay: `${2 * 0.15}s` }}
+          >
+            <div className="servicio_logo">
+              <img src={`/images/franquicias.jpeg`} alt={`Servicio MENTORIAS`} />
+            </div>
+            <h3>MENTORÍAS </h3>
+            <p>
+              Descripción de Mentorias
+            </p>
+            <span className="servicio_link">Ver más →</span>
+          </a>
+
+        </div>
+      </motion.section>
+
+
+
 
       <motion.section
         initial={{ opacity: 0, y: 30 }}
@@ -431,6 +537,9 @@ const LandingPage = () => {
               </button>
               <button type="button" className="footer-link" onClick={() => scrollToSection(contactoRef)}>
                 Contactos
+              </button>
+              <button type="button" className="footer-link" onClick={() => scrollToSection(serviciosRef)}>
+                Servicios
               </button>
             </nav>
           </div>
