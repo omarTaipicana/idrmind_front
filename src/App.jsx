@@ -27,6 +27,11 @@ import SuperAdminProtectedRoute from "./routes/SuperAdminProtectedRoute";
 import UserEdit from "./pages/UserEdit";
 import { useEffect } from "react";
 import CursoInfo from "./components/Cursos/CursoInfo";
+import Ipel from "./components/Servicios/Ipel";
+import Ipp from "./components/Servicios/Ipp";
+import Capacitaciones from "./components/Servicios/Capacitaciones";
+import Membresias from "./components/Servicios/Membresias";
+import Franquicias from "./components/Servicios/Franquicias";
 
 const App = () => {
   const location = useLocation();
@@ -53,6 +58,18 @@ const App = () => {
       {/* <Gkm /> */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/servicios/ipel" element={<Ipel />} />
+        <Route path="/servicios/ipp" element={<Ipp />} />
+        <Route path="/servicios/capacitaciones" element={<Capacitaciones />} />
+        <Route path="/servicios/membresias" element={<Membresias />} />
+        <Route path="/servicios/franquicias" element={<Franquicias />} />
+
+
+
+
+
+
+
         <Route path="/register" element={<Register />} />
         <Route path="/verify/:code" element={<Verify />} />
         <Route path="/reset_password" element={<ResetPasswordSendEmail />} />

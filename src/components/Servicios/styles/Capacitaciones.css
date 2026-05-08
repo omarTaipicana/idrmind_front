@@ -1,0 +1,483 @@
+.caps_page {
+  width: 100%;
+  overflow-x: hidden;
+  background: #ffffff;
+  color: #111827;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* HERO */
+
+.caps_hero {
+  position: relative;
+  min-height: 100vh;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(3, 22, 52, 0.96),
+      rgba(5, 46, 95, 0.9),
+      rgba(14, 116, 144, 0.78)
+    ),
+    url("/images/cap.jpeg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  padding: 30px 7%;
+  color: #ffffff;
+}
+
+.caps_overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.22), transparent 34%),
+    radial-gradient(circle at 15% 80%, rgba(14, 165, 233, 0.16), transparent 36%);
+  z-index: 1;
+}
+
+.caps_nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3;
+  padding: 24px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.caps_nav img {
+  width: 155px;
+  height: auto;
+}
+
+.caps_nav a {
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7, #06b6d4);
+  padding: 12px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 14px 32px rgba(14, 165, 233, 0.28);
+  transition: 0.3s ease;
+}
+
+.caps_nav a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(14, 165, 233, 0.36);
+}
+
+.caps_hero_content {
+  position: relative;
+  z-index: 2;
+  max-width: 790px;
+  padding-top: 80px;
+}
+
+.caps_badge,
+.caps_tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  background: rgba(56, 189, 248, 0.13);
+  color: #7dd3fc;
+  border: 1px solid rgba(125, 211, 252, 0.38);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.caps_hero h2 {
+  font-size: clamp(3rem, 7vw, 5.2rem);
+  line-height: 0.98;
+  margin: 28px 0 24px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.caps_hero p {
+  font-size: 1.18rem;
+  line-height: 1.75;
+  max-width: 690px;
+  color: #e5e7eb;
+  margin-bottom: 34px;
+}
+
+.caps_buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.caps_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  transition: 0.3s ease;
+}
+
+.caps_primary {
+  background: linear-gradient(135deg, #0284c7, #06b6d4);
+  color: #ffffff;
+  box-shadow: 0 14px 32px rgba(14, 165, 233, 0.3);
+}
+
+.caps_secondary {
+  color: #ffffff;
+  border: 1px solid rgba(186, 230, 253, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.caps_btn:hover {
+  transform: translateY(-3px);
+}
+
+/* GENERAL */
+
+.caps_section {
+  padding: 95px 7%;
+}
+
+.caps_container {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.caps_two_cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  align-items: center;
+}
+
+.caps_header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 50px;
+}
+
+.caps_header h2,
+.caps_section h2,
+.caps_statement h2,
+.caps_cta h2 {
+  font-size: clamp(2rem, 4vw, 3.55rem);
+  line-height: 1.1;
+  margin: 18px 0;
+  color: #052e5f;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.caps_header p,
+.caps_statement p,
+.caps_cta p {
+  font-size: 1.06rem;
+  line-height: 1.8;
+  color: #526173;
+}
+
+/* PROBLEMA */
+
+.caps_problem {
+  background: #f3f8fc;
+}
+
+.caps_problem_card {
+  background: #ffffff;
+  padding: 38px;
+  border-radius: 30px;
+  box-shadow: 0 18px 45px rgba(5, 46, 95, 0.08);
+  border-left: 6px solid #0284c7;
+}
+
+.caps_problem_card p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #526173;
+}
+
+.caps_problem_card strong {
+  display: block;
+  margin-top: 18px;
+  color: #052e5f;
+  font-size: 1.08rem;
+}
+
+/* PROGRAMAS */
+
+.caps_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.caps_card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 32px;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 14px 38px rgba(5, 46, 95, 0.06);
+  transition: 0.35s ease;
+  overflow: hidden;
+}
+
+.caps_card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: linear-gradient(90deg, #0369a1, #06b6d4);
+}
+
+.caps_card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 55px rgba(5, 46, 95, 0.13);
+  border-color: rgba(14, 165, 233, 0.28);
+}
+
+.caps_card h3 {
+  color: #052e5f;
+  margin-bottom: 14px;
+  font-size: 1.22rem;
+  font-weight: 900;
+}
+
+.caps_card p {
+  color: #526173;
+  line-height: 1.7;
+}
+
+/* FRASE CENTRAL */
+
+.caps_statement {
+  background: linear-gradient(
+    135deg,
+    #031634 0%,
+    #052e5f 48%,
+    #075985 100%
+  );
+  color: #ffffff;
+  padding: 92px 7%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.caps_statement::before {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.12);
+  top: -160px;
+  right: -120px;
+}
+
+.caps_statement h2,
+.caps_statement p {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+}
+
+.caps_statement p {
+  max-width: 840px;
+  margin: auto;
+  color: #e0f2fe;
+}
+
+/* BENEFICIOS */
+
+.caps_features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.caps_feature {
+  background: #f8fbff;
+  padding: 30px;
+  border-radius: 26px;
+  border: 1px solid #dbeafe;
+  transition: 0.3s ease;
+}
+
+.caps_feature:hover {
+  transform: translateY(-6px);
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(5, 46, 95, 0.08);
+}
+
+.caps_feature span,
+.caps_steps span {
+  color: #0284c7;
+  font-weight: 900;
+}
+
+.caps_feature h3,
+.caps_steps h3 {
+  margin: 14px 0 10px;
+  color: #052e5f;
+  font-size: 1.12rem;
+  font-weight: 900;
+}
+
+.caps_feature p,
+.caps_steps p {
+  color: #526173;
+  line-height: 1.7;
+}
+
+/* METODOLOGÍA */
+
+.caps_methodology {
+  background: #f3f8fc;
+}
+
+.caps_steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.caps_steps div {
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 30px;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 14px 38px rgba(5, 46, 95, 0.06);
+  transition: 0.3s ease;
+}
+
+.caps_steps div:hover {
+  transform: translateY(-6px);
+}
+
+/* CTA */
+
+.caps_cta {
+  padding: 110px 7%;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(3, 22, 52, 0.97),
+      rgba(5, 46, 95, 0.95),
+      rgba(7, 89, 133, 0.9)
+    ),
+    url("/images/capacitaciones_cta.jpg") center/cover no-repeat;
+  text-align: center;
+  color: #ffffff;
+}
+
+.caps_cta h2 {
+  color: #ffffff;
+}
+
+.caps_cta p {
+  color: #e0f2fe;
+  max-width: 720px;
+  margin: 0 auto 30px;
+}
+
+.caps_cta .caps_buttons {
+  justify-content: center;
+}
+
+.caps_footer {
+  margin-top: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #e0f2fe;
+}
+
+.caps_footer strong {
+  color: #7dd3fc;
+  font-size: 1.3rem;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 980px) {
+  .caps_two_cols,
+  .caps_grid,
+  .caps_features,
+  .caps_steps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .caps_hero {
+    min-height: 820px;
+  }
+}
+
+@media (max-width: 640px) {
+  .caps_nav {
+    padding: 18px 6%;
+  }
+
+  .caps_nav img {
+    width: 125px;
+  }
+
+  .caps_nav a {
+    display: none;
+  }
+
+  .caps_hero {
+    min-height: 760px;
+    padding: 24px 6%;
+  }
+
+  .caps_hero_content {
+    padding-top: 80px;
+  }
+
+  .caps_hero h1 {
+    font-size: clamp(2.7rem, 13vw, 4rem);
+  }
+
+  .caps_hero p {
+    font-size: 1rem;
+  }
+
+  .caps_section,
+  .caps_statement,
+  .caps_cta {
+    padding: 70px 6%;
+  }
+
+  .caps_two_cols,
+  .caps_grid,
+  .caps_features,
+  .caps_steps {
+    grid-template-columns: 1fr;
+  }
+
+  .caps_problem_card,
+  .caps_card,
+  .caps_feature,
+  .caps_steps div {
+    padding: 26px;
+  }
+
+  .caps_buttons {
+    flex-direction: column;
+  }
+
+  .caps_btn {
+    width: 100%;
+    text-align: center;
+  }
+}

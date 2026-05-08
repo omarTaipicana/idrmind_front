@@ -309,7 +309,7 @@ const LandingPage = () => {
       >
         <div className="servicios_header">
           <span>Nuestros servicios</span>
-          <h2 className="nosotros-title">Servicios iDr. Mind</h2>
+          <h2 className="nosotros-title">Servicios iDr. Mind.</h2>
           <p>
             Soluciones diseñadas para acompañar el crecimiento personal,
             académico y empresarial.
@@ -317,23 +317,32 @@ const LandingPage = () => {
         </div>
         <div className="servicios_lista">
 
-          <a
-            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+
+
+          <div
+            onClick={() => navigate("/servicios/ipel")}
             className="servicio_card"
             style={{ animationDelay: `${2 * 0.15}s` }}
           >
             <div className="servicio_logo">
-              <img src={`/images/ipel.jpeg`} alt={`Servicio IPEL`} />
+              <img src={`/images/ipel.jpeg`} alt="Servicio IPEL" />
             </div>
-            <h3>IPEL </h3>
-            <p>
-              Descripción de IPEL
-            </p>
-            <span className="servicio_link">Ver más →</span>
-          </a>
 
-          <a
-            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+            <h3>IPEL</h3>
+
+            <p>
+              Somos especialistas en detectar pérdidas invisibles de productividad
+              relacionadas con el comportamiento personal que afectan la rentabilidad
+              empresarial.
+            </p>
+
+            <span className="servicio_link">Ver más →</span>
+          </div>
+
+
+
+          <div
+            onClick={() => navigate("/servicios/ipp")}
             className="servicio_card"
             style={{ animationDelay: `${2 * 0.15}s` }}
           >
@@ -342,28 +351,15 @@ const LandingPage = () => {
             </div>
             <h3>IPP </h3>
             <p>
-              Descripción de IPP
-            </p>
+              Evalúa hábitos, conducta e inteligencia emocional para detectar fortalezas y oportunidades de mejora que impulsen la productividad y el desempeño personal.   </p>
             <span className="servicio_link">Ver más →</span>
-          </a>
+          </div>
 
-          <a
-            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
-            className="servicio_card"
-            style={{ animationDelay: `${2 * 0.15}s` }}
-          >
-            <div className="servicio_logo">
-              <img src={`/images/membr.jpeg`} alt={`Servicio Coach`} />
-            </div>
-            <h3>COACH </h3>
-            <p>
-              Descripción de COACH
-            </p>
-            <span className="servicio_link">Ver más →</span>
-          </a>
 
-          <a
-            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+
+
+          <div
+            onClick={() => navigate("/servicios/capacitaciones")}
             className="servicio_card"
             style={{ animationDelay: `${2 * 0.15}s` }}
           >
@@ -372,25 +368,45 @@ const LandingPage = () => {
             </div>
             <h3>Capacitaciones </h3>
             <p>
-              Descripción de Capacitaciones
+              Capacitaciones empresariales enfocadas en productividad, liderazgo, habilidades blandas e inteligencia emocional para fortalecer equipos y mejorar resultados.
             </p>
             <span className="servicio_link">Ver más →</span>
-          </a>
+          </div>
 
-          <a
-            href="https://naskcorp.my.canva.site/empresarial-idr-mind-ipel"
+
+
+
+
+          <div
+            onClick={() => navigate("/servicios/membresias")}
+            className="servicio_card"
+            style={{ animationDelay: `${2 * 0.15}s` }}
+          >
+            <div className="servicio_logo">
+              <img src={`/images/membr.jpeg`} alt={`Servicio Coach`} />
+            </div>
+            <h3>MEMBRESÍAS </h3>
+            <p>
+              Convierte tus contactos y conexiones estratégicas en nuevas oportunidades de crecimiento e ingresos promoviendo soluciones empresariales de alto valor.
+            </p>
+            <span className="servicio_link">Ver más →</span>
+          </div>
+
+
+          <div
+            onClick={() => navigate("/servicios/franquicias")}
             className="servicio_card"
             style={{ animationDelay: `${2 * 0.15}s` }}
           >
             <div className="servicio_logo">
               <img src={`/images/franquicias.jpeg`} alt={`Servicio MENTORIAS`} />
             </div>
-            <h3>MENTORÍAS </h3>
+            <h3>FRANQUICIAS </h3>
             <p>
-              Descripción de Mentorias
+              Representa la metodología de iDr. Mind en tu país y lidera una nueva generación de soluciones enfocadas en productividad, análisis humano y transformación empresarial.
             </p>
             <span className="servicio_link">Ver más →</span>
-          </a>
+          </div>
 
         </div>
       </motion.section>

@@ -1,240 +1,370 @@
-/* Wrapper principal */
+/* ===============================
+   CURSO INFO - IDR MIND
+================================ */
+
 .curso_info_wrapper {
-  max-width: 98%;
-  margin: 0.5em auto;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(145deg, #ffffffa3, #84aeedbe);
-  backdrop-filter: blur(6px);
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease-in-out;
-  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(100vh - 90px);
+  background:
+    radial-gradient(circle at 10% 15%, rgba(40, 167, 232, 0.25), transparent 28%),
+    linear-gradient(135deg, #071b3f 0%, #0f2a63 55%, #173a8a 100%);
+  color: #ffffff;
+  overflow: hidden;
 }
 
-/* Contenedor de columnas */
-.curso_info_container {
+.curso_info_hero {
+  width: 100%;
+  min-height: calc(100vh - 90px);
+  padding: 3rem 5%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.curso_info_hero::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -140px;
+  top: 90px;
+  border-radius: 50%;
+  background: rgba(40, 167, 232, 0.18);
+  filter: blur(12px);
+}
+
+.curso_info_hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+}
+
+.curso_info_brand {
+  position: relative;
+  z-index: 2;
+  max-width: 1350px;
+  margin: 0 auto 2rem;
   display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: cursoFadeDown 0.6s ease both;
+}
+
+.curso_info_brand img {
+  width: 175px;
+  max-height: 75px;
+  object-fit: contain;
+}
+
+.curso_info_brand span {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #8edcff;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+/* LAYOUT */
+.curso_info_container {
+  position: relative;
+  z-index: 2;
+  max-width: 1350px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(330px, 0.8fr) minmax(0, 1.2fr);
   gap: 2rem;
-  flex-wrap: nowrap; /* desktop real en 2 columnas */
   align-items: stretch;
 }
 
-/* Sección Izquierda */
+/* LEFT CARD */
 .curso_info_left {
-  flex: 0 0 42%;
-  width: 42%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 1.5rem 2rem;
-  background-color: rgba(255, 255, 255, 0.521);
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  box-sizing: border-box;
+  border-radius: 2rem;
+  padding: 2.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+  animation: cursoSlideLeft 0.65s ease both;
 }
 
-/* Sección Derecha */
-.curso_info_right {
-  flex: 1;
-  width: 58%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 0; /* IMPORTANTÍSIMO para que el PDF no se desborde en flex */
-}
-
-/* Título del curso */
-.curso_info_title {
-  font-size: 2rem;
-  color: #0b2e59;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-/* Descripción / objetivo */
-.curso_info_section {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: #1c1c1c;
-  margin-bottom: 1.7rem;
-}
-
-/* Grupo de botones */
-.button_group {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 1rem;
-  width: 100%;
-}
-
-/* Botones base */
-.btn_inscribirse,
-.btn_registrar_pago,
-.btn_descargar_pdf {
-  text-decoration: none;
-  color: #fff;
-  border: none;
-  padding: 0.85rem 1.4rem;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.35s ease;
-  box-shadow: 0 4px 12px rgba(11, 46, 89, 0.25);
-  font-size: 1rem;
+.curso_info_badge {
   display: inline-flex;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(40, 167, 232, 0.2);
+  color: #8edcff;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.curso_info_title {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 4vw, 1.25rem);
+  line-height: 1.05;
+  font-weight: 950;
+  color: #ffffff;
+}
+
+.curso_info_section {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.curso_info_meta {
+  margin: 1.7rem 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem;
+}
+
+.curso_info_meta div {
+  padding: 1rem;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.curso_info_meta strong {
+  display: block;
+  font-size: 0.78rem;
+  color: #8edcff;
+  margin-bottom: 0.35rem;
+}
+
+.curso_info_meta span {
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+/* BUTTONS */
+.button_group {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.curso_btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  white-space: nowrap;
+  min-height: 54px;
+  padding: 0.9rem 1.2rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  font-weight: 950;
+  transition: 0.25s ease;
 }
 
-/* Hover elegante */
-.btn_inscribirse:hover,
-.btn_registrar_pago:hover,
-.btn_descargar_pdf:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-  filter: brightness(1.08);
+.curso_btn:hover {
+  transform: translateY(-3px);
 }
 
-/* Colores */
-.btn_inscribirse {
-  background: linear-gradient(135deg, #0072ff, #0b2e59);
-}
-.btn_registrar_pago {
-  background: linear-gradient(135deg, #0072ff, #0b2e59);
-}
-.btn_descargar_pdf {
-  background: linear-gradient(135deg, #0b2e59, #0072ff);
+.curso_btn_primary {
+  background: linear-gradient(135deg, #28a7e8, #173a8a);
+  color: #ffffff;
+  box-shadow: 0 16px 35px rgba(40, 167, 232, 0.35);
 }
 
-/* PDF elegante */
+.curso_btn_secondary {
+  background: #ffffff;
+  color: #071b3f;
+}
+
+.curso_btn_outline {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* RIGHT PDF CARD */
+.curso_info_right {
+  border-radius: 2rem;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+  color: #071b3f;
+  animation: cursoSlideRight 0.65s ease both;
+}
+
+.pdf_card_header {
+  padding: 0.8rem 0.6rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pdf_card_header span {
+  display: block;
+  color: #0873c4;
+  font-weight: 900;
+  font-size: 0.82rem;
+}
+
+.pdf_card_header h2 {
+  margin: 0.25rem 0 0;
+  color: #071b3f;
+  font-size: 1.3rem;
+  font-weight: 950;
+}
+
+.pdf_page_badge {
+  min-width: 70px;
+  text-align: center;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: #eef6ff;
+  color: #071b3f !important;
+}
+
 .pdf_frame {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #0b2e59;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  text-align: center;
-  margin-bottom: 1rem;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
+  max-height: 720px;
+  overflow: auto;
+  border-radius: 1.4rem;
+  background: #eef6ff;
+  border: 1px solid rgba(23, 58, 138, 0.12);
 
-  overflow: hidden; /* evita que se salga en mobile */
 }
 
-/* Asegura que el canvas del PDF no se pase */
 .pdf_frame canvas {
-  max-width: 100% !important;
-  height: auto !important;
+  border-radius: 0.8rem;
+  box-shadow: 0 16px 35px rgba(7, 27, 63, 0.18);
 }
 
-/* Controles de paginación */
+/* PAGINATION */
 .pagination_controls {
+  padding-top: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.9rem;
   flex-wrap: wrap;
-  margin-top: 0.2rem;
-  width: 100%;
 }
 
 .pagination_controls button {
-  background: linear-gradient(135deg, #0b2e59, #1e73be);
-  color: #fff;
+  min-height: 44px;
+  padding: 0.7rem 1.1rem;
+  border-radius: 0.9rem;
   border: none;
-  padding: 0.55rem 1.2rem;
-  border-radius: 10px;
-  font-weight: 800;
+  background: linear-gradient(135deg, #173a8a, #071b3f);
+  color: #ffffff;
+  font-weight: 900;
   cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 3px 10px rgba(11, 46, 89, 0.25);
+  transition: 0.25s ease;
 }
 
 .pagination_controls button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1e73be, #0b2e59);
-  transform: scale(1.03);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(23, 58, 138, 0.35);
 }
 
 .pagination_controls button:disabled {
-  background-color: #c8d8ee;
+  opacity: 0.45;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
 .pagination_controls span {
-  font-weight: 700;
-  color: #1c1c1c;
+  color: #344054;
+  font-weight: 900;
 }
 
-/* =======================
-   RESPONSIVE
-======================= */
+/* LOADING */
+.curso_info_loading {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #071b3f;
+  color: #ffffff;
+  font-weight: 900;
+}
 
-/* Tablet / pequeños laptops */
-@media screen and (max-width: 992px) {
+/* ANIMATIONS */
+@keyframes cursoFadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cursoSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cursoSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1050px) {
   .curso_info_container {
+    grid-template-columns: 1fr;
+  }
+
+  .curso_info_left {
+    order: 1;
+  }
+
+  .curso_info_right {
+    order: 2;
+  }
+}
+
+@media (max-width: 680px) {
+  .curso_info_hero {
+    padding: 1.5rem 1rem;
+  }
+
+  .curso_info_brand {
     flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
+    text-align: center;
+  }
+
+  .curso_info_brand img {
+    width: 155px;
   }
 
   .curso_info_left,
   .curso_info_right {
-    width: 100%;
-    flex: 1 1 auto;
+    border-radius: 1.4rem;
   }
 
   .curso_info_left {
-    padding: 1.25rem 1.25rem;
-  }
-}
-
-/* Mobile */
-@media screen and (max-width: 600px) {
-  .curso_info_wrapper {
-    padding: 16px;
-    margin: 0.5rem auto;
+    padding: 1.4rem;
   }
 
-  .curso_info_title {
-    font-size: 1.45rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .curso_info_section {
-    font-size: 0.98rem;
-    line-height: 1.55;
-    margin-bottom: 1.2rem;
-  }
-
-  /* Botones en columna, full width, cómodo para el dedo */
-  .button_group {
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-  }
-
-  .btn_inscribirse,
-  .btn_registrar_pago,
-  .btn_descargar_pdf {
-    width: 100%;
-    padding: 0.95rem 1rem;
-    font-size: 1.02rem;
-    border-radius: 12px;
+  .curso_info_meta {
+    grid-template-columns: 1fr;
   }
 
   .pdf_frame {
-    padding: 10px;
-    border-radius: 12px;
+    padding: 0.5rem;
   }
 
   .pagination_controls {
@@ -242,12 +372,6 @@
   }
 
   .pagination_controls button {
-    width: 100%;
-    max-width: 260px;
-  }
-
-  .pagination_controls span {
-    width: 100%;
-    text-align: center;
+    flex: 1;
   }
 }
