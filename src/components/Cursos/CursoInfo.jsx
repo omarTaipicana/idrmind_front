@@ -15,6 +15,7 @@ const CursoInfo = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [loadingPdf, setLoadingPdf] = useState(true);
 
+  
   const containerRef = useRef(null);
   const [pdfWidth, setPdfWidth] = useState(740);
 
