@@ -357,7 +357,7 @@
 
 .servicio_card {
   min-height: 285px;
-  padding: 1.4rem;
+  padding: 0.75rem;
   border-radius: 1.6rem;
   text-decoration: none;
   color: #ffffff;
@@ -425,7 +425,7 @@
   position: relative;
   z-index: 2;
   margin: 1.4rem 0 0.6rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 950;
   text-align: center;
 }
@@ -435,7 +435,7 @@
   z-index: 2;
   margin: 0;
   color: rgba(255, 255, 255, 0.74);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   line-height: 1.55;
   text-align: center;
 }
@@ -444,7 +444,7 @@
   position: relative;
   z-index: 2;
   margin-top: 1rem;
-  color: #054766;
+  color: #b8d4e1;
   font-weight: 900;
   transition: transform 0.25s ease;
 }
