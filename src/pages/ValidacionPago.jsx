@@ -217,13 +217,7 @@ const ValidacionPago = () => {
 
   const guardarEdicion = async (pagoId, data) => {
     try {
-      // ✅ Confirmación SOLO si BD era false y ahora el input viene true
-      if (verificadoOriginal === false && data.verificado === true) {
-        const ok = window.confirm(
-          "⚠️ Al marcar este pago como VERIFICADO se emitirá el certificado.\n\n¿Deseas continuar?"
-        );
-        if (!ok) return; // ❌ no actualiza nada
-      }
+
 
       await updatePago(PATH_PAGOS, pagoId, {
         ...data,
@@ -376,8 +370,11 @@ const ValidacionPago = () => {
       return;
     }
 
-    const ok = window.confirm("¿Deseas generar el certificado para este usuario?");
-    if (!ok) return;
+const ok = window.confirm(
+  "🎓 Estás a punto de generar el certificado oficial de este participante.\n\nUna vez emitido, el certificado quedará registrado en el sistema y será enviado al usuario.\n\n¿Deseas continuar?"
+);
+
+if (!ok) return;
 
     try {
       await axios.post(
@@ -1106,7 +1103,7 @@ const ValidacionPago = () => {
 
         <nav className={`secMenu ${menuOpen ? "open" : ""}`} ref={menuRef}>
           <div className="secMenuHeader">
-            <img src="/images/idrmind_sf.png" alt="iDr.Mind" className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="iDr.Mind." className="secMenuLogo" />
             <p className="secMenuSubtitle">Validación de Pagos</p>
           </div>
 

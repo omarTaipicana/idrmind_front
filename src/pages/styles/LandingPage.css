@@ -238,10 +238,11 @@
 }
 
 .nosotros-title {
-  font-size: 2.4rem;
+  font-size: 3rem;
   font-weight: 800;
   color: #1b326b;
   text-align: center;
+  margin-top: 1rem;
 }
 
 .nosotros-content {
@@ -291,7 +292,7 @@
 ================================ */
 
 .servicios {
-  padding: 6rem 6%;
+  padding: 5rem 6%;
   background:
     radial-gradient(circle at top left, rgba(40, 167, 232, 0.18), transparent 34%),
     linear-gradient(135deg, #071b3f, #0f2a63 55%, #173a8a);
@@ -320,12 +321,17 @@
   color: #ffffff;
 }
 
+.servicios-title {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
 .servicios_header span {
   display: inline-flex;
   padding: 0.45rem 1rem;
   border-radius: 999px;
   background: rgba(40, 167, 232, 0.18);
-  color: #8edcff;
+  color: #054766;
   font-weight: 900;
   margin-bottom: 1rem;
 }
@@ -336,18 +342,17 @@
 
 .servicios_header p {
   color: rgba(255, 255, 255, 0.76);
-  line-height: 1.7;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .servicios_lista {
   position: relative;
   z-index: 2;
-  max-width: 1250px;
+  max-width: 1750px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .servicio_card {
@@ -420,7 +425,7 @@
   position: relative;
   z-index: 2;
   margin: 1.4rem 0 0.6rem;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 950;
   text-align: center;
 }
@@ -439,7 +444,7 @@
   position: relative;
   z-index: 2;
   margin-top: 1rem;
-  color: #8edcff;
+  color: #054766;
   font-weight: 900;
   transition: transform 0.25s ease;
 }
@@ -468,6 +473,12 @@
 }
 
 @media (max-width: 760px) {
+
+  .servicios-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
   .servicios {
     padding: 4rem 1rem;
   }
@@ -590,7 +601,9 @@
   width: 50%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 1em;
+  margin: auto;
 }
 
 .contacto_text h3 {
@@ -1001,6 +1014,13 @@
   /* FOOTER */
   .footer {
     padding: 2.5rem 1rem 2rem;
+  }
+
+
+
+
+  .mobile_none {
+    display: none;
   }
 
   .footer-inner {

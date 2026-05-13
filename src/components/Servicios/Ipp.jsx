@@ -8,8 +8,8 @@ const Ipp = () => {
                 <div className="ipp_hero_overlay" />
 
                 <nav className="ipp_nav">
-                    <img src="/images/idrmind_logo_sf.png" alt="iDr. Mind" />
-                    <a href="#contacto">Solicitar evaluación IPP</a>
+                    <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind." />
+                    <a href="https://wa.me/593979002223">Solicitar evaluación IPP</a>
                 </nav>
 
                 <div className="ipp_hero_content">
@@ -70,7 +70,7 @@ const Ipp = () => {
                         <h2>¿Qué es el IPP?</h2>
                         <p>
                             El Índice de Productividad Personal es una evaluación
-                            psicoproductiva diseñada por iDr. Mind para medir el nivel de
+                            psicoproductiva diseñada por iDr. Mind. para medir el nivel de
                             productividad individual dentro de un entorno laboral.
                         </p>
                     </div>
@@ -158,7 +158,7 @@ const Ipp = () => {
             <section className="ipp_section" id="metodologia">
                 <div className="ipp_container">
                     <div className="ipp_section_header">
-                        <span className="ipp_section_tag">Metodología iDr. Mind</span>
+                        <span className="ipp_section_tag">Metodología iDr. Mind.</span>
                         <h2>Proceso IPP</h2>
                     </div>
 
@@ -226,11 +226,32 @@ const Ipp = () => {
                     </div>
 
                     <div className="ipp_footer_brand">
-                        <strong>iDr. Mind</strong>
+                        <strong>iDr.Mind.</strong>
                         <span>Evaluamos personas. Potenciamos equipos. Mejoramos empresas.</span>
                     </div>
                 </div>
             </section>
+
+                       <footer className="ipel_footer">
+                <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind" />
+
+                <p>No es falta de talento. Es falta de diagnóstico.</p>
+
+                <div>
+                    <a href="https://www.idrmind.com" target="_blank" rel="noopener noreferrer">
+                        www.idrmind.com
+                    </a>
+                    <a href="https://www.naskcorp.com" target="_blank" rel="noopener noreferrer">
+                        www.naskcorp.com
+                    </a>
+                    <a href="mailto:idrmind@gmail.com">idrmind@gmail.com</a>
+                    <a href="https://wa.me/593979002223" target="_blank" rel="noopener noreferrer">
+                        +593 097 900 2223
+                    </a>
+                </div>
+
+                <span>Presentado por iDr. Mind. by NASK Corp.</span>
+            </footer>
         </main>
     );
 };

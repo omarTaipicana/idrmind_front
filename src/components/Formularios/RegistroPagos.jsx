@@ -46,15 +46,17 @@ export const RegistroPagos = () => {
     reset,
   } = useForm();
 
-  const archivoField = register("archivo", {
-    required: "Debes subir el comprobante de pago.",
-  });
-
   const [cert_emp, cert_mdt, cert_int] = watch([
     "cert_emp",
     "cert_mdt",
     "cert_int",
   ]);
+
+  const archivoWatch = watch("archivo");
+
+  useEffect(() => {
+    setFileName(archivoWatch?.[0]?.name || "");
+  }, [archivoWatch]);
 
   const toCents = (value) => Math.round(Number(value || 0) * 100);
 
@@ -72,11 +74,25 @@ export const RegistroPagos = () => {
     );
   };
 
-  const obtenerCertificadosPagados = (pagos = []) => ({
-    cert_emp: pagos.some((p) => tieneCertificado(p, "cert_emp", "empresarial")),
-    cert_mdt: pagos.some((p) => tieneCertificado(p, "cert_mdt", "sPolicial")),
-    cert_int: pagos.some((p) => tieneCertificado(p, "cert_int", "oProfesionales")),
-  });
+const obtenerCertificadosPagados = (pagos = []) => ({
+  cert_emp: pagos.some(
+    (p) =>
+      p.confirmacion === true &&
+      tieneCertificado(p, "cert_emp", "empresarial")
+  ),
+
+  cert_mdt: pagos.some(
+    (p) =>
+      p.confirmacion === true &&
+      tieneCertificado(p, "cert_mdt", "sPolicial")
+  ),
+
+  cert_int: pagos.some(
+    (p) =>
+      p.confirmacion === true &&
+      tieneCertificado(p, "cert_int", "oProfesionales")
+  ),
+});
 
   const resetCertificados = () => {
     setValue("cert_emp", false);
@@ -123,9 +139,12 @@ export const RegistroPagos = () => {
       setUsuario(newValidate?.user);
       setInscrito(newValidate?.inscripcion);
 
+    
+
       const certificados = obtenerCertificadosPagados(newValidate?.pagos || []);
       setCertificadosPagados(certificados);
       resetCertificados();
+
 
       if (newValidate?.pagos?.length > 0) {
         setPagoExistente(newValidate?.pagos);
@@ -143,8 +162,6 @@ export const RegistroPagos = () => {
   }, [newValidate]);
 
   const buscarCedula = (data) => {
-
-    console.log("ejecutando")
     const cedula = data?.cedula?.trim();
     const body = { cedula, code };
     const curso = courses?.find((c) => c.sigla === code);
@@ -183,7 +200,6 @@ export const RegistroPagos = () => {
       cert_mdt: !!data.cert_mdt,
       cert_int: !!data.cert_int,
 
-      // Compatibilidad con nombres anteriores
       sPolicial: !!data.cert_mdt,
       oProfesionales: !!data.cert_int,
 
@@ -213,7 +229,11 @@ export const RegistroPagos = () => {
 
       dispatch(
         showAlert({
-          message: `✅ Estimado/a ${usuario?.firstName} ${usuario?.lastName}, se registró tu pago de $${newUpload.valorDepositado} por ${seleccionados.join(", ")}.`,
+          message: `✅ Estimado/a ${usuario?.firstName} ${
+            usuario?.lastName
+          }, se registró tu pago de $${
+            newUpload.valorDepositado
+          } por ${seleccionados.join(", ")}.`,
           alertType: 2,
         })
       );
@@ -231,9 +251,11 @@ export const RegistroPagos = () => {
   const onRegistrarNuevo = () => {
     setUsuario(newValidate?.user);
 
-    const curso = courses?.find((c) => c.sigla === pagoExistente?.[0]?.curso) || cursoActivo;
-    setCursoActual(curso);
+    const curso =
+      courses?.find((c) => c.sigla === pagoExistente?.[0]?.curso) ||
+      cursoActivo;
 
+    setCursoActual(curso);
     setCertificadosPagados(obtenerCertificadosPagados(pagoExistente || []));
     resetCertificados();
     setPagoExistente(null);
@@ -290,25 +312,23 @@ export const RegistroPagos = () => {
     );
   }
 
+
   const certificados = [
     {
       name: "cert_emp",
-      title: "Certificado empresarial",
-      description: "Certificación institucional empresarial.",
+      title: "Certificado Empresarial iDr.Mind.",
       price: cursoActual?.precio_emp,
       disabled: certificadosPagados.cert_emp,
     },
     {
       name: "cert_mdt",
-      title: "Certificado por el Ministerio",
-      description: "Certificado avalado por el MDT.",
+      title: "Certificado por el Ministerio de Trabajo",
       price: cursoActual?.precio_mdt,
       disabled: certificadosPagados.cert_mdt,
     },
     {
       name: "cert_int",
-      title: "Certificado internacional",
-      description: "Certificación con proyección internacional.",
+      title: "Certificado Internacional",
       price: cursoActual?.precio_int,
       disabled: certificadosPagados.cert_int,
     },
@@ -400,7 +420,7 @@ export const RegistroPagos = () => {
                       >
                         <div className="pagos_cert_info">
                           <strong>{cert.title}</strong>
-                          <small>{cert.description}</small>
+                     
                           <span>
                             {cert.disabled
                               ? "Ya registrado"
@@ -409,6 +429,7 @@ export const RegistroPagos = () => {
                         </div>
 
                         <input
+                        className="check_price"
                           type="checkbox"
                           disabled={cert.disabled}
                           {...register(cert.name)}
@@ -433,11 +454,9 @@ export const RegistroPagos = () => {
 
                         <input
                           type="file"
-                          {...archivoField}
-                          onChange={(e) => {
-                            archivoField.onChange(e);
-                            setFileName(e.target.files[0]?.name || "");
-                          }}
+                          {...register("archivo", {
+                            required: "Debes subir el comprobante de pago.",
+                          })}
                         />
                       </label>
 

@@ -22,7 +22,7 @@
   overflow: hidden;
 }
 
-/* Marca de agua iDr.Mind */
+/* Marca de agua iDr.Mind.<//
 .verifyCard::before {
   content: "";
   position: absolute;

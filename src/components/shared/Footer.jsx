@@ -100,7 +100,7 @@ const Footer = () => {
           <li className="li_footer">
             <span className="span_footer">Copyright</span>
             <img className="img_footer_c" src="../../../copyright.png" alt="" />
-            <span className="span_footer">2024. iDr. Mind. by NASK-Corp. All Rights Reserved.</span>
+            <span className="span_footer">2024. iDr.Mind. by NASK-Corp. All Rights Reserved.</span>
             <a href="tel:+593979002223" className="link_footer">
               <img
                 src="/images/idrmind_sf.png"

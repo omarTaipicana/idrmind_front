@@ -8,7 +8,7 @@ const Franquicias = () => {
                 <div className="fran_overlay" />
 
                 <nav className="fran_nav">
-                    <img src="/images/idrmind_logo_sf.png" alt="iDr. Mind" />
+                    <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind." />
 
                     <a href="https://wa.me/593979002223">
                         Modelo Internacional
@@ -29,7 +29,7 @@ const Franquicias = () => {
                     </h2>
 
                     <p>
-                        Representa la metodología de iDr. Mind en tu país y lidera una
+                        Representa la metodología de iDr. Mind. en tu país y lidera una
                         nueva generación de soluciones enfocadas en productividad,
                         análisis humano y transformación empresarial.
                     </p>
@@ -48,7 +48,7 @@ const Franquicias = () => {
                 <div className="fran_container fran_two_cols">
                     <div>
                         <span className="fran_tag">
-                            ¿Qué es iDr. Mind?
+                            ¿Qué es iDr. Mind..?
                         </span>
 
                         <h2>
@@ -60,7 +60,7 @@ const Franquicias = () => {
 
                     <div className="fran_problem_card">
                         <p>
-                            iDr. Mind es una plataforma especializada en evaluación de
+                            iDr. Mind.es una plataforma especializada en evaluación de
                             productividad, análisis conductual, optimización organizacional
                             y entrenamiento estratégico para empresas.
                         </p>
@@ -203,7 +203,7 @@ const Franquicias = () => {
                         </span>
 
                         <h2>
-                            ¿Por qué empresas y emprendedores se interesan en iDr. Mind?
+                            ¿Por qué empresas y emprendedores se interesan en iDr. Mind.?
                         </h2>
                     </div>
 
@@ -237,7 +237,7 @@ const Franquicias = () => {
 
                     <div className="fran_footer">
                         <strong>
-                            iDr. Mind — Human Intelligence Applied To Business
+                            iDr. Mind.— Human Intelligence Applied To Business
                         </strong>
 
                         <span>

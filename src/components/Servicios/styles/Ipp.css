@@ -10,7 +10,7 @@
 
 .ipp_hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 85vh;
     background:
         linear-gradient(120deg,
             rgba(3, 22, 52, 0.96),
@@ -68,7 +68,8 @@
 .ipp_hero_content {
     position: relative;
     z-index: 2;
-    max-width: 990px;
+
+
 }
 
 .ipp_badge,
@@ -77,7 +78,7 @@
     align-items: center;
     width: fit-content;
     background: rgba(56, 189, 248, 0.13);
-    color: #7dd3fc;
+    color: #1c9fdc;
     border: 1px solid rgba(125, 211, 252, 0.38);
     padding: 8px 16px;
     border-radius: 999px;
@@ -176,9 +177,9 @@
 .ipp_problem_card p,
 .ipp_statement p,
 .ipp_cta p {
-    font-size: 1.06rem;
+    font-size: 1.3rem;
     line-height: 1.8;
-    color: #526173;
+    color: #232426;
 }
 
 /* PROBLEMA */
@@ -430,7 +431,7 @@
 }
 
 .ipp_footer_brand strong {
-    color: #7dd3fc;
+    color: #1c9fdc;
     font-size: 1.3rem;
 }
 
@@ -447,7 +448,7 @@
     }
 
     .ipp_hero {
-        min-height: 820px;
+        min-height: 620px;
     }
 }
 
@@ -465,7 +466,7 @@
     }
 
     .ipp_hero {
-        min-height: 760px;
+        min-height: 500px;
         padding: 24px 6%;
     }
 
@@ -484,7 +485,7 @@
     .ipp_section,
     .ipp_statement,
     .ipp_cta {
-        padding: 70px 6%;
+        padding: 30px 6%;
     }
 
     .ipp_two_cols,

@@ -32,6 +32,7 @@ import Ipp from "./components/Servicios/Ipp";
 import Capacitaciones from "./components/Servicios/Capacitaciones";
 import Membresias from "./components/Servicios/Membresias";
 import Franquicias from "./components/Servicios/Franquicias";
+import SistemaDeEvaluacion from "./components/Servicios/SistemaDeEvaluacion";
 
 const App = () => {
   const location = useLocation();
@@ -63,9 +64,7 @@ const App = () => {
         <Route path="/servicios/capacitaciones" element={<Capacitaciones />} />
         <Route path="/servicios/membresias" element={<Membresias />} />
         <Route path="/servicios/franquicias" element={<Franquicias />} />
-
-
-
+        <Route path="/servicios/sistema_evaluación" element={<SistemaDeEvaluacion />} />
 
 
 

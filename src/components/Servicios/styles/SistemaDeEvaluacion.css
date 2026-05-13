@@ -1,4 +1,4 @@
-.fran_page {
+.eval_page {
   width: 100%;
   overflow-x: hidden;
   background: #ffffff;
@@ -6,11 +6,9 @@
   font-family: "Inter", "Segoe UI", sans-serif;
 }
 
-/* HERO */
-
-.fran_hero {
+.eval_hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 80vh;
   background:
     linear-gradient(
       120deg,
@@ -18,14 +16,14 @@
       rgba(5, 46, 95, 0.9),
       rgba(14, 116, 144, 0.78)
     ),
-    url("/images/franquicias.jpeg") center/cover no-repeat;
+    url("/images/sis_ev.jpeg") center/cover no-repeat;
   display: flex;
   align-items: center;
   padding: 30px 7%;
   color: #ffffff;
 }
 
-.fran_overlay {
+.eval_overlay {
   position: absolute;
   inset: 0;
   background:
@@ -34,7 +32,7 @@
   z-index: 1;
 }
 
-.fran_nav {
+.eval_nav {
   position: absolute;
   top: 0;
   left: 0;
@@ -46,11 +44,11 @@
   justify-content: space-between;
 }
 
-.fran_nav img {
+.eval_nav img {
   width: 155px;
 }
 
-.fran_nav a {
+.eval_nav a {
   color: #ffffff;
   background: linear-gradient(135deg, #0284c7, #06b6d4);
   padding: 12px 22px;
@@ -61,18 +59,15 @@
   transition: 0.3s ease;
 }
 
-.fran_nav a:hover {
-  transform: translateY(-2px);
-}
-
-.fran_hero_content {
+.eval_hero_content {
   position: relative;
   z-index: 2;
   max-width: 820px;
+  padding-top: 80px;
 }
 
-.fran_badge,
-.fran_tag {
+.eval_badge,
+.eval_tag {
   display: inline-flex;
   align-items: center;
   width: fit-content;
@@ -87,7 +82,7 @@
   text-transform: uppercase;
 }
 
-.fran_hero h2 {
+.eval_hero h2 {
   font-size: clamp(3rem, 7vw, 4rem);
   line-height: 0.98;
   margin: 28px 0 24px;
@@ -95,7 +90,7 @@
   letter-spacing: -0.04em;
 }
 
-.fran_hero p {
+.eval_hero p {
   font-size: 1.18rem;
   line-height: 1.75;
   max-width: 720px;
@@ -103,13 +98,13 @@
   margin-bottom: 34px;
 }
 
-.fran_buttons {
+.eval_buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
 }
 
-.fran_btn {
+.eval_btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -121,51 +116,50 @@
   transition: 0.3s ease;
 }
 
-.fran_primary {
+.eval_primary {
   background: linear-gradient(135deg, #0284c7, #06b6d4);
   color: #ffffff;
   box-shadow: 0 14px 32px rgba(14, 165, 233, 0.3);
 }
 
-.fran_secondary {
+.eval_secondary {
   color: #ffffff;
   border: 1px solid rgba(186, 230, 253, 0.45);
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
 }
 
-.fran_btn:hover {
+.eval_btn:hover,
+.eval_nav a:hover {
   transform: translateY(-3px);
 }
 
-/* GENERAL */
-
-.fran_section {
-  padding: 75px 7%;
+.eval_section {
+  padding: 70px 7%;
 }
 
-.fran_container {
+.eval_container {
   max-width: 1180px;
   margin: 0 auto;
 }
 
-.fran_two_cols {
+.eval_two_cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 45px;
   align-items: center;
 }
 
-.fran_header {
+.eval_header {
   text-align: center;
-  max-width: 780px;
+  max-width: 800px;
   margin: 0 auto 50px;
 }
 
-.fran_header h2,
-.fran_section h2,
-.fran_statement h2,
-.fran_cta h2 {
+.eval_header h2,
+.eval_section h2,
+.eval_statement h2,
+.eval_cta h2 {
   font-size: clamp(2rem, 4vw, 3.55rem);
   line-height: 1.1;
   margin: 18px 0;
@@ -174,22 +168,21 @@
   letter-spacing: -0.03em;
 }
 
-.fran_header p,
-.fran_statement p,
-.fran_cta p,
-.fran_problem_card p {
+.eval_header p,
+.eval_statement p,
+.eval_cta p,
+.eval_problem_card p {
   font-size: 1.06rem;
   line-height: 1.8;
-  color: #000000;
+  color: #030303;
 }
 
-/* PROBLEM */
-
-.fran_problem {
+.eval_problem,
+.eval_report {
   background: #f3f8fc;
 }
 
-.fran_problem_card {
+.eval_problem_card {
   background: #ffffff;
   padding: 38px;
   border-radius: 30px;
@@ -197,21 +190,21 @@
   border-left: 6px solid #0284c7;
 }
 
-.fran_problem_card strong {
+.eval_problem_card strong {
   display: block;
   margin-top: 18px;
   color: #052e5f;
 }
 
-/* GRID */
-
-.fran_grid {
+.eval_grid,
+.eval_services_grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 22px;
 }
 
-.fran_card {
+.eval_card,
+.eval_services_grid div {
   position: relative;
   background: #ffffff;
   border-radius: 28px;
@@ -222,7 +215,8 @@
   overflow: hidden;
 }
 
-.fran_card::before {
+.eval_card::before,
+.eval_services_grid div::before {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
@@ -230,26 +224,25 @@
   background: linear-gradient(90deg, #0369a1, #06b6d4);
 }
 
-.fran_card:hover {
+.eval_card:hover,
+.eval_services_grid div:hover {
   transform: translateY(-8px);
   box-shadow: 0 24px 55px rgba(5, 46, 95, 0.13);
 }
 
-.fran_card h3 {
+.eval_card h3 {
   color: #052e5f;
   margin-bottom: 14px;
   font-size: 1.22rem;
   font-weight: 900;
 }
 
-.fran_card p {
+.eval_card p {
   color: #526173;
   line-height: 1.7;
 }
 
-/* STATEMENT */
-
-.fran_statement {
+.eval_statement {
   background: linear-gradient(
     135deg,
     #031634 0%,
@@ -257,30 +250,28 @@
     #075985 100%
   );
   color: #ffffff;
-  padding: 70px 7%;
+  padding: 92px 7%;
   text-align: center;
 }
 
-.fran_statement h2,
-.fran_statement p {
+.eval_statement h2,
+.eval_statement p {
   color: #ffffff;
 }
 
-.fran_statement p {
+.eval_statement p {
   max-width: 840px;
   margin: auto;
   color: #e0f2fe;
 }
 
-/* FEATURES */
-
-.fran_features {
+.eval_features {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
-.fran_feature {
+.eval_feature {
   background: #f8fbff;
   padding: 30px;
   border-radius: 26px;
@@ -288,59 +279,59 @@
   transition: 0.3s ease;
 }
 
-.fran_feature:hover {
+.eval_feature:hover {
   transform: translateY(-6px);
   background: #ffffff;
   box-shadow: 0 18px 42px rgba(5, 46, 95, 0.08);
 }
 
-.fran_feature span {
+.eval_feature span {
   color: #0284c7;
   font-weight: 900;
 }
 
-.fran_feature h3 {
+.eval_feature h3 {
   margin: 14px 0 10px;
   color: #052e5f;
   font-size: 1.12rem;
   font-weight: 900;
 }
 
-.fran_feature p {
+.eval_feature p {
   color: #526173;
   line-height: 1.7;
 }
 
-/* SERVICES */
-
-.fran_services {
-  background: #f3f8fc;
+.eval_services_grid div {
+  font-weight: 800;
+  color: #052e5f;
 }
 
-.fran_services_grid {
+.eval_faq {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
-.fran_services_grid div {
+.eval_faq div {
   background: #ffffff;
-  border-radius: 24px;
-  padding: 26px;
+  border-radius: 26px;
+  padding: 30px;
   border: 1px solid #dbeafe;
   box-shadow: 0 14px 38px rgba(5, 46, 95, 0.06);
-  font-weight: 800;
+}
+
+.eval_faq h3 {
   color: #052e5f;
-  transition: 0.3s ease;
+  margin-bottom: 10px;
 }
 
-.fran_services_grid div:hover {
-  transform: translateY(-5px);
+.eval_faq p {
+  color: #526173;
+  line-height: 1.7;
 }
 
-/* CTA */
-
-.fran_cta {
+.eval_cta {
   padding: 70px 7%;
   background:
     linear-gradient(
@@ -349,26 +340,26 @@
       rgba(5, 46, 95, 0.95),
       rgba(7, 89, 133, 0.9)
     ),
-    url("/images/franquicias_cta.jpg") center/cover no-repeat;
+    url("/images/proyecto_pensar_cta.jpg") center/cover no-repeat;
   text-align: center;
   color: #ffffff;
 }
 
-.fran_cta h2 {
+.eval_cta h2 {
   color: #ffffff;
 }
 
-.fran_cta p {
+.eval_cta p {
   color: #e0f2fe;
   max-width: 720px;
   margin: 0 auto 30px;
 }
 
-.fran_cta .fran_buttons {
+.eval_cta .eval_buttons {
   justify-content: center;
 }
 
-.fran_footer {
+.eval_footer {
   margin-top: 44px;
   display: flex;
   flex-direction: column;
@@ -376,81 +367,82 @@
   color: #e0f2fe;
 }
 
-.fran_footer strong {
+.eval_footer strong {
   color: #1c9fdc;
   font-size: 1.3rem;
 }
 
-/* RESPONSIVE */
-
 @media (max-width: 980px) {
-  .fran_two_cols,
-  .fran_grid,
-  .fran_features,
-  .fran_services_grid {
+  .eval_two_cols,
+  .eval_grid,
+  .eval_services_grid,
+  .eval_features,
+  .eval_faq {
     grid-template-columns: 1fr 1fr;
   }
 
-  .fran_hero {
+  .eval_hero {
     min-height: 620px;
   }
 }
 
 @media (max-width: 640px) {
-  .fran_nav {
+  .eval_nav {
     padding: 18px 6%;
   }
 
-  .fran_nav img {
+  .eval_nav img {
     width: 125px;
   }
 
-  .fran_nav a {
+  .eval_nav a {
     display: none;
   }
 
-  .fran_hero {
+  .eval_hero {
     min-height: 500px;
     padding: 24px 6%;
   }
 
-  .fran_hero_content {
+  .eval_hero_content {
     padding-top: 80px;
   }
 
-  .fran_hero h2 {
+  .eval_hero h2 {
     font-size: clamp(2.7rem, 13vw, 1rem);
   }
 
-  .fran_hero p {
+  .eval_hero p {
     font-size: 1rem;
   }
 
-  .fran_section,
-  .fran_statement,
-  .fran_cta {
+  .eval_section,
+  .eval_statement,
+  .eval_cta {
     padding: 50px 6%;
   }
 
-  .fran_two_cols,
-  .fran_grid,
-  .fran_features,
-  .fran_services_grid {
+  .eval_two_cols,
+  .eval_grid,
+  .eval_services_grid,
+  .eval_features,
+  .eval_faq {
     grid-template-columns: 1fr;
   }
 
-  .fran_problem_card,
-  .fran_card,
-  .fran_feature,
-  .fran_services_grid div {
+  .eval_problem_card,
+  .eval_card,
+  .eval_feature,
+  .eval_services_grid div,
+  .eval_faq div {
     padding: 26px;
   }
 
-  .fran_buttons {
+  .eval_buttons {
     flex-direction: column;
   }
 
-  .fran_btn {
+  .eval_btn {
     width: 100%;
     text-align: center;
   }

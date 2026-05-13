@@ -245,9 +245,9 @@ const LandingPage = () => {
           </motion.h1>
 
           <p>
-            Cursos diseñados para reconocer y potenciar tus Habilidades Blandas y las
-            competencias del talento humano, preparado para personas y empresas que
-            buscan la excelencia y el crecimiento continuo en su productividad laboral.
+            Cursos diseñados para identificar y fortalecer tus Habilidades Blandas, enfocándose en el desarrollo continuo
+            del talento humano. Perfectos para individuos y empresas que aspiran la excelencia
+            y un crecimiento continuo en la productividad laboral y personal.
           </p>
 
           <a onClick={() => scrollToSection(contactoRef)} className="cta_button">
@@ -284,7 +284,7 @@ const LandingPage = () => {
             >
               <div className="curso_card">
                 <img
-                  src={`/cursos/${c.sigla}.jpg`}
+                  src={`/cursos/${c.sigla}.png`}
                   alt={c.nombre}
                   className="curso_img"
                 />
@@ -308,11 +308,11 @@ const LandingPage = () => {
         ref={serviciosRef}
       >
         <div className="servicios_header">
-          <span>Nuestros servicios</span>
-          <h2 className="nosotros-title">Servicios iDr. Mind.</h2>
+          <h2 className="servicios-title">Servicios iDr. Mind.</h2>
           <p>
-            Soluciones diseñadas para acompañar el crecimiento personal,
-            académico y empresarial.
+            Soluciones diseñadas para acompañar
+
+            crecimiento personal, empresarial y académico.
           </p>
         </div>
         <div className="servicios_lista">
@@ -332,7 +332,7 @@ const LandingPage = () => {
 
             <p>
               Somos especialistas en detectar pérdidas invisibles de productividad
-              relacionadas con el comportamiento personal que afectan la rentabilidad
+              relacionadas con el comportamiento personal que afecta la rentabilidad
               empresarial.
             </p>
 
@@ -366,10 +366,26 @@ const LandingPage = () => {
             <div className="servicio_logo">
               <img src={`/images/cap.jpeg`} alt={`Servicio Capacitaciones`} />
             </div>
-            <h3>Capacitaciones </h3>
+            <h3>CAPACITACIONES</h3>
             <p>
               Capacitaciones empresariales enfocadas en productividad, liderazgo, habilidades blandas e inteligencia emocional para fortalecer equipos y mejorar resultados.
             </p>
+            <span className="servicio_link">Ver más →</span>
+          </div>
+
+
+
+          <div
+            onClick={() => navigate("/servicios/sistema_evaluación")}
+            className="servicio_card"
+            style={{ animationDelay: `${2 * 0.15}s` }}
+          >
+            <div className="servicio_logo">
+              <img src={`/images/sis_ev.jpeg`} alt={`sistema_evaluación`} />
+            </div>
+            <h3>SISTEMA DE EVALUACIÓN </h3>
+            <p>
+              Descubre tus habilidades blandas, fortalezas y áreas de mejora mediante una evaluación estratégica diseñada para impulsar tu crecimiento personal y profesional.            </p>
             <span className="servicio_link">Ver más →</span>
           </div>
 
@@ -387,7 +403,7 @@ const LandingPage = () => {
             </div>
             <h3>MEMBRESÍAS </h3>
             <p>
-              Convierte tus contactos y conexiones estratégicas en nuevas oportunidades de crecimiento e ingresos promoviendo soluciones empresariales de alto valor.
+              Convierte tus contactos y conexiones estratégicas en nuevas oportunidades de crecimiento e ingresos, promoviendo soluciones empresariales de alto valor.
             </p>
             <span className="servicio_link">Ver más →</span>
           </div>
@@ -403,7 +419,7 @@ const LandingPage = () => {
             </div>
             <h3>FRANQUICIAS </h3>
             <p>
-              Representa la metodología de iDr. Mind en tu país y lidera una nueva generación de soluciones enfocadas en productividad, análisis humano y transformación empresarial.
+              Representa la metodología de iDr. Mind. en tu país y lidera una nueva generación de soluciones enfocadas en productividad, análisis humano y transformación empresarial.
             </p>
             <span className="servicio_link">Ver más →</span>
           </div>
@@ -423,19 +439,19 @@ const LandingPage = () => {
       >
         <div className="nosotros-inner">
           <div className="nosotros-header">
-            <h2 className="nosotros-title">¿Por qué elegir a iDr. Mind?</h2>
+            <h2 className="nosotros-title">¿Por qué elegir a iDr. Mind.?</h2>
           </div>
 
           <div className="nosotros-content">
             <p>
-              En<strong> iDr. Mind</strong> Somos especialistas en ofrecer capacitaciones
+              Somos especialistas en ofrecer capacitaciones
               integrales que impulsan el desarrollo de Habilidades Blandas, Técnicas y
-              Emocionales. Nuestro enfoque está en diseñar soluciones a medida para
+              Emocionales. Nuestro método diseña soluciones a la medida para
               maximizar la productividad y fomentar la mejora continua con nuestras
-              modalidades presencial y en línea. Somos reconocidos por nuestro
-              compromiso con la excelencia, ayudando a transformar el talento humano
-              en un motor clave para el éxito empresarial. «¡Pensamos positivo y
-              actuamos para avanzar juntos!»
+              modalidades presencial on line. Somos reconocidos por nuestro
+              compromiso con la excelencia, ayudamos a transformar el talento humano
+              en el motor clave para el éxito empresarial. " ¡Pensamos positivo y
+              actuamos para avanzar juntos! "
             </p>
           </div>
         </div>
@@ -445,7 +461,7 @@ const LandingPage = () => {
             <h3 className="mvv-title">¡Empieza Tu Formación Hoy Mismo!</h3>
             <p className="mvv-text">
               No te pierdas la oportunidad de mejorar tus Habilidades Blandas y avanzar
-              con nuestros cursos especializados para mejorar la productividad laboral.
+              con nuestros cursos especializados.
               Regístrate ahora y accede a una formación de calidad que te ayudará a
               sobresalir en tu campo.
             </p>
@@ -464,13 +480,11 @@ const LandingPage = () => {
           <h3>Contáctanos</h3>
           <p>
             Si tienes alguna consulta o necesitas información adicional sobre nuestros
-            cursos y servicios, no dudes en escribirnos o llamarnos. Responderemos a la
-            brevedad para atender todas tus necesidades. ¡Contáctanos hoy mismo!
+            cursos y servicios, no dudes en escribirnos o llamarnos.
           </p>
 
           <article>
             <ul className="ul_contactanos">
-              <span>Contáctenos a través de</span>
 
               <li className="li_footer">
                 <a
@@ -490,18 +504,20 @@ const LandingPage = () => {
                 </a>
               </li>
 
-              <li>
+              <li className="li_footer">
                 <a
                   href="https://api.whatsapp.com/send?phone=593979002223&text=Hola%20quiero%20más%20información"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="link_footer"
+
                 >
                   <img
                     className="img_contctanos"
                     src="../../../whatsapp2.png"
                     alt="WhatsApp"
                   />
-                  <span className="span_contactanos">+593979002223</span>
+                  <span className="span_contactanos">+593 - 979002223</span>
                 </a>
               </li>
 
@@ -561,8 +577,8 @@ const LandingPage = () => {
           </div>
 
           <div className="footer-middle">
-            <h4 className="footer-section-title footer-social-title">¡Síguenos!</h4>
-            <div className="footer-social">
+            <h4 className="footer-section-title footer-social-title mobile_none">¡Síguenos!</h4>
+            <div className="footer-social mobile_none">
               <a
                 href="https://www.facebook.com/profile.php?id=100054880556231&mibextid=ZbWKwL"
                 target="_blank"
@@ -588,7 +604,7 @@ const LandingPage = () => {
           </div>
 
           <div className="footer-right">
-            <div className="footer-block">
+            <div className="footer-block mobile_none">
               <h4 className="footer-section-title">¡Escríbenos!</h4>
             </div>
 
@@ -596,9 +612,10 @@ const LandingPage = () => {
               href="https://api.whatsapp.com/send?phone=593979002223&text=Hola%20quiero%20más%20información"
               target="_blank"
               rel="noopener noreferrer"
+              className="mobile_none"
             >
 
-              <span className="span_contactanos">+593979002223</span>
+              <span className="span_contactanos">+593 - 979002223</span>
             </a>
             <div className="footer-block">
               <h4 className="footer-section-title">Plataforma educativa</h4>
@@ -614,8 +631,8 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <div className="footer-bottom">
-          <p>2024. iDr. Mind. by NASK-Corp. All Rights Reserved.</p>
+        <div className="footer-bottom mobile_none">
+          <p>2020. iDr.Mind. by NASK-Corp. All Rights Reserved.</p>
         </div>
       </footer>
     </div>

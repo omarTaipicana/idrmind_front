@@ -147,7 +147,7 @@ const Login = () => {
 
       dispatch(
         showAlert({
-          message: `⚠️ Bienvenido ${userLogged?.firstName} ${userLogged?.lastName} a iDr.Mind, tu Plataforma Educativa`,
+          message: `⚠️ Bienvenido ${userLogged?.firstName} ${userLogged?.lastName} a iDr.Mind.</tu Plataforma Educativa`,
           alertType: 2,
         })
       );

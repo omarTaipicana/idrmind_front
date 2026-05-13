@@ -1,4 +1,4 @@
-/* ===== HOME iDr.Mind STYLE ===== */
+/* ===== HOME iDr.Mind.</TYLE ===== */
 
 /* Ajusta este valor según tu header total */
 :root {
@@ -414,8 +414,8 @@
 /* ===== Hamburger (Mobile) ===== */
 .homeHamburger {
   position: fixed;
-  left: 0.2rem;
-  top: 7rem;
+  left: 0.1rem;
+  top: 4rem;
   z-index: 120;
   width: 44px;
   height: 44px;

@@ -8,7 +8,7 @@ const Membresias = () => {
                 <div className="memb_overlay" />
 
                 <nav className="memb_nav">
-                    <img src="/images/idrmind_logo_sf.png" alt="iDr. Mind" />
+                    <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind." />
 
                     <a href="https://wa.me/593979002223">
                         Quiero ser Cooproductor
@@ -20,13 +20,11 @@ const Membresias = () => {
                         Membresía Cooproductor
                     </span>
 
-                    <h1>
+                    <h2>
                         Promociona.
-                        <br />
                         Conecta.
-                        <br />
                         Genera.
-                    </h1>
+                    </h2>
 
                     <p>
                         Convierte tus contactos y conexiones estratégicas en nuevas
@@ -53,7 +51,7 @@ const Membresias = () => {
 
                         <h2>
                             No necesitas crear un negocio
-                            <br />
+                
                             desde cero para generar ingresos.
                         </h2>
                     </div>
@@ -84,7 +82,7 @@ const Membresias = () => {
 
                         <p>
                             Un Cooproductor conecta empresas, emprendedores y profesionales
-                            con soluciones empresariales de iDr. Mind mientras desarrolla una
+                            con soluciones empresariales de iDr. Mind. mientras desarrolla una
                             nueva fuente de ingresos basada en relaciones estratégicas.
                         </p>
                     </div>
@@ -233,7 +231,7 @@ const Membresias = () => {
                     </div>
 
                     <div className="memb_footer">
-                        <strong>iDr. Mind</strong>
+                        <strong>iDr.Mind.</strong>
 
                         <span>
                             Conexiones Estratégicas • Crecimiento • Expansión

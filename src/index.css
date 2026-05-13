@@ -70,7 +70,7 @@ button {
 /* cuando hay PrincipalHeader fixed */
 .app-main--with-header {
   /* topbar (5em) + navbar (5rem) */
-  padding-top: calc(3.5em + 3.5rem);
+  padding-top: calc(3em + 3rem);
 }
 
 
@@ -78,6 +78,6 @@ button {
 /* Versión mobile: topbar más baja + navbar 3.5rem */
 @media (max-width: 768px) {
   .app-main--with-header {
-    padding-top: 8.5rem; /* ajusta si ves que falta/sobra un poquito */
+    padding-top: 4rem; /* ajusta si ves que falta/sobra un poquito */
   }
 }

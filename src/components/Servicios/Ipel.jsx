@@ -18,13 +18,13 @@ const Ipel = () => {
 
                 <div className="ipel_hero_content">
                     <div className="ipel_hero_text">
-                        <span className="ipel_badge">
+                        <span className="ipel_badge claro">
                             Sistema de Auditoría Conductual Empresarial
                         </span>
 
                         <h2>
                             Liderar sin datos hoy,
-                            <br />
+                     
                             es dirigir a ciegas.
                         </h2>
 
@@ -55,14 +55,14 @@ const Ipel = () => {
             {/* PROBLEMA */}
             <section className="ipel_problem" id="diagnostico">
                 <div className="ipel_section_head">
-                    <span>Diagnóstico empresarial</span>
+                    <span >Diagnóstico empresarial</span>
 
                     <h2>
                         Evaluamos fugas invisibles de productividad que están drenando la
                         rentabilidad de su empresa.
                     </h2>
 
-                    <p>
+                    <p className="oscuro">
                         Durante años vimos el mismo patrón repetirse en empresas de todos los
                         tamaños: gerentes brillantes, equipos comprometidos y resultados que
                         no reflejaban el esfuerzo invertido. No era falta de talento. Era
@@ -112,7 +112,7 @@ const Ipel = () => {
             {/* VIDEO 1 */}
             <section className="ipel_video_dark" id="video">
                 <div className="ipel_section_head ipel_section_head_dark">
-                    <span>Presentación IPEL</span>
+                    <span className="claro">Presentación IPEL</span>
                     <h2>Conoce cómo funciona el sistema</h2>
                     <p>
                         Evaluamos gerentes, equipos clave y colaboradores para convertir
@@ -136,7 +136,7 @@ const Ipel = () => {
                     <span className="ipel_badge">¿Qué es IPEL?</span>
 
                     <h2>
-                        iDr. Mind crea IPEL para convertir lo invisible en datos, y los datos
+                        iDr.Mind. crea IPEL para convertir lo invisible en datos, y los datos
                         en decisiones.
                     </h2>
 
@@ -210,7 +210,7 @@ const Ipel = () => {
             {/* QUÉ RECIBE */}
             <section className="ipel_receive">
                 <div className="ipel_receive_card">
-                    <span className="ipel_badge">¿Qué recibe su empresa?</span>
+                    <span className="ipel_badge claro">¿Qué recibe su empresa?</span>
 
                     <h2>Información lista para decidir</h2>
 
@@ -272,7 +272,7 @@ const Ipel = () => {
             {/* CTA FINAL */}
             <section className="ipel_cta" id="contacto">
                 <div>
-                    <span className="ipel_badge">Empieza ahora</span>
+                    <span className="ipel_badge claro">Empieza ahora</span>
 
                     <h2>
                         Si tu empresa ya no puede gestionarse como antes, necesitas otra
@@ -280,7 +280,7 @@ const Ipel = () => {
                     </h2>
 
                     <p>
-                        iDr. Mind no inspira ni motiva. iDr. Mind mide, ordena y guía.
+                        iDr. Mind. no inspira ni motiva. iDr. Mind. mide, ordena y guía.
                         Solicita una evaluación inicial y empieza a decidir con datos reales.
                     </p>
 
@@ -331,7 +331,7 @@ const Ipel = () => {
                     </a>
                 </div>
 
-                <span>Presentado por iDr. Mind by NASK Corp.</span>
+                <span>Presentado por iDr. Mind. by NASK Corp.</span>
             </footer>
         </main>
     );

@@ -10,7 +10,7 @@
 
 .caps_hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 85vh;
   background:
     linear-gradient(
       120deg,
@@ -80,7 +80,7 @@
   align-items: center;
   width: fit-content;
   background: rgba(56, 189, 248, 0.13);
-  color: #7dd3fc;
+  color: #1c9fdc;
   border: 1px solid rgba(125, 211, 252, 0.38);
   padding: 8px 16px;
   border-radius: 999px;
@@ -91,7 +91,7 @@
 }
 
 .caps_hero h2 {
-  font-size: clamp(3rem, 7vw, 5.2rem);
+  font-size: clamp(3rem, 7vw, 4.2rem);
   line-height: 0.98;
   margin: 28px 0 24px;
   font-weight: 900;
@@ -144,7 +144,7 @@
 /* GENERAL */
 
 .caps_section {
-  padding: 95px 7%;
+  padding: 75px 7%;
 }
 
 .caps_container {
@@ -202,7 +202,7 @@
 .caps_problem_card p {
   font-size: 1.05rem;
   line-height: 1.75;
-  color: #526173;
+  color: #0e0e0e;
 }
 
 .caps_problem_card strong {
@@ -367,7 +367,7 @@
 /* CTA */
 
 .caps_cta {
-  padding: 110px 7%;
+  padding: 80px 7%;
   background:
     linear-gradient(
       135deg,
@@ -403,7 +403,7 @@
 }
 
 .caps_footer strong {
-  color: #7dd3fc;
+  color: #1c9fdc;
   font-size: 1.3rem;
 }
 
@@ -418,7 +418,7 @@
   }
 
   .caps_hero {
-    min-height: 820px;
+    min-height: 600px;
   }
 }
 
@@ -436,7 +436,7 @@
   }
 
   .caps_hero {
-    min-height: 760px;
+    min-height: 500px;
     padding: 24px 6%;
   }
 
@@ -444,8 +444,8 @@
     padding-top: 80px;
   }
 
-  .caps_hero h1 {
-    font-size: clamp(2.7rem, 13vw, 4rem);
+  .caps_hero h2 {
+    font-size: clamp(2.7rem, 13vw, 1rem);
   }
 
   .caps_hero p {
@@ -455,8 +455,10 @@
   .caps_section,
   .caps_statement,
   .caps_cta {
-    padding: 70px 6%;
+    padding: 50px 6%;
   }
+
+ 
 
   .caps_two_cols,
   .caps_grid,

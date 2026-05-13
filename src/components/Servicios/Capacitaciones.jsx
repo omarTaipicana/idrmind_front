@@ -8,7 +8,7 @@ const Capacitaciones = () => {
                 <div className="caps_overlay" />
 
                 <nav className="caps_nav">
-                    <img src="/images/idrmind_logo_sf.png" alt="iDr. Mind" />
+                    <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind." />
                     <a href="https://wa.me/593979002223">Solicitar capacitación</a>
                 </nav>
 
@@ -136,7 +136,7 @@ const Capacitaciones = () => {
                     <h2>Las empresas evolucionan cuando sus equipos evolucionan.</h2>
 
                     <p>
-                        Las capacitaciones de iDr. Mind combinan análisis conductual,
+                        Las capacitaciones de iDr. Mind. combinan análisis conductual,
                         productividad e inteligencia emocional para generar cambios reales
                         dentro de la organización.
                     </p>
@@ -251,7 +251,7 @@ const Capacitaciones = () => {
                     </div>
 
                     <div className="caps_footer">
-                        <strong>iDr. Mind</strong>
+                        <strong>iDr. Mind.</strong>
 
                         <span>
                             Evaluamos personas. Potenciamos equipos. Mejoramos empresas.

@@ -38,7 +38,7 @@
 
 .pagos_layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
+  grid-template-columns: minmax(0, 1fr) minmax(30px, 0.75fr);
   gap: 2rem;
   align-items: stretch;
 }
@@ -54,7 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.95rem 1.2rem;
+  padding: 0.7rem 1rem;
   border-radius: 1rem;
   background: linear-gradient(135deg, #173a8a41, #35508396);
   color: #ffffff;
@@ -88,9 +88,11 @@
 .pagos_form_card {
   background: rgba(255, 255, 255, 0.96);
   border-radius: 2rem;
-  padding: 2.2rem;
+  padding: 1.5rem;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
 }
 
 .pagos_intro {
@@ -215,7 +217,7 @@
 
 .pagos_form_dos {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  grid-template-columns: minmax(0, 1fr) minmax(28px, 0.45fr);
   gap: 1.4rem;
   align-items: start;
 }
@@ -223,12 +225,12 @@
 .pagos_col {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.3rem;
 }
 
 .pagos_col_pago {
   position: sticky;
-  top: 1rem;
+  top: 0.5rem;
 }
 
 /* ===============================
@@ -236,7 +238,7 @@
 ================================ */
 
 .pagos_datos_usuario {
-  padding: 1.4rem;
+  padding: 1rem;
   border-radius: 1.5rem;
   background: linear-gradient(135deg, #eef8ff, #ffffff);
   border-left: 6px solid #28a7e8;
@@ -245,7 +247,7 @@
 }
 
 .pagos_datos_usuario h2 {
-  margin: 0.3rem 0 1rem;
+  margin: 0.1rem 0 1rem;
   color: #071b3f;
   font-size: 1.25rem;
   font-weight: 950;
@@ -253,7 +255,7 @@
 }
 
 .pagos_datos_usuario p {
-  margin: 0.4rem 0;
+  margin: 0.1rem 0;
   color: #344054;
   font-size: 0.95rem;
 }
@@ -282,6 +284,75 @@
   text-align: center;
 }
 
+/* ===============================
+   CERTIFICADOS
+================================ */
+
+.pagos_cert_card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem;
+  border-radius: 1rem;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  margin-bottom: 0.5rem;
+  transition: 0.25s ease;
+}
+
+.pagos_cert_card:last-child {
+  margin-bottom: 0;
+}
+
+.pagos_cert_card:hover {
+  background: #eef6ff;
+  border-color: #28a7e8;
+}
+
+.pagos_cert_info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: left;
+}
+
+.pagos_cert_info strong {
+  color: #071b3f;
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.pagos_cert_info small {
+  color: #667085;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.pagos_cert_info span {
+  color: #0873c4;
+  font-weight: 900;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.pagos_cert_card input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: #173a8a;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.pagos_cert_card--disabled {
+  opacity: 0.65;
+  background: #f5f7fa;
+}
+
+.pagos_cert_card--disabled input[type="checkbox"] {
+  cursor: not-allowed;
+}
+
 .pagos_check_row {
   display: flex;
   align-items: center;
@@ -303,7 +374,7 @@
 }
 
 .pagos_check_row input[type="checkbox"],
-.pagos_check_legal input[type="checkbox"] {
+.pagos_check_legal input[type="checkbox"]{
   width: 20px;
   height: 20px;
   accent-color: #173a8a;
@@ -316,7 +387,7 @@
 ================================ */
 
 .pagos_total {
-  padding: 1.2rem;
+  padding: 1rem;
   border-radius: 1.5rem;
   background: linear-gradient(135deg, #173a8a, #071b3f);
   color: #ffffff;
@@ -334,7 +405,7 @@
 
 .pagos_total strong {
   display: block;
-  font-size: 2.4rem;
+  font-size: 2rem;
   font-weight: 950;
   line-height: 1;
 }
@@ -346,14 +417,14 @@
 .pagos_check_legal {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 0.5rem;
   align-items: center;
   padding: 1rem;
   border-radius: 1.2rem;
   background: #f8fbff;
   border-left: 6px solid #173a8a;
   color: #475467;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   text-align: center;
 }

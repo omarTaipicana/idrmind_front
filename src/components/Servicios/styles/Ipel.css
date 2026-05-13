@@ -62,7 +62,7 @@
   position: relative;
   z-index: 2;
   max-width: 1320px;
-  margin: 7rem auto 0;
+  margin: 3rem auto 0;
 
   display: grid;
   grid-template-columns: 1fr 0.9fr;
@@ -82,9 +82,17 @@
   padding: 0.5rem 1rem;
   border-radius: 999px;
   background: rgba(40, 167, 232, 0.18);
-  color: #8edcff;
   font-weight: 900;
   margin-bottom: 1rem;
+}
+
+.claro {
+  color: #99c9df;
+}
+
+.oscuro {
+  color: #0a0000 !important;
+
 }
 
 .ipel_hero h2 {
@@ -119,7 +127,7 @@
 
   box-shadow:
     0 30px 80px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255,255,255,0.1);
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 
   border: 1px solid rgba(255, 255, 255, 0.16);
 
@@ -134,11 +142,9 @@
   inset: 0;
 
   background:
-    linear-gradient(
-      135deg,
-      rgba(40,167,232,0.12),
-      transparent 35%
-    );
+    linear-gradient(135deg,
+      rgba(40, 167, 232, 0.12),
+      transparent 35%);
 
   pointer-events: none;
   z-index: 2;
@@ -185,7 +191,7 @@
 .ipel_problem,
 .ipel_process,
 .ipel_video {
-  padding: 6rem 6%;
+  padding: 3.5rem 6%;
   background: #f5f8ff;
   color: #071b3f;
 }
@@ -262,6 +268,8 @@
 .ipel_section_head_dark h2 {
   color: #ffffff;
 }
+
+
 
 .ipel_section_head_dark p {
   color: rgba(255, 255, 255, 0.75);
@@ -428,7 +436,7 @@
 /* BENEFITS */
 
 .ipel_benefits {
-  padding: 6rem 6%;
+  padding: 3.5rem 6%;
   background: #ffffff;
   color: #071b3f;
 }
@@ -508,7 +516,7 @@
   align-items: center;
 }
 
-.ipel_cta > div {
+.ipel_cta>div {
   max-width: 850px;
 }
 
@@ -529,7 +537,7 @@
 .ipel_cta_stats strong {
   display: block;
   font-size: 1.6rem;
-  color: #8edcff;
+  color: #6ab5d7;
 }
 
 .ipel_cta_stats span {
@@ -566,7 +574,7 @@
 }
 
 .ipel_footer a {
-  color: #8edcff;
+  color: #054766;
   text-decoration: none;
   font-weight: 800;
 }
@@ -615,7 +623,7 @@
   }
 
   .ipel_hero_content {
-    margin-top: 4rem;
+    margin-top: 2rem;
   }
 }
 
@@ -623,6 +631,10 @@
 
   .ipel_hero {
     padding: 1.5rem 1rem;
+  }
+
+  .ipel_hero_text>h2 {
+    font-size: 2rem
   }
 
   .ipel_nav {
@@ -660,6 +672,10 @@
   .ipel_video_frame,
   .ipel_hero_video {
     border-radius: 1.2rem;
+  }
+
+  .ipel_hero_buttons {
+    margin-left: 2rem;
   }
 
   .ipel_cta_stats {
