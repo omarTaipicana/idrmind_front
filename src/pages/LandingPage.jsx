@@ -620,7 +620,7 @@ const LandingPage = () => {
             <div className="footer-block">
               <h4 className="footer-section-title">Plataforma educativa</h4>
               <a
-                href="https://aulavirtual.idrmind.com/"
+                href="https://aulavirtual.idrmind.com/my/courses.php"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-text-link"
