@@ -281,7 +281,7 @@ const Home = () => {
                         <span className="homeDot">•</span>
                         <a
                           className="homeLink"
-                          href={`https://moodle.idrmind.com/course/view.php?name=${curso.curso}`}
+                          href={`https://aulavirtual.idrmind.com/course/view.php?name=${curso.curso}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
