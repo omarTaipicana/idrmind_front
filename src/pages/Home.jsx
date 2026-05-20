@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "./styles/Home.css";
 import useAuth from "../hooks/useAuth";
 import IsLoading from "../components/shared/isLoading";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const token = localStorage.getItem("token");
@@ -12,6 +13,7 @@ const Home = () => {
   const [cursoAbiertoIndex, setCursoAbiertoIndex] = useState(null);
   const menuRef = useRef();
   const hamburgerRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -164,7 +166,13 @@ const Home = () => {
                       {user.firstName && user.lastName ? (
                         `${user.firstName} ${user.lastName}`
                       ) : (
-                        <span className="homeWarn">Complete información</span>
+                        <span
+                          className="homeWarn"
+                          onClick={() => navigate("/login")}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Complete información
+                        </span>
                       )}
                     </span>
                   </li>
@@ -172,21 +180,39 @@ const Home = () => {
                   <li className="homeDataItem">
                     <span className="homeDataLabel">Cédula</span>
                     <span className="homeDataValue">
-                      {user.cI || <span className="homeWarn">Complete información</span>}
+                      {user.cI || <span
+                        className="homeWarn"
+                        onClick={() => navigate("/login")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Complete información
+                      </span>}
                     </span>
                   </li>
 
                   <li className="homeDataItem">
                     <span className="homeDataLabel">Email</span>
                     <span className="homeDataValue">
-                      {user.email || <span className="homeWarn">Complete información</span>}
+                      {user.email || <span
+                        className="homeWarn"
+                        onClick={() => navigate("/login")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Complete información
+                      </span>}
                     </span>
                   </li>
 
                   <li className="homeDataItem">
                     <span className="homeDataLabel">Celular</span>
                     <span className="homeDataValue">
-                      {user.cellular || <span className="homeWarn">Complete información</span>}
+                      {user.cellular || <span
+                        className="homeWarn"
+                        onClick={() => navigate("/login")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Complete información
+                      </span>}
                     </span>
                   </li>
 
@@ -196,7 +222,13 @@ const Home = () => {
                       {user.dateBirth ? (
                         calcularEdad(user.dateBirth)
                       ) : (
-                        <span className="homeWarn">Complete información</span>
+                        <span
+                          className="homeWarn"
+                          onClick={() => navigate("/login")}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Complete información
+                        </span>
                       )}
                     </span>
                   </li>
@@ -204,14 +236,26 @@ const Home = () => {
                   <li className="homeDataItem">
                     <span className="homeDataLabel">Provincia</span>
                     <span className="homeDataValue">
-                      {user.province || <span className="homeWarn">Complete información</span>}
+                      {user.province || <span
+                        className="homeWarn"
+                        onClick={() => navigate("/login")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Complete información
+                      </span>}
                     </span>
                   </li>
 
                   <li className="homeDataItem">
                     <span className="homeDataLabel">Ciudad</span>
                     <span className="homeDataValue">
-                      {user.city || <span className="homeWarn">Complete información</span>}
+                      {user.city || <span
+                        className="homeWarn"
+                        onClick={() => navigate("/login")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Complete información
+                      </span>}
                     </span>
                   </li>
 

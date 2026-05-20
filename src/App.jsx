@@ -38,6 +38,10 @@ const App = () => {
   const location = useLocation();
   const showHeader = location.pathname !== "/";
 
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, [location.pathname]);
+
   // main.jsx o App.jsx (una sola vez)
   useEffect(() => {
     window.__RN_LOGOUT__ = () => {
