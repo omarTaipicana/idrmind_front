@@ -407,6 +407,12 @@
   text-overflow: ellipsis;
 }
 
+.vpTdWrap2{
+  display: flex;
+  justify-content: center;
+  align-items:center ;
+}
+
 
 .vpLink {
   color: #0a58ca;

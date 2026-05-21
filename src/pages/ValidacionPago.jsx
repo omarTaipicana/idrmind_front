@@ -597,12 +597,17 @@ const ValidacionPago = () => {
                         Fecha {ordenFechaDesc ? "⬇️" : "⬆️"}
                       </th>
                       <th>Curso</th>
-                      <th>Distin</th>
-                      <th>Mon</th>
+                      {/* <th>Distin</th>
+                      <th>Mon</th> */}
                       <th>Valor</th>
                       <th>Entidad</th>
                       <th>Id Pago</th>
                       <th>Comp</th>
+                      <th>Emp</th>
+                      <th>Mdt</th>
+                      <th>Int</th>
+
+                      <th>Calif</th>
                       <th>Verif</th>
                       <th>Obser</th>
                       <th>Editor</th>
@@ -631,7 +636,7 @@ const ValidacionPago = () => {
                           </td>
 
                           <td className="vpTdWrap">{p.curso}</td>
-
+                          {/* 
                           <td style={{ textAlign: "center" }}>
                             {papelera ? (
                               p.distintivo ? (
@@ -665,7 +670,7 @@ const ValidacionPago = () => {
                             ) : (
                               "❌"
                             )}
-                          </td>
+                          </td> */}
 
                           <td>
                             {papelera ? (
@@ -737,6 +742,67 @@ const ValidacionPago = () => {
                               "No disponible"
                             )}
                           </td>
+
+
+                          <td>
+                            {p.cert_emp === "true" ? (
+                              p.urlCertificadoEmp ? (
+                                <a
+                                  href={p.urlCertificadoEmp}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btnVerCertificado"
+                                >
+                                  📄 Ver
+                                </a>
+                              ) : (
+                                "✅"
+                              )
+                            ) : (
+                              "❌"
+                            )}
+                          </td>
+
+                          <td>
+                            {p.cert_mdt === "true" ? (
+                              p.urlCertificadoMdt ? (
+                                <a
+                                  href={p.urlCertificadoMdt}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btnVerCertificado"
+                                >
+                                  📄 Ver
+                                </a>
+                              ) : (
+                                "✅"
+                              )
+                            ) : (
+                              "❌"
+                            )}
+                          </td>
+
+                          <td>
+                            {p.cert_int === "true" ? (
+                              p.urlCertificadoInt ? (
+                                <a
+                                  href={p.urlCertificadoInt}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btnVerCertificado"
+                                >
+                                  📄 Ver
+                                </a>
+                              ) : (
+                                "✅"
+                              )
+                            ) : (
+                              "❌"
+                            )}
+                          </td>
+
+                          <td className="vpTdWrap">{p.notaFinal}</td>
+
 
                           <td style={{ textAlign: "center" }}>
                             {papelera ? (
@@ -819,8 +885,6 @@ const ValidacionPago = () => {
                                     >
                                       Registrar Validación
                                     </button>
-                                    {console.log(p)}
-
                                     {/* BOTÓN GENERAR CERTIFICADO */}
                                     {p.verificado &&
                                       p.cert_emp === "true" &&
@@ -833,18 +897,7 @@ const ValidacionPago = () => {
                                         </button>
                                       )}
 
-                                    {/* VER CERTIFICADO */}
-                                    {p.certificadoEmp &&
-                                      p.urlCertificadoEmp && (
-                                        <a
-                                          href={p.urlCertificadoEmp}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="btnVerCertificado"
-                                        >
-                                          📄 Ver certificado
-                                        </a>
-                                      )}
+
                                   </div>
                                 )}
                               </td>
