@@ -269,7 +269,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-        
+
 
             <div className="dashChartBox">
               <h4 className="dashChartTitle">Franja horaria de inscripción</h4>
@@ -307,7 +307,7 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
 
-  
+
 
             <div className="dashChartBox">
               <h4 className="dashChartTitle">Evolutivo diario de inscripciones</h4>
@@ -486,7 +486,7 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
 
-    
+
           </section>
         );
       }
@@ -719,7 +719,7 @@ const Dashboard = () => {
           ref={menuRef}
         >
           <div className="secMenuHeader">
-            <img src="/images/idrmind_sf.png" alt="iDr.Mind."className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="iDr.Mind." className="secMenuLogo" />
             <p className="secMenuSubtitle">Dashboard</p>
           </div>
 

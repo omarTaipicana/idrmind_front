@@ -159,6 +159,12 @@ const LandingPage = () => {
           <button type="button" onClick={() => scrollToSection(serviciosRef)}>
             Servicios
           </button>
+          <button
+            type="button"
+            onClick={() => window.open("https://www.invok.me/", "_blank")}
+          >
+            Empleos
+          </button>
         </div>
 
         <div className="topbar-right">
@@ -203,6 +209,12 @@ const LandingPage = () => {
         </button>
         <button type="button" onClick={() => scrollToSection(serviciosRef)}>
           Servicios
+        </button>
+        <button
+          type="button"
+          onClick={() => window.open("https://www.invok.me/", "_blank")}
+        >
+          Empleos
         </button>
 
         <div className="navbar_mobile_auth">
