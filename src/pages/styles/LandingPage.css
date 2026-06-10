@@ -31,14 +31,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   z-index: 10001;
   backdrop-filter: blur(5px);
   box-sizing: border-box;
 }
 
 .logo_navbar {
-  height: 4rem;
+  height: 5.5rem;
   align-self: flex-start;
   cursor: pointer;
   z-index: 1200;
@@ -250,6 +250,39 @@
   line-height: 1.9;
   color: #333333;
   text-align: center;
+}
+
+.img_mdt {
+  width: 60%;
+  animation:
+    fadeUpMdt 1.2s ease-out,
+    floatMdt 5s ease-in-out 1.2s infinite;
+}
+
+@keyframes fadeUpMdt {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatMdt {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .nosotros-content p {
@@ -971,6 +1004,10 @@
   .nosotros-content {
     font-size: 1rem;
     line-height: 1.7;
+  }
+
+  .img_mdt {
+    width: 100%;
   }
 
   .mvv-section {

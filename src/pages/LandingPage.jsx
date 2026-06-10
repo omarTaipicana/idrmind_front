@@ -257,8 +257,8 @@ const LandingPage = () => {
           </motion.h1>
 
           <p>
-            Cursos diseñados para identificar y fortalecer tus Habilidades Blandas, enfocándose en el desarrollo continuo
-            del talento humano. Perfectos para individuos y empresas que aspiran la excelencia
+            Cursos diseñados para identificar y fortalecer tus Habilidades Blandas, nos enfocamos en el desarrollo continuo
+            del talento humano. Perfecto para individuos y empresas que aspiran la excelencia
             y un crecimiento continuo en la productividad laboral y personal.
           </p>
 
@@ -322,9 +322,7 @@ const LandingPage = () => {
         <div className="servicios_header">
           <h2 className="servicios-title">Servicios iDr. Mind.</h2>
           <p>
-            Soluciones diseñadas para acompañar
-
-            crecimiento personal, empresarial y académico.
+            Soluciones diseñadas para acompañar el crecimiento personal, empresarial y académico.
           </p>
         </div>
         <div className="servicios_lista">
@@ -457,14 +455,17 @@ const LandingPage = () => {
           <div className="nosotros-content">
             <p>
               Somos especialistas en ofrecer capacitaciones
-              integrales que impulsan el desarrollo de Habilidades Blandas, Técnicas y
+              integrales avaladas por el Ministerio de Trabajo, que impulsan el desarrollo de Habilidades Blandas, Técnicas y
               Emocionales. Nuestro método diseña soluciones a la medida para
               maximizar la productividad y fomentar la mejora continua con nuestras
-              modalidades presencial on line. Somos reconocidos por nuestro
+              modalidades presencial, semipresencial y virtual. Somos reconocidos por nuestro
               compromiso con la excelencia, ayudamos a transformar el talento humano
-              en el motor clave para el éxito empresarial. " ¡Pensamos positivo y
-              actuamos para avanzar juntos! "
+              en el motor clave para el éxito empresarial. ¡Pensamos positivo y
+              actuamos para avanzar juntos!
             </p>
+            <br />
+            <img className="img_mdt" src={`/images/mdt.jpeg`} alt="logo mdt" />
+
           </div>
         </div>
 
@@ -530,6 +531,23 @@ const LandingPage = () => {
                     alt="WhatsApp"
                   />
                   <span className="span_contactanos">+593 - 979002223</span>
+                </a>
+              </li>
+
+              <li className="li_footer">
+                <a
+                  href="https://api.whatsapp.com/send?phone=593962799793&text=Hola%20quiero%20más%20información"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link_footer"
+
+                >
+                  <img
+                    className="img_contctanos"
+                    src="../../../whatsapp2.png"
+                    alt="WhatsApp"
+                  />
+                  <span className="span_contactanos">+593 - 962799793</span>
                 </a>
               </li>
 
@@ -629,6 +647,19 @@ const LandingPage = () => {
 
               <span className="span_contactanos">+593 - 979002223</span>
             </a>
+
+
+            <a
+              href="https://api.whatsapp.com/send?phone=593962799793&text=Hola%20quiero%20más%20información"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mobile_none"
+            >
+
+              <span className="span_contactanos">+593 - 962799793</span>
+            </a>
+
+
             <div className="footer-block">
               <h4 className="footer-section-title">Plataforma educativa</h4>
               <a

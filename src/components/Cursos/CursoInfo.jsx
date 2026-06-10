@@ -15,7 +15,7 @@ const CursoInfo = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [loadingPdf, setLoadingPdf] = useState(true);
 
-  
+
   const containerRef = useRef(null);
   const [pdfWidth, setPdfWidth] = useState(740);
 
@@ -72,7 +72,10 @@ const CursoInfo = () => {
 
       <section className="curso_info_hero">
         <div className="curso_info_brand">
-          <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind" />
+          <div className="content_logo">
+            <img src="/images/idrmind_logo_fa.png" alt="iDr.Mind" />
+          </div>
+
           <span>Formación empresarial</span>
         </div>
 
@@ -112,6 +115,15 @@ const CursoInfo = () => {
                 className="curso_btn curso_btn_outline"
               >
                 Descargar PDF
+              </a>
+
+              <a
+                href={`https://aulavirtual.idrmind.com/course/view.php?name=${course.sigla}`}
+                download={`${course.nombre}.pdf`}
+                className="curso_btn curso_btn_aula"
+                target="blank"
+              >
+                Ingresa al Aula Virtual
               </a>
             </div>
           </aside>

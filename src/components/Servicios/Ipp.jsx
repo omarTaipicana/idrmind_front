@@ -8,7 +8,7 @@ const Ipp = () => {
                 <div className="ipp_hero_overlay" />
 
                 <nav className="ipp_nav">
-                    <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind." />
+                    <img src="/images/idrmind_logo_fa.png" alt="iDr.Mind." />
                     <a href="https://wa.me/593979002223">Solicitar evaluación IPP</a>
                 </nav>
 
@@ -233,7 +233,7 @@ const Ipp = () => {
             </section>
 
                        <footer className="ipel_footer">
-                <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind" />
+                <img src="/images/idrmind_logo_fa.png" alt="iDr.Mind" />
 
                 <p>No es falta de talento. Es falta de diagnóstico.</p>
 

@@ -8,7 +8,7 @@ const SistemaDeEvaluacion = () => {
                 <div className="eval_overlay" />
 
                 <nav className="eval_nav">
-                    <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind." />
+                    <img src="/images/idrmind_logo_fa.png" alt="iDr.Mind." />
                     <a href="https://wa.me/593979002223">Comenzar evaluación</a>
                 </nav>
 

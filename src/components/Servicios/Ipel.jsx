@@ -9,7 +9,7 @@ const Ipel = () => {
                 <div className="ipel_hero_overlay" />
 
                 <nav className="ipel_nav">
-                    <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind" />
+                    <img src="/images/idrmind_logo_fa.png" alt="iDr.Mind" />
 
                     <a href="https://wa.me/593979002223" target="_blank" rel="noopener noreferrer">
                         Haz tu diagnóstico ahora
@@ -314,7 +314,7 @@ const Ipel = () => {
 
             {/* FOOTER */}
             <footer className="ipel_footer">
-                <img src="/images/idrmind_logo_sf.png" alt="iDr.Mind" />
+                <img src="/images/idrmind_logo_fa.png" alt="iDr.Mind" />
 
                 <p>No es falta de talento. Es falta de diagnóstico.</p>
 
