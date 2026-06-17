@@ -231,7 +231,7 @@ const Membresias = () => {
                     </div>
 
                     <div className="memb_footer">
-                        <strong>iDr.Mind.</strong>
+                        <strong>iDr. Mind.</strong>
 
                         <span>
                             Conexiones Estratégicas • Crecimiento • Expansión

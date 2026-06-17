@@ -60,9 +60,8 @@ const Franquicias = () => {
 
                     <div className="fran_problem_card">
                         <p>
-                            iDr. Mind.es una plataforma especializada en evaluación de
-                            productividad, análisis conductual, optimización organizacional
-                            y entrenamiento estratégico para empresas.
+                            iDr. Mind. es una plataforma especializada en evaluar la productividad, análizar la conducta, optimizar la cultura organizacional
+                            y entrenar estratégicamente a las empresas.
                         </p>
 
                         <strong>
@@ -80,7 +79,7 @@ const Franquicias = () => {
                             Oportunidad Internacional
                         </span>
 
-                        <h2>Una oportunidad para líderes que quieran crecer en grande</h2>
+                        <h2>Una oportunidad para líderes que quieren crecer en grande</h2>
 
                         <p>
                             Buscamos aliados estratégicos capaces de representar nuestra
@@ -99,7 +98,7 @@ const Franquicias = () => {
                         <div className="fran_card">
                             <h3>Consultores corporativos</h3>
                             <p>
-                                Profesionales enfocados en transformación empresarial.
+                                Profesionales enfocados en la transformación empresarial.
                             </p>
                         </div>
 
@@ -188,7 +187,7 @@ const Franquicias = () => {
                             <span>04</span>
                             <h3>Capacitación ejecutiva</h3>
                             <p>
-                                Formación continua orientada a crecimiento internacional.
+                                Formación continua orientada al crecimiento internacional.
                             </p>
                         </article>
                     </div>
@@ -208,12 +207,12 @@ const Franquicias = () => {
                     </div>
 
                     <div className="fran_services_grid">
-                        <div>Fugas de productividad</div>
-                        <div>Desgaste organizacional</div>
-                        <div>Riesgos internos</div>
-                        <div>Desalineación de equipos</div>
-                        <div>Liderazgos improductivos</div>
-                        <div>Potenciales ocultos</div>
+                        <div>Detecta las fugas de productividad</div>
+                        <div>Analiza el desgaste organizacional</div>
+                        <div>Minimiza los riesgos internos</div>
+                        <div>Consolida equipos de trabajo</div>
+                        <div>Liderazgo productivo</div>
+                        <div>Potenciales fortalezas</div>
                     </div>
                 </div>
             </section>

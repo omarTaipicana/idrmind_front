@@ -672,8 +672,8 @@ const ValidacionPago = () => {
                       <th>Emp</th>
                       <th>Mdt</th>
                       <th>Int</th>
-
                       <th>Calif</th>
+                      <th>Tiemp. Act</th>
                       <th>Verif</th>
                       <th>Obser</th>
                       <th>Editor</th>
@@ -868,6 +868,8 @@ const ValidacionPago = () => {
                           </td>
 
                           <td className="vpTdWrap">{p.notaFinal}</td>
+                          <td className="vpTdWrap">{p.tiempoTotalCurso}</td>
+
 
 
                           <td style={{ textAlign: "center" }}>

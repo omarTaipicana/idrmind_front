@@ -355,11 +355,31 @@ const Home = () => {
                             {/* ✅ Calificaciones: se muestran si existen, sin depender de inscripcion/matriculado */}
                             {Object.keys(calificaciones).length > 0 ? (
                               <ul className="homeNotes">
-                                {Object.entries(calificaciones).map(([actividad, nota]) => (
-                                  <li key={actividad} className="homeNoteItem">
-                                    <strong>{actividad}:</strong> {nota}
-                                  </li>
-                                ))}
+                                {Object.entries(calificaciones)
+                                  .filter(
+                                    ([actividad]) =>
+                                      ![
+                                        "Tiempo Actividad Curso",
+                                        "Tiempo Actividad Minutos",
+                                        "Tiempo Zoom",
+                                        "Tiempo Zoom Minutos",
+                                        "Tiempo Total Curso",
+                                        "Tiempo Total Minutos",
+                                      ].includes(actividad)
+                                  )
+                                  .map(([actividad, nota]) => (
+                                    <li key={actividad} className="homeNoteItem">
+                                      <strong>{actividad}:</strong> {nota}
+                                    </li>
+                                  ))}
+
+                                {calificaciones["Tiempo Total Curso"] &&
+                                  calificaciones["Tiempo Total Curso"] !== "0h 0m" && (
+                                    <li className="homeNoteItem">
+                                      <strong>Tiempo total en el curso:</strong>{" "}
+                                      {calificaciones["Tiempo Total Curso"]}
+                                    </li>
+                                  )}
                               </ul>
                             ) : (
                               <p className="homeMuted">No hay calificaciones registradas.</p>

@@ -53,7 +53,7 @@ const Capacitaciones = () => {
 
                     <div className="caps_problem_card">
                         <p>
-                            El verdadero crecimiento ocurre cuando las personas desarrollan
+                            El verdadero crecimiento ocurre cuando las personas desarrollan sus
                             habilidades para liderar, comunicarse mejor, adaptarse al cambio
                             y trabajar con mayor enfoque y compromiso.
                         </p>
@@ -115,7 +115,7 @@ const Capacitaciones = () => {
                         <div className="caps_card">
                             <h3>Trabajo en equipo</h3>
                             <p>
-                                Estrategias para fortalecer colaboración, coordinación y cultura
+                                Estrategias para fortalecer la colaboración, coordinación y cultura
                                 organizacional.
                             </p>
                         </div>
@@ -123,7 +123,7 @@ const Capacitaciones = () => {
                         <div className="caps_card">
                             <h3>Adaptación al cambio</h3>
                             <p>
-                                Capacitación para afrontar transformación empresarial y nuevos
+                                Capacitación para afrontar la transformación empresarial y nuevos
                                 desafíos.
                             </p>
                         </div>
@@ -136,7 +136,7 @@ const Capacitaciones = () => {
                     <h2>Las empresas evolucionan cuando sus equipos evolucionan.</h2>
 
                     <p>
-                        Las capacitaciones de iDr. Mind. combinan análisis conductual,
+                        Las capacitaciones de iDr. Mind. combinan, análisis conductual,
                         productividad e inteligencia emocional para generar cambios reales
                         dentro de la organización.
                     </p>

@@ -287,27 +287,29 @@ const LandingPage = () => {
         <h2 className="nosotros-title">Nuestros Cursos</h2>
 
         <div className="curso_lista">
-          {(courses || []).map((c, index) => (
-            <Link
-              key={c.sigla}
-              to={`/curso/${c.sigla}`}
-              className="curso_item"
-              style={{ animationDelay: `${index * 0.15}s` }}
-            >
-              <div className="curso_card">
-                <img
-                  src={`/cursos/${c.sigla}.png`}
-                  alt={c.nombre}
-                  className="curso_img"
-                />
-                <div className="curso_card_overlay">
-                  <button type="button" className="curso_btn">
-                    VER CURSO
-                  </button>
+          {(courses || [])
+            .filter((c) => c.vigente === true)
+            .map((c, index) => (
+              <Link
+                key={c.sigla}
+                to={`/curso/${c.sigla}`}
+                className="curso_item"
+                style={{ animationDelay: `${index * 0.15}s` }}
+              >
+                <div className="curso_card">
+                  <img
+                    src={`/cursos/${c.sigla}.png`}
+                    alt={c.nombre}
+                    className="curso_img"
+                  />
+                  <div className="curso_card_overlay">
+                    <button type="button" className="curso_btn">
+                      VER CURSO
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
         </div>
       </motion.section>
 

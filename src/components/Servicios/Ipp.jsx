@@ -106,7 +106,7 @@ const Ipp = () => {
 
                     <div className="ipp_features">
                         {[
-                            ["Enfoque y concentración", "Capacidad de sostener atención y reducir distracciones."],
+                            ["Enfoque y concentración", "Capacidad de sostener la atención y reducir distracciones."],
                             ["Disciplina personal", "Cumplimiento, constancia, responsabilidad y orden operativo."],
                             ["Gestión emocional", "Regulación de presión, frustración, conflictos y cambios."],
                             ["Comunicación laboral", "Claridad, escucha, cooperación y respuesta al feedback."],
@@ -196,7 +196,7 @@ const Ipp = () => {
                 <div className="ipp_container">
                     <div className="ipp_section_header">
                         <span className="ipp_section_tag">Entregables</span>
-                        <h2>¿Qué recibe la empresa?</h2>
+                        <h2>¿Qué recibe el cliente?</h2>
                     </div>
 
                     <div className="ipp_grid ipp_grid_small">
@@ -204,7 +204,7 @@ const Ipp = () => {
                         <div>Semáforo laboral de riesgo</div>
                         <div>Perfil productivo individual</div>
                         <div>Factores críticos de mejora</div>
-                        <div>Recomendaciones gerenciales</div>
+                        <div>Recomendaciones generales</div>
                         <div>Plan de acción sugerido</div>
                     </div>
                 </div>

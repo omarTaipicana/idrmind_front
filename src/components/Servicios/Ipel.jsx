@@ -136,7 +136,7 @@ const Ipel = () => {
                     <span className="ipel_badge">¿Qué es IPEL?</span>
 
                     <h2>
-                        iDr.Mind. crea IPEL para convertir lo invisible en datos, y los datos
+                        iDr. Mind. mide el IPEL para convertir lo invisible en datos, y los datos
                         en decisiones.
                     </h2>
 

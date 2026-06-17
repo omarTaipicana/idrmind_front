@@ -75,11 +75,11 @@ const SistemaDeEvaluacion = () => {
                     <div className="eval_grid">
                         <div className="eval_card">
                             <h3>Respaldo conductual</h3>
-                            <p>Enfoque basado en comportamiento humano y mejora continua.</p>
+                            <p>Enfoque basado en el comportamiento humano y mejora continua.</p>
                         </div>
                         <div className="eval_card">
                             <h3>Evaluación estratégica</h3>
-                            <p>Analiza patrones que impactan productividad y desempeño.</p>
+                            <p>Analiza patrones que impactan la productividad y desempeño.</p>
                         </div>
                         <div className="eval_card">
                             <h3>Resultados claros</h3>
@@ -179,7 +179,7 @@ const SistemaDeEvaluacion = () => {
                         </div>
                         <div>
                             <h3>¿Puedo acceder desde cualquier dispositivo?</h3>
-                            <p>Sí, desde celular, tablet, laptop o computadora.</p>
+                            <p>Sí, desde el celular, tablet, laptop o computadora.</p>
                         </div>
                         <div>
                             <h3>¿Recibiré soporte?</h3>
