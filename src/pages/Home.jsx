@@ -373,13 +373,33 @@ const Home = () => {
                                     </li>
                                   ))}
 
+
+
                                 {calificaciones["Tiempo Total Curso"] &&
-                                  calificaciones["Tiempo Total Curso"] !== "0h 0m" && (
+                                  calificaciones["Tiempo Total Curso"] !== "00:00:00" && (
                                     <li className="homeNoteItem">
-                                      <strong>Tiempo total en el curso:</strong>{" "}
-                                      {calificaciones["Tiempo Total Curso"]}
+                                      <div style={{ fontSize: "0.85rem", lineHeight: "1.4" }}>
+                                        <div>
+                                          <strong>📚 Aula virtual:</strong>{" "}
+                                          {calificaciones["Tiempo Actividad Curso"]}
+                                        </div>
+
+                                        <div>
+                                          <strong>🎥 Clase Zoom:</strong>{" "}
+                                          {calificaciones["Tiempo Zoom"]}
+                                        </div>
+
+                                        <div>
+                                          <strong>⏱️ Total:</strong>{" "}
+                                          {calificaciones["Tiempo Total Curso"]}
+                                        </div>
+                                      </div>
                                     </li>
                                   )}
+
+
+
+
                               </ul>
                             ) : (
                               <p className="homeMuted">No hay calificaciones registradas.</p>

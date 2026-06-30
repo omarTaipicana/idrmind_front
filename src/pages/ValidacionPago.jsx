@@ -868,9 +868,11 @@ const ValidacionPago = () => {
                           </td>
 
                           <td className="vpTdWrap">{p.notaFinal}</td>
-                          <td className="vpTdWrap">{p.tiempoTotalCurso}</td>
-
-
+                          <td className="vpTdTiempo">
+                            <div><strong>Aula virtual:</strong> {p.tiempoActividadCurso}</div>
+                            <div><strong>Clase Zoom:</strong> {p.tiempoZoomCurso}</div>
+                            <div><strong>Total:</strong> {p.tiempoTotalCurso}</div>
+                          </td>
 
                           <td style={{ textAlign: "center" }}>
                             {papelera ? (

@@ -407,6 +407,26 @@
   text-overflow: ellipsis;
 }
 
+.vpTdTiempo {
+  font-size: 0.65rem; /* 12px aprox */
+  line-height: 1;
+  white-space: normal;
+  min-width: 140px;
+}
+
+
+
+
+
+.vpTdTiempo div {
+  margin: 2px 0;
+}
+
+.vpTdTiempo strong {
+  color: #1b4f8c;
+  font-weight: 600;
+}
+
 .vpTdWrap2{
   display: flex;
   justify-content: center;

@@ -418,7 +418,7 @@ const Secretaria = () => {
           ref={menuRef}
         >
           <div className="secMenuHeader">
-            <img src="/images/idrmind_sf.png" alt="iDr.Mind."className="secMenuLogo" />
+            <img src="/images/idrmind_sf.png" alt="iDr.Mind." className="secMenuLogo" />
             <p className="secMenuSubtitle">Panel Secretaría</p>
           </div>
 
@@ -832,6 +832,7 @@ const Secretaria = () => {
                   <thead>
                     <tr>
                       <th>Cédula</th>
+                      <th>Email</th>
                       <th className="col-curso">Nombre</th>
                       <th className="col-curso">Celular</th>
                       <th className="col-curso">Curso</th>
@@ -869,17 +870,104 @@ const Secretaria = () => {
                           {idx === 0 && (
                             <>
                               <td rowSpan={cursos.length}>{usuario.cI}</td>
-                              <td className="col-curso" rowSpan={cursos.length}>
+
+
+                              <td
+                                className="col-curso email-copy"
+                                rowSpan={cursos.length}
+                                title="Clic para copiar el correo"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(usuario.email);
+                                  alert("📋 Correo copiado al portapapeles");
+                                }}
+                              >
+                                {usuario.email}
+                              </td>
+
+
+                              <td
+                                className="col-curso"
+                                rowSpan={cursos.length}
+                                title={`${usuario.firstName} ${usuario.lastName}`}
+                              >
                                 {usuario.firstName} {usuario.lastName}
                               </td>
-                              <td rowSpan={cursos.length}>{usuario.cellular}</td>
+
+
+                              <td rowSpan={cursos.length}>
+                                {(() => {
+                                  const celular = String(
+                                    usuario.cellular || "",
+                                  ).replace(/\D/g, "");
+
+                                  if (!celular || celular.length < 9) {
+                                    return usuario.cellular || "";
+                                  }
+
+                                  const numeroWhatsapp = celular.startsWith("0")
+                                    ? `593${celular.slice(1)}`
+                                    : celular.startsWith("593")
+                                      ? celular
+                                      : `593${celular}`;
+
+                                  return (
+                                    <a
+                                      href={`https://wa.me/${numeroWhatsapp}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{
+                                        color: "#0b66c3",
+                                        fontWeight: 700,
+                                        textDecoration: "underline",
+                                      }}
+                                    >
+                                      {usuario.cellular}
+                                    </a>
+                                  );
+                                })()}
+                              </td>
                             </>
                           )}
 
-                          <td className="col-curso">{curso.fullname}</td>
+
+                          <td
+                            className="col-curso"
+                            title={curso.fullname}
+                          >
+                            {curso.fullname}
+                          </td>
+
+
+
                           <td>{curso.grades?.["Nota Final"] ?? "Sin calificación"}</td>
+
+
                           <td>{curso.matriculado ? "✅" : "❌"}</td>
-                          <td>{curso.acces ? "✅" : "❌"}</td>
+
+
+                          <td className="vpTdTiempo">
+                            {curso.acces ? (
+                              <>
+                                <div>
+                                  <strong>📚 Aula:</strong>{" "}
+                                  {curso.grades?.["Tiempo Actividad Curso"] || "00:00:00"}
+                                </div>
+
+                                <div>
+                                  <strong>🎥 Zoom:</strong>{" "}
+                                  {curso.grades?.["Tiempo Zoom"] || "00:00:00"}
+                                </div>
+
+                                <div>
+                                  <strong>⏱️ Total:</strong>{" "}
+                                  {curso.grades?.["Tiempo Total Curso"] || "00:00:00"}
+                                </div>
+                              </>
+                            ) : (
+                              "❌"
+                            )}
+                          </td>
+
 
                           <td>
                             {curso.pagos?.length
