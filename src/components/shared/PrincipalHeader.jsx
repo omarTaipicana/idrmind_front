@@ -126,6 +126,9 @@ const PrincipalHeader = () => {
           <Link to="/edit_user" onClick={onClick}>
             Editar Usuario
           </Link>
+          <Link to="/evaluacion-docente" onClick={onClick}>
+            Evaluación Docente
+          </Link>
         </>
       );
     }
@@ -241,6 +244,9 @@ const PrincipalHeader = () => {
           </Link>
           <Link to="/edit_user" onClick={onClick}>
             Editar Usuario
+          </Link>
+          <Link to="/evaluacion-docente" onClick={onClick}>
+            Evaluación Docente
           </Link>
         </>
       );
@@ -389,6 +395,9 @@ const PrincipalHeader = () => {
                 </button>
                 <button type="button" onClick={() => { closeMenu(); navigate("/edit_user"); }}>
                   Editar Usuario
+                </button>
+                <button type="button" onClick={() => { closeMenu(); navigate("/evaluacion-docente"); }}>
+                  Evaluación Docente
                 </button>
               </>
             )}

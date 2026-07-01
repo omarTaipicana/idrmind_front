@@ -33,14 +33,15 @@ import Capacitaciones from "./components/Servicios/Capacitaciones";
 import Membresias from "./components/Servicios/Membresias";
 import Franquicias from "./components/Servicios/Franquicias";
 import SistemaDeEvaluacion from "./components/Servicios/SistemaDeEvaluacion";
+import EvaluacionDocente from "./pages/EvaluacionDocente";
 
 const App = () => {
   const location = useLocation();
   const showHeader = location.pathname !== "/";
 
   useEffect(() => {
-  window.scrollTo(0, 0);
-}, [location.pathname]);
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // main.jsx o App.jsx (una sola vez)
   useEffect(() => {
@@ -103,6 +104,8 @@ const App = () => {
 
               <Route element={<SuperAdminProtectedRoute />}>
                 <Route path="/edit_user" element={<UserEdit />} />
+                <Route path="/evaluacion-docente" element={<EvaluacionDocente />} />
+
               </Route>
             </Route>
           </Route>

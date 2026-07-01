@@ -1,0 +1,384 @@
+:root {
+  --idrmindBlue: #1b326b;
+  --idrmindBlue2: #0f2a63;
+  --idrmindAccent: #ffb703;
+  --idrmindGreen: #5b8f15;
+  --idrmindDanger: #c0392b;
+  --headerOffset: 9rem;
+}
+
+.evalPage {
+  width: 100%;
+}
+
+.evalShell {
+  width: 100%;
+  min-height: calc(100dvh - var(--headerOffset));
+  padding-top: 1.2rem;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  position: relative;
+  background: #ffffff;
+}
+
+.evalMenu {
+  position: sticky;
+  top: calc(var(--headerOffset) + 1rem);
+  height: calc(100dvh - var(--headerOffset) - 2rem);
+  border-radius: 1.2rem;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 0.9rem 2rem rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease;
+}
+
+.evalMenuHeader {
+  padding: 1.4rem 1.2rem 1rem;
+  background: linear-gradient(180deg, rgba(27, 50, 107, 0.08), transparent);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.evalMenuLogo {
+  width: 7rem;
+  display: block;
+  margin: 0 auto 0.4rem;
+}
+
+.evalMenuSubtitle {
+  margin: 0;
+  color: #4d4d4d;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.evalMenuBtn {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #2e2e2e;
+  transition: 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.evalMenuBtn:hover {
+  background-color: rgba(27, 50, 107, 0.08);
+  color: var(--idrmindBlue);
+}
+
+.evalMenuBtn.active {
+  background-color: rgba(27, 50, 107, 0.12);
+  color: var(--idrmindBlue);
+  border-left-color: var(--idrmindAccent);
+}
+
+.evalContent {
+  padding: 0 1rem 2.5rem 0;
+  overflow-y: auto;
+}
+
+.evalCard {
+  position: relative;
+  width: min(1250px, 100%);
+  min-height: 90%;
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 1rem 2.4rem rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  overflow: hidden;
+  animation: evalFade 0.35s ease both;
+}
+
+.evalCard::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background-image: url("/images/idrmind_logo_sf.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 55%;
+  opacity: 0.045;
+  pointer-events: none;
+}
+
+.evalCardHeader {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.2rem;
+}
+
+.evalTitle {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--idrmindBlue);
+  display: inline-block;
+  padding-bottom: 0.35rem;
+  border-bottom: 3px solid var(--idrmindAccent);
+}
+
+.evalMuted {
+  color: #6b6f7b;
+  font-weight: 700;
+}
+
+.evalStatsGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+.evalStatCard {
+  background: rgba(232, 234, 239, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 1.2rem;
+  padding: 1.3rem;
+  box-shadow: 0 0.9rem 1.6rem rgba(0, 0, 0, 0.08);
+  color: #111;
+}
+
+.evalStatCard span {
+  font-size: 2rem;
+}
+
+.evalStatCard h3 {
+  margin: 0.5rem 0 0.2rem;
+  color: var(--idrmindBlue);
+  font-weight: 900;
+}
+
+.evalStatCard p {
+  margin: 0;
+  color: #555;
+  font-weight: 700;
+}
+
+.evalEmpty {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  font-weight: 900;
+  padding: 2rem;
+  font-size: 1.05rem;
+  color: #555;
+  background: rgba(232, 234, 239, 0.55);
+  border: 2px dashed rgba(27, 50, 107, 0.25);
+  border-radius: 1.2rem;
+}
+
+.evalOverlay {
+  display: none;
+}
+
+.evalHamburger {
+  position: fixed;
+  left: 0.2rem;
+  top: 7rem;
+  z-index: 120;
+  width: 44px;
+  height: 44px;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0.9rem 1.6rem rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.evalHamburgerLine {
+  height: 3px;
+  background: var(--idrmindBlue);
+  border-radius: 999px;
+  transition: 0.2s ease;
+}
+
+.evalHamburger.is-open .evalHamburgerLine:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.evalHamburger.is-open .evalHamburgerLine:nth-child(2) {
+  opacity: 0;
+}
+
+.evalHamburger.is-open .evalHamburgerLine:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+.evalForm {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.evalFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.evalFormGroup label {
+  font-weight: 900;
+  color: var(--idrmindBlue);
+}
+
+.evalInput,
+.evalTextarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 2px solid rgba(27, 50, 107, 0.45);
+  border-radius: 0.9rem;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+  color: #222;
+}
+
+.evalTextarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.evalInput:focus,
+.evalTextarea:focus {
+  border-color: var(--idrmindAccent);
+  box-shadow: 0 0 0 4px rgba(255, 183, 3, 0.18);
+}
+
+.evalQuestion {
+  background: rgba(232, 234, 239, 0.62);
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(27, 50, 107, 0.1);
+}
+
+.evalQuestion h3 {
+  margin: 0 0 0.8rem;
+  color: var(--idrmindBlue);
+  font-size: 1rem;
+}
+
+.evalOptions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.evalOptions label {
+  background: #fff;
+  border: 1px solid rgba(27, 50, 107, 0.18);
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  font-weight: 900;
+  color: #222;
+}
+
+.evalOptions input {
+  margin-right: 0.4rem;
+}
+
+.evalBtnPrimary {
+  justify-self: flex-start;
+  background: var(--idrmindBlue2);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.3rem;
+  border-radius: 0.9rem;
+  cursor: pointer;
+  font-weight: 900;
+  box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.18);
+}
+
+.evalBtnPrimary:hover {
+  background: #081a3f;
+}
+
+@keyframes evalFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .evalShell {
+    grid-template-columns: 1fr;
+    padding-top: 1rem;
+  }
+
+  .evalHamburger {
+    display: flex;
+  }
+
+  .evalOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 110;
+  }
+
+  .evalOverlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .evalMenu {
+    position: fixed;
+    top: var(--headerOffset);
+    left: 0;
+    height: calc(100dvh - var(--headerOffset));
+    width: 82%;
+    max-width: 320px;
+    transform: translateX(-110%);
+    z-index: 115;
+    border-radius: 0 1.2rem 1.2rem 0;
+  }
+
+  .evalMenu.open {
+    transform: translateX(0);
+  }
+
+  .evalContent {
+    padding: 0 1rem 2.5rem 1rem;
+  }
+
+  .evalCard {
+    padding: 1.4rem 1.1rem;
+    border-radius: 1.1rem;
+  }
+
+  .evalTitle {
+    font-size: 1.5rem;
+  }
+
+  .evalStatsGrid {
+    grid-template-columns: 1fr;
+  }
+}

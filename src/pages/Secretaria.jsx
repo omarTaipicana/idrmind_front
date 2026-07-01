@@ -26,6 +26,7 @@ const Secretaria = () => {
   const [filtroCurso, setFiltroCurso] = useState("");
   const [busquedaTemporal, setBusquedaTemporal] = useState("");
   const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+  const [ordenFecha, setOrdenFecha] = useState("desc");
 
   const [cedulaTemporal, setCedulaTemporal] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
@@ -58,7 +59,7 @@ const Secretaria = () => {
 
     cargaTimeoutRef.current = setTimeout(() => {
       getUsers(
-        `/users?cedula=${cedulaBuscada}&search=${nombreBuscado}&notaFinal=${filtroDetalle}&acces=${filtroUltimoAcceso}&pagos=${filtroPago}&certificado=${filtroCertificado}&curso=${filtroCurso}&page=${pagina}&limit=${limite}`
+        `/users?cedula=${cedulaBuscada}&search=${nombreBuscado}&notaFinal=${filtroDetalle}&acces=${filtroUltimoAcceso}&pagos=${filtroPago}&certificado=${filtroCertificado}&curso=${filtroCurso}&page=${pagina}&limit=${limite}&ordenFecha=${ordenFecha}`
       );
     }, 2000); // 2 segundos de espera
   };
@@ -116,7 +117,7 @@ const Secretaria = () => {
     const actualizarUsuarios = () => {
       const f = filtrosRef.current; // usamos los valores actuales de los filtros
       getUsers(
-        `/users?cedula=${f.cedula}&search=${f.nombre}&notaFinal=${f.notaFinal}&acces=${f.acces}&pagos=${f.pagos}&certificado=${f.certificado}&curso=${f.curso}&page=${f.page}`
+        `/users?cedula=${f.cedula}&search=${f.nombre}&notaFinal=${f.notaFinal}&acces=${f.acces}&pagos=${f.pagos}&certificado=${f.certificado}&curso=${f.curso}&page=${f.page}&ordenFecha=${ordenFecha}`
       );
     };
 
@@ -138,18 +139,18 @@ const Secretaria = () => {
   }, []);
 
   useEffect(() => {
-    getUsers(
-      `/users?cedula=${cedulaBuscada}&search=${nombreBuscado}&notaFinal=${filtroDetalle}&acces=${filtroUltimoAcceso}&pagos=${filtroPago}&certificado=${filtroCertificado}&curso=${filtroCurso}&page=${paginaActual}`
-    );
+    cargarDatosConQuery(paginaActual, limit);
   }, [
     cedulaBuscada,
     nombreBuscado,
     filtroDetalle,
+    filtroUltimoAcceso,
     filtroPago,
     filtroCertificado,
     filtroCurso,
     paginaActual,
-    filtroUltimoAcceso,
+    limit,
+    ordenFecha,
   ]);
 
   useEffect(() => {
@@ -164,16 +165,13 @@ const Secretaria = () => {
     filtroUltimoAcceso,
   ]);
 
-  const users = usersAll
-    ? {
-      ...usersAll,
-      data: usersAll.data
-        ? usersAll.data
-          .slice()
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        : [],
-    }
-    : { total: 0, page: 1, limit: 10, totalPages: 1, data: [] };
+  const users = usersAll || {
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    data: [],
+  };
 
   const [
     inscripciones,
@@ -365,6 +363,227 @@ const Secretaria = () => {
     setCertificadosFiltrados([]);
     setSugerenciasCertificados([]);
   };
+
+
+
+
+
+
+
+
+  const limpiarTextoCsv = (valor) => {
+    if (valor === null || valor === undefined) return "";
+    return `"${String(valor).replace(/"/g, '""')}"`;
+  };
+
+  const formatearCalificacion = (valor) => {
+    if (valor === null || valor === undefined || valor === "") return "";
+
+    const numero = Number(valor);
+
+    if (Number.isNaN(numero)) return valor;
+
+    return numero.toFixed(2).replace(".", ",");
+  };
+
+  const descargarMatrizListado = async () => {
+    try {
+      const params = new URLSearchParams({
+        cedula: cedulaBuscada || "",
+        search: nombreBuscado || "",
+        notaFinal: filtroDetalle || "",
+        acces: filtroUltimoAcceso || "",
+        pagos: filtroPago || "",
+        certificado: filtroCertificado || "",
+        curso: filtroCurso || "",
+        page: "1",
+        limit: String(users?.total || 100000),
+      });
+
+      const res = await fetch(`${BASEURL}/users?${params.toString()}`);
+      const data = await res.json();
+
+      const filas = [];
+      const columnasGrades = new Set();
+
+      data?.data?.forEach((usuario) => {
+        const cursos = usuario.courses || [];
+
+        cursos.forEach((curso) => {
+          const grades = curso.grades || {};
+
+          Object.keys(grades).forEach((key) => {
+            if (
+              key !== "Tiempo Actividad Minutos" &&
+              key !== "Tiempo Zoom Minutos" &&
+              key !== "Tiempo Total Minutos" &&
+              key !== "Tiempo Actividad Curso" &&
+              key !== "Tiempo Zoom" &&
+              key !== "Tiempo Total Curso"
+            ) {
+              columnasGrades.add(key);
+            }
+          });
+        });
+      });
+
+      const columnasCalificaciones = Array.from(columnasGrades);
+
+      data?.data?.forEach((usuario) => {
+        const cursos = usuario.courses || [];
+
+        if (cursos.length === 0) {
+          const filaSinCurso = {
+
+            fecha: new Date(usuario.createdAt).toLocaleDateString("es-EC"),
+            cedula: usuario.cI,
+            email: usuario.email,
+            nombre: `${usuario.firstName || ""} ${usuario.lastName || ""}`.trim(),
+            celular: usuario.cellular,
+            curso: "Sin inscripciones",
+            matriculado: "",
+            accesoMoodle: "",
+            tiempoAula: "",
+            tiempoZoom: "",
+            tiempoTotal: "",
+            pagos: "",
+            certificado: "",
+            observacion: "",
+          };
+
+          columnasCalificaciones.forEach((col) => {
+            filaSinCurso[col] = "";
+          });
+
+          filas.push(filaSinCurso);
+          return;
+        }
+
+        cursos.forEach((curso) => {
+          const grades = curso.grades || {};
+
+          const fila = {
+            fecha: new Date(usuario.createdAt).toLocaleDateString("es-EC"),
+            cedula: usuario.cI,
+            email: usuario.email,
+            nombre: `${usuario.firstName || ""} ${usuario.lastName || ""}`.trim(),
+            celular: usuario.cellular,
+            curso: curso.fullname,
+            matriculado: curso.matriculado ? "Sí" : "No",
+            accesoMoodle: curso.acces ? "Sí" : "No",
+            tiempoAula: grades["Tiempo Actividad Curso"] || "00:00:00",
+            tiempoZoom: grades["Tiempo Zoom"] || "00:00:00",
+            tiempoTotal: grades["Tiempo Total Curso"] || "00:00:00",
+            pagos: curso.pagos?.length
+              ? curso.pagos
+                .map((p, i) => `Pago ${i + 1}: ${p.pagoUrl || ""}`)
+                .join(" | ")
+              : "",
+            certificado: curso.certificado?.url || "",
+            observacion: curso.observacion || "",
+          };
+
+          columnasCalificaciones.forEach((col) => {
+            fila[col] =
+              grades[col] !== null && grades[col] !== undefined
+                ? formatearCalificacion(grades[col])
+                : "";
+          });
+
+          filas.push(fila);
+        });
+
+
+      });
+
+
+      const encabezados = [
+        "Fecha",
+        "Cédula",
+        "Email",
+        "Nombre",
+        "Celular",
+        "Curso",
+        ...columnasCalificaciones,
+        "Matriculado",
+        "Ingresa a Moodle",
+        "Tiempo Aula",
+        "Tiempo Zoom",
+        "Tiempo Total",
+        "Pagos",
+        "Certificado",
+        "Observación",
+      ];
+
+      const cuerpo = filas.map((f) =>
+        [
+          f.fecha,
+          f.cedula,
+          f.email,
+          f.nombre,
+          f.celular,
+          f.curso,
+          ...columnasCalificaciones.map((col) => f[col]),
+          f.matriculado,
+          f.accesoMoodle,
+          f.tiempoAula,
+          f.tiempoZoom,
+          f.tiempoTotal,
+          f.pagos,
+          f.certificado,
+          f.observacion,
+        ]
+          .map(limpiarTextoCsv)
+          .join(";")
+      );
+
+      const csv = [encabezados.join(";"), ...cuerpo].join("\n");
+
+      const blob = new Blob(["\ufeff" + csv], {
+        type: "text/csv;charset=utf-8;",
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+
+
+      const ahora = new Date();
+
+      const fechaHora =
+        `${ahora.getFullYear()}-` +
+        `${String(ahora.getMonth() + 1).padStart(2, "0")}-` +
+        `${String(ahora.getDate()).padStart(2, "0")}_` +
+        `${String(ahora.getHours()).padStart(2, "0")}-` +
+        `${String(ahora.getMinutes()).padStart(2, "0")}-` +
+        `${String(ahora.getSeconds()).padStart(2, "0")}`;
+
+      link.download = `matriz_listado_${fechaHora}.csv`;
+
+
+
+
+      link.click();
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo descargar la matriz.");
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Autocompletar nombres
   useEffect(() => {
@@ -748,6 +967,16 @@ const Secretaria = () => {
                     ❌ Limpiar filtros
                   </button>
                 </div>
+
+
+                <div className="input_group secInputGroup">
+                  <button
+                    className="btn_buscar secBtnPrimary"
+                    onClick={descargarMatrizListado}
+                  >
+                    📥 Descargar Reporte
+                  </button>
+                </div>
               </div>
 
               <div className="paginacion secPagination">
@@ -831,6 +1060,16 @@ const Secretaria = () => {
                 <table className="tabla-pagos secTable">
                   <thead>
                     <tr>
+                      <th
+                        onClick={() => {
+                          setOrdenFecha((prev) => (prev === "desc" ? "asc" : "desc"));
+                          setPaginaActual(1);
+                        }}
+                        style={{ cursor: "pointer", userSelect: "none" }}
+                        title="Ordenar por fecha"
+                      >
+                        Fecha {ordenFecha === "desc" ? "⬇️" : "⬆️"}
+                      </th>
                       <th>Cédula</th>
                       <th>Email</th>
                       <th className="col-curso">Nombre</th>
@@ -853,11 +1092,53 @@ const Secretaria = () => {
                       if (cursos.length === 0) {
                         return (
                           <tr key={usuario.id}>
+
+                            <td >
+                              {new Date(usuario.createdAt).toLocaleDateString("es-EC")}
+                            </td>
                             <td>{usuario.cI}</td>
+                            <td>{usuario.email}</td>
+
                             <td className="col-curso">
                               {usuario.firstName} {usuario.lastName}
                             </td>
-                            <td>{usuario.cellular}</td>
+
+
+
+                            <td >
+                              {(() => {
+                                const celular = String(
+                                  usuario.cellular || "",
+                                ).replace(/\D/g, "");
+
+                                if (!celular || celular.length < 9) {
+                                  return usuario.cellular || "";
+                                }
+
+                                const numeroWhatsapp = celular.startsWith("0")
+                                  ? `593${celular.slice(1)}`
+                                  : celular.startsWith("593")
+                                    ? celular
+                                    : `593${celular}`;
+
+                                return (
+                                  <a
+                                    href={`https://wa.me/${numeroWhatsapp}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      color: "#0b66c3",
+                                      fontWeight: 700,
+                                      textDecoration: "underline",
+                                    }}
+                                  >
+                                    {usuario.cellular}
+                                  </a>
+                                );
+                              })()}
+                            </td>
+
+
                             <td colSpan={7} style={{ textAlign: "center" }}>
                               Sin inscripciones
                             </td>
@@ -869,8 +1150,10 @@ const Secretaria = () => {
                         <tr key={`${usuario.id}-${curso.id}`}>
                           {idx === 0 && (
                             <>
+                              <td rowSpan={cursos.length}>
+                                {new Date(usuario.createdAt).toLocaleDateString("es-EC")}
+                              </td>
                               <td rowSpan={cursos.length}>{usuario.cI}</td>
-
 
                               <td
                                 className="col-curso email-copy"
