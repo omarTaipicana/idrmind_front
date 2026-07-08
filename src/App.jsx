@@ -88,8 +88,8 @@ const App = () => {
 
         <Route element={<ProtectedRoutes />}>
           <Route path="/home" element={<Home />} />
-          <Route path="/evaluacion/:inscripcionId"
-            element={<EvaluacionCurso />} />
+          <Route path="/evaluacion/:inscripcionId" element={<EvaluacionCurso />} />
+          <Route path="/evaluar-curso/:token" element={<EvaluacionCurso />} />
 
 
           <Route element={<InstitutoProtectedRoute />}>

@@ -8,12 +8,21 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const EvaluacionCurso = () => {
 
-    const { inscripcionId } = useParams();
+    const params = useParams();
+    const token = params.token;
     const { state } = useLocation();
 
-    const userId = state?.userId;
-    const courseId = state?.courseId;
-    const courseName = state?.courseName;
+    const [accessData, setAccessData] = useState({
+        userId: state?.userId || null,
+        courseId: state?.courseId || null,
+        courseName: state?.courseName || "",
+        inscripcionId: state?.inscripcionId || params.inscripcionId || null,
+    });
+
+    const userId = accessData.userId;
+    const courseId = accessData.courseId;
+    const courseName = accessData.courseName;
+    const inscripcionId = accessData.inscripcionId;
 
 
 
@@ -31,6 +40,43 @@ const EvaluacionCurso = () => {
 
         setPreguntas(res.data || []);
     };
+
+    const verificarTokenMoodle = async () => {
+        if (!token) return;
+
+        try {
+            const res = await axios.get(
+                `${API_URL}/evaluation-access/verify/${token}`,
+                getConfigToken()
+            );
+
+            if (!res.data.valid) {
+                alert(res.data.message || "Acceso inválido.");
+                return;
+            }
+
+            setAccessData({
+                userId: res.data.userId,
+                courseId: res.data.courseId,
+                inscripcionId: res.data.inscripcionId,
+                courseName:
+                    res.data.course?.fullname ||
+                    res.data.course?.name ||
+                    res.data.course?.nombre ||
+                    res.data.course?.sigla ||
+                    "",
+            });
+        } catch (error) {
+            console.error(error);
+            alert("Token inválido o expirado.");
+        }
+    };
+
+    useEffect(() => {
+        verificarTokenMoodle();
+    }, [token]);
+
+
 
     const verificarEvaluacion = async () => {
         const res = await axios.get(
@@ -103,6 +149,27 @@ const EvaluacionCurso = () => {
             <div className="evalCard">
                 <div className="evalEmpty">
                     ✅ Usted ya completó la evaluación de este curso.
+                </div>
+            </div>
+        );
+    }
+
+
+    if (!courseId || !inscripcionId || !userId) {
+        return (
+            <div className="evalCard">
+                <div className="evalEmpty">
+                    No se pudo cargar la información de la evaluación.
+                </div>
+            </div>
+        );
+    }
+
+    if (preguntas.length === 0) {
+        return (
+            <div className="evalCard">
+                <div className="evalEmpty">
+                    No existen preguntas activas para esta evaluación.
                 </div>
             </div>
         );
