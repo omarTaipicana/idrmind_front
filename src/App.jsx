@@ -34,6 +34,7 @@ import Membresias from "./components/Servicios/Membresias";
 import Franquicias from "./components/Servicios/Franquicias";
 import SistemaDeEvaluacion from "./components/Servicios/SistemaDeEvaluacion";
 import EvaluacionDocente from "./pages/EvaluacionDocente";
+import EvaluacionCurso from "./pages/EvaluacionCurso";
 
 const App = () => {
   const location = useLocation();
@@ -87,6 +88,9 @@ const App = () => {
 
         <Route element={<ProtectedRoutes />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/evaluacion/:inscripcionId"
+            element={<EvaluacionCurso />} />
+
 
           <Route element={<InstitutoProtectedRoute />}>
             <Route path="/instituto" element={<Instituto />} />

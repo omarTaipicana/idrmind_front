@@ -5,7 +5,13 @@
   --idrmindGreen: #5b8f15;
   --idrmindDanger: #c0392b;
   --headerOffset: 9rem;
+  --borderSoft: rgba(27, 50, 107, 0.14);
+  --shadowSoft: 0 1rem 2.4rem rgba(0, 0, 0, 0.08);
 }
+
+/* =========================
+   LAYOUT GENERAL
+========================= */
 
 .evalPage {
   width: 100%;
@@ -18,9 +24,17 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 1.5rem;
-  position: relative;
-  background: #ffffff;
+  background: #fff;
 }
+
+.evalContent {
+  padding: 0 1rem 2.5rem 0;
+  overflow-y: auto;
+}
+
+/* =========================
+   MENÚ LATERAL
+========================= */
 
 .evalMenu {
   position: sticky;
@@ -28,7 +42,7 @@
   height: calc(100dvh - var(--headerOffset) - 2rem);
   border-radius: 1.2rem;
   overflow: hidden;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0 0.9rem 2rem rgba(0, 0, 0, 0.08);
   transition: transform 0.25s ease;
@@ -79,20 +93,19 @@
   border-left-color: var(--idrmindAccent);
 }
 
-.evalContent {
-  padding: 0 1rem 2.5rem 0;
-  overflow-y: auto;
-}
+/* =========================
+   CARD PRINCIPAL
+========================= */
 
 .evalCard {
   position: relative;
   width: min(1250px, 100%);
   min-height: 90%;
   border-radius: 1.4rem;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(0, 0, 0, 0.07);
-  box-shadow: 0 1rem 2.4rem rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadowSoft);
   padding: 2rem;
   overflow: hidden;
   animation: evalFade 0.35s ease both;
@@ -110,9 +123,15 @@
   pointer-events: none;
 }
 
-.evalCardHeader {
+.evalCardHeader,
+.evalForm,
+.evalTableWrap,
+.evalScaleBox {
   position: relative;
   z-index: 1;
+}
+
+.evalCardHeader {
   margin-bottom: 1.2rem;
 }
 
@@ -126,10 +145,262 @@
   border-bottom: 3px solid var(--idrmindAccent);
 }
 
+.evalSubtitle {
+  color: var(--idrmindBlue);
+  font-weight: 900;
+  margin: 1rem 0;
+}
+
 .evalMuted {
   color: #6b6f7b;
   font-weight: 700;
 }
+
+/* =========================
+   FORMULARIOS
+========================= */
+
+.evalForm {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.evalFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.evalFormGroup label {
+  font-weight: 900;
+  color: var(--idrmindBlue);
+}
+
+.evalInput,
+.evalTextarea {
+  width: 100%;
+  padding: 0.82rem 0.95rem;
+  border: 2px solid rgba(27, 50, 107, 0.32);
+  border-radius: 0.9rem;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+  color: #222;
+  transition: 0.2s ease;
+}
+
+.evalInput:hover,
+.evalTextarea:hover {
+  border-color: rgba(27, 50, 107, 0.55);
+}
+
+.evalInput:focus,
+.evalTextarea:focus {
+  border-color: var(--idrmindAccent);
+  box-shadow: 0 0 0 4px rgba(255, 183, 3, 0.18);
+}
+
+.evalTextarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.evalInput[type="file"] {
+  padding: 0.65rem;
+  cursor: pointer;
+  background: #f8fafc;
+}
+
+.evalInput[type="file"]::file-selector-button {
+  border: none;
+  background: var(--idrmindBlue2);
+  color: white;
+  padding: 0.65rem 1rem;
+  margin-right: 1rem;
+  border-radius: 0.7rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.evalInput[type="file"]::file-selector-button:hover {
+  background: #081a3f;
+}
+
+/* =========================
+   GRIDS
+========================= */
+
+.evalGrid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.evalGrid3 {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+/* =========================
+   PREGUNTAS / ESCALA
+========================= */
+
+.evalQuestion {
+  background: rgba(232, 234, 239, 0.62);
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(27, 50, 107, 0.1);
+}
+
+.evalQuestion h3 {
+  margin: 0 0 0.8rem;
+  color: var(--idrmindBlue);
+  font-size: 1rem;
+}
+
+.evalOptions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.evalOptionItem,
+.evalOptions label {
+  background: #fff;
+  border: 1px solid rgba(27, 50, 107, 0.18);
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  font-weight: 900;
+  color: #222;
+  transition: 0.2s ease;
+}
+
+.evalOptionItem:hover,
+.evalOptions label:hover {
+  border-color: var(--idrmindBlue);
+  box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+.evalOptionItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 90px;
+}
+
+.evalOptionItem input {
+  margin: 0;
+}
+
+.evalOptionItem span {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--idrmindBlue);
+}
+
+.evalOptionItem small {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;
+}
+
+.evalScaleBox {
+  background: rgba(232, 234, 239, 0.62);
+  border-radius: 1rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(27, 50, 107, 0.1);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.evalScaleBox h3 {
+  margin: 0;
+  color: var(--idrmindBlue);
+  font-weight: 900;
+}
+
+.evalScaleRow {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.evalScaleRow strong {
+  color: var(--idrmindBlue);
+  font-size: 1.1rem;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.evalBtnPrimary {
+  justify-self: flex-start;
+  background: var(--idrmindBlue2);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.35rem;
+  border-radius: 0.9rem;
+  cursor: pointer;
+  font-weight: 900;
+  box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.18);
+  transition: 0.2s ease;
+}
+
+.evalBtnPrimary:hover {
+  background: #081a3f;
+  transform: translateY(-1px);
+}
+
+.evalBtnPrimary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.evalIconBtn {
+  border: none;
+  border-radius: 0.6rem;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  font-weight: 900;
+  transition: 0.2s ease;
+}
+
+.evalIconBtn.restore {
+  background: var(--idrmindGreen);
+  color: white;
+}
+
+.evalIconBtn.restore:hover {
+  transform: scale(1.08);
+}
+
+/* =========================
+   CHECKBOX
+========================= */
+
+.evalCheck {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 900;
+  color: var(--idrmindBlue);
+}
+
+.evalCheck input {
+  width: 18px;
+  height: 18px;
+}
+
+/* =========================
+   ESTADÍSTICAS
+========================= */
 
 .evalStatsGrid {
   position: relative;
@@ -165,6 +436,49 @@
   font-weight: 700;
 }
 
+/* =========================
+   TABLAS
+========================= */
+
+.evalTableWrap {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+}
+
+.evalTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.evalTable th,
+.evalTable td {
+  border: 1px solid #d9d9d9;
+  padding: 0.8rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.evalTable th {
+  background: #f4f7fb;
+  color: var(--idrmindBlue);
+  font-weight: 900;
+}
+
+.evalTable tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.evalTable tr:hover {
+  background: #eef5ff;
+}
+
+/* =========================
+   VACÍOS / MENSAJES
+========================= */
+
 .evalEmpty {
   position: relative;
   z-index: 1;
@@ -177,6 +491,10 @@
   border: 2px dashed rgba(27, 50, 107, 0.25);
   border-radius: 1.2rem;
 }
+
+/* =========================
+   MENÚ MÓVIL
+========================= */
 
 .evalOverlay {
   display: none;
@@ -221,95 +539,9 @@
   transform: translateY(-9px) rotate(-45deg);
 }
 
-.evalForm {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 1.2rem;
-}
-
-.evalFormGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.evalFormGroup label {
-  font-weight: 900;
-  color: var(--idrmindBlue);
-}
-
-.evalInput,
-.evalTextarea {
-  width: 100%;
-  padding: 0.75rem 0.9rem;
-  border: 2px solid rgba(27, 50, 107, 0.45);
-  border-radius: 0.9rem;
-  font-size: 0.95rem;
-  outline: none;
-  background: #fff;
-  color: #222;
-}
-
-.evalTextarea {
-  min-height: 110px;
-  resize: vertical;
-}
-
-.evalInput:focus,
-.evalTextarea:focus {
-  border-color: var(--idrmindAccent);
-  box-shadow: 0 0 0 4px rgba(255, 183, 3, 0.18);
-}
-
-.evalQuestion {
-  background: rgba(232, 234, 239, 0.62);
-  border-radius: 1rem;
-  padding: 1rem;
-  border: 1px solid rgba(27, 50, 107, 0.1);
-}
-
-.evalQuestion h3 {
-  margin: 0 0 0.8rem;
-  color: var(--idrmindBlue);
-  font-size: 1rem;
-}
-
-.evalOptions {
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.evalOptions label {
-  background: #fff;
-  border: 1px solid rgba(27, 50, 107, 0.18);
-  padding: 0.55rem 0.85rem;
-  border-radius: 0.8rem;
-  cursor: pointer;
-  font-weight: 900;
-  color: #222;
-}
-
-.evalOptions input {
-  margin-right: 0.4rem;
-}
-
-.evalBtnPrimary {
-  justify-self: flex-start;
-  background: var(--idrmindBlue2);
-  color: #fff;
-  border: none;
-  padding: 0.8rem 1.3rem;
-  border-radius: 0.9rem;
-  cursor: pointer;
-  font-weight: 900;
-  box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.18);
-}
-
-.evalBtnPrimary:hover {
-  background: #081a3f;
-}
+/* =========================
+   ANIMACIÓN
+========================= */
 
 @keyframes evalFade {
   from {
@@ -323,10 +555,74 @@
   }
 }
 
+.evalBtnSecondary {
+  justify-self: flex-start;
+  background: #ffffff;
+  color: var(--idrmindBlue2);
+  border: 2px solid var(--idrmindBlue2);
+  padding: 0.85rem 1.35rem;
+  border-radius: 0.9rem;
+  cursor: pointer;
+  font-weight: 900;
+  transition: 0.2s ease;
+}
+
+.evalBtnSecondary:hover {
+  background: var(--idrmindBlue2);
+  color: #ffffff;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+  .evalShell {
+    grid-template-columns: 240px 1fr;
+    gap: 1rem;
+  }
+
+  .evalCard {
+    padding: 1.6rem;
+  }
+
+  .evalGrid3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .evalShell {
     grid-template-columns: 1fr;
     padding-top: 1rem;
+  }
+
+  .evalContent {
+    padding: 0 1rem 2.5rem 1rem;
+  }
+
+  .evalCard {
+    padding: 1.4rem 1.1rem;
+    border-radius: 1.1rem;
+  }
+
+  .evalTitle {
+    font-size: 1.5rem;
+  }
+
+  .evalGrid2,
+  .evalGrid3,
+  .evalStatsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .evalOptions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .evalOptionItem {
+    width: 100%;
   }
 
   .evalHamburger {
@@ -363,22 +659,5 @@
 
   .evalMenu.open {
     transform: translateX(0);
-  }
-
-  .evalContent {
-    padding: 0 1rem 2.5rem 1rem;
-  }
-
-  .evalCard {
-    padding: 1.4rem 1.1rem;
-    border-radius: 1.1rem;
-  }
-
-  .evalTitle {
-    font-size: 1.5rem;
-  }
-
-  .evalStatsGrid {
-    grid-template-columns: 1fr;
   }
 }

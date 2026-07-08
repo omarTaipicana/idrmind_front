@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./styles/Home.css";
 import useAuth from "../hooks/useAuth";
+import EvaluacionCurso from "./EvaluacionCurso";
 import IsLoading from "../components/shared/isLoading";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +12,7 @@ const Home = () => {
   const [activeSection, setActiveSection] = useState("datos-personales");
   const [menuOpen, setMenuOpen] = useState(false);
   const [cursoAbiertoIndex, setCursoAbiertoIndex] = useState(null);
+  const [cursoEvaluar, setCursoEvaluar] = useState(null);
   const menuRef = useRef();
   const hamburgerRef = useRef();
   const navigate = useNavigate();
@@ -322,6 +324,8 @@ const Home = () => {
               {user?.courses?.length > 0 ? (
                 <ul className="homeList">
                   {user.courses.map((curso, index) => {
+
+
                     const calificaciones = curso.grades || {};
                     const estaAbierto = cursoAbiertoIndex === index;
 
@@ -354,53 +358,73 @@ const Home = () => {
 
                             {/* ✅ Calificaciones: se muestran si existen, sin depender de inscripcion/matriculado */}
                             {Object.keys(calificaciones).length > 0 ? (
-                              <ul className="homeNotes">
-                                {Object.entries(calificaciones)
-                                  .filter(
-                                    ([actividad]) =>
-                                      ![
-                                        "Tiempo Actividad Curso",
-                                        "Tiempo Actividad Minutos",
-                                        "Tiempo Zoom",
-                                        "Tiempo Zoom Minutos",
-                                        "Tiempo Total Curso",
-                                        "Tiempo Total Minutos",
-                                      ].includes(actividad)
-                                  )
-                                  .map(([actividad, nota]) => (
-                                    <li key={actividad} className="homeNoteItem">
-                                      <strong>{actividad}:</strong> {nota}
-                                    </li>
-                                  ))}
+                              <>
+                                <ul className="homeNotes">
+                                  {Object.entries(calificaciones)
+                                    .filter(
+                                      ([actividad]) =>
+                                        ![
+                                          "Tiempo Actividad Curso",
+                                          "Tiempo Actividad Minutos",
+                                          "Tiempo Zoom",
+                                          "Tiempo Zoom Minutos",
+                                          "Tiempo Total Curso",
+                                          "Tiempo Total Minutos",
+                                        ].includes(actividad)
+                                    )
+                                    .map(([actividad, nota]) => (
+                                      <li key={actividad} className="homeNoteItem">
+                                        <strong>{actividad}:</strong> {nota}
+                                      </li>
+                                    ))}
 
 
 
-                                {calificaciones["Tiempo Total Curso"] &&
-                                  calificaciones["Tiempo Total Curso"] !== "00:00:00" && (
-                                    <li className="homeNoteItem">
-                                      <div style={{ fontSize: "0.85rem", lineHeight: "1.4" }}>
-                                        <div>
-                                          <strong>📚 Aula virtual:</strong>{" "}
-                                          {calificaciones["Tiempo Actividad Curso"]}
+                                  {calificaciones["Tiempo Total Curso"] &&
+                                    calificaciones["Tiempo Total Curso"] !== "00:00:00" && (
+                                      <li className="homeNoteItem">
+                                        <div style={{ fontSize: "0.85rem", lineHeight: "1.4" }}>
+                                          <div>
+                                            <strong>📚 Aula virtual:</strong>{" "}
+                                            {calificaciones["Tiempo Actividad Curso"]}
+                                          </div>
+
+                                          <div>
+                                            <strong>🎥 Clase Zoom:</strong>{" "}
+                                            {calificaciones["Tiempo Zoom"]}
+                                          </div>
+
+                                          <div>
+                                            <strong>⏱️ Total:</strong>{" "}
+                                            {calificaciones["Tiempo Total Curso"]}
+                                          </div>
                                         </div>
-
-                                        <div>
-                                          <strong>🎥 Clase Zoom:</strong>{" "}
-                                          {calificaciones["Tiempo Zoom"]}
-                                        </div>
-
-                                        <div>
-                                          <strong>⏱️ Total:</strong>{" "}
-                                          {calificaciones["Tiempo Total Curso"]}
-                                        </div>
-                                      </div>
-                                    </li>
-                                  )}
+                                      </li>
+                                    )}
 
 
 
 
-                              </ul>
+                                </ul>
+
+                                {curso.inscripcion && (
+                                  <button
+                                    type="button"
+                                    className="homeBtnLink"
+                                    onClick={() =>
+                                      navigate(`/evaluacion/${curso.inscripcion.id}`, {
+                                        state: {
+                                          userId: user.id,
+                                          courseId: curso.inscripcion.courseId,
+                                          courseName: curso.fullname,
+                                        },
+                                      })
+                                    }
+                                  >
+                                    ⭐ Evaluar curso
+                                  </button>
+                                )}
+                              </>
                             ) : (
                               <p className="homeMuted">No hay calificaciones registradas.</p>
                             )}
