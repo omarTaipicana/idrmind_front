@@ -44,15 +44,15 @@
   z-index: 1200;
 }
 
-.navbar_links {
+.navbar_links_lp {
   display: flex;
   gap: 2rem;
-  width: 60%;
+  width: 55%;
   justify-content: flex-end;
   align-items: center;
 }
 
-.navbar_links button {
+.navbar_links_lp button {
   background: none;
   border: none;
   color: #081a3f;
@@ -64,7 +64,7 @@
   font-weight: 600;
 }
 
-.navbar_links button::after {
+.navbar_links_lp button::after {
   content: "";
   position: absolute;
   bottom: -0.15rem;
@@ -75,11 +75,11 @@
   transition: width 0.3s ease;
 }
 
-.navbar_links button:hover {
+.navbar_links_lp button:hover {
   color: #0f07f5;
 }
 
-.navbar_links button:hover::after {
+.navbar_links_lp button:hover::after {
   width: 100%;
 }
 
@@ -865,7 +865,7 @@
   }
 
   /* ocultamos links desktop */
-  .navbar_links {
+  .navbar_links_lp {
     display: none;
   }
 
@@ -1076,4 +1076,681 @@
     align-items: center;
   }
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================
+   PROYECTO PENSAR DENTRO DE SERVICIOS
+========================================= */
+
+.proyecto-pensar {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto 4rem;
+  padding: 3.5rem;
+
+  border-radius: 2.2rem;
+  overflow: hidden;
+  isolation: isolate;
+
+  color: #ffffff;
+
+  background:
+    radial-gradient(circle at 8% 15%,
+      rgba(255, 220, 25, 0.14),
+      transparent 26%),
+    radial-gradient(circle at 92% 85%,
+      rgba(49, 165, 255, 0.22),
+      transparent 30%),
+    linear-gradient(125deg,
+      rgba(4, 15, 43, 0.98),
+      rgba(9, 47, 108, 0.97) 52%,
+      rgba(12, 84, 166, 0.96));
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  box-shadow:
+    0 32px 75px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.17);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.proyecto-pensar:hover {
+  transform: translateY(-6px);
+
+  border-color: rgba(62, 171, 255, 0.65);
+
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.48),
+    0 0 35px rgba(30, 148, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Línea multicolor superior */
+.proyecto-pensar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+
+  width: 80%;
+  height: 4px;
+
+  border-radius: 0 0 999px 999px;
+
+  background: linear-gradient(90deg,
+      transparent,
+      #ff3535,
+      #ffdb19,
+      #28d252,
+      #248eff,
+      transparent);
+
+  box-shadow:
+    0 0 16px rgba(255, 219, 25, 0.55),
+    0 0 24px rgba(36, 142, 255, 0.45);
+}
+
+/* Destello que cruza el bloque */
+.proyecto-pensar::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  top: -70%;
+  left: -35%;
+
+  width: 20%;
+  height: 250%;
+
+  transform: rotate(24deg);
+
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.13),
+      transparent);
+
+  animation: proyectoPensarShine 7s ease-in-out infinite;
+}
+
+/* Luces de fondo */
+.proyecto-pensar__glow {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(18px);
+}
+
+.proyecto-pensar__glow--one {
+  top: -170px;
+  right: -100px;
+
+  width: 350px;
+  height: 350px;
+
+  background: rgba(25, 146, 255, 0.3);
+
+  animation: proyectoPensarGlow 5s ease-in-out infinite;
+}
+
+.proyecto-pensar__glow--two {
+  bottom: -180px;
+  left: 15%;
+
+  width: 310px;
+  height: 310px;
+
+  background: rgba(35, 212, 81, 0.17);
+
+  animation: proyectoPensarGlow 6s ease-in-out infinite reverse;
+}
+
+/* Contenido en dos columnas */
+.proyecto-pensar__content {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(450px, 1.5fr);
+  align-items: center;
+  gap: 4rem;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.proyecto-pensar__logo-container {
+  position: relative;
+
+  width: min(355px, 100%);
+  aspect-ratio: 1 / 1;
+
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proyecto-pensar__logo-ring {
+  position: absolute;
+  inset: 2%;
+
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.35);
+
+  box-shadow:
+    0 0 30px rgba(30, 153, 255, 0.35),
+    inset 0 0 28px rgba(30, 153, 255, 0.12);
+
+  animation: proyectoPensarRotate 18s linear infinite;
+}
+
+.proyecto-pensar__logo-ring::before,
+.proyecto-pensar__logo-ring::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+
+.proyecto-pensar__logo-ring::before {
+  top: 6%;
+  left: 17%;
+
+  width: 17px;
+  height: 17px;
+
+  background: #ffdb19;
+
+  box-shadow:
+    0 0 18px #ffdb19,
+    230px 190px 0 #24d050,
+    230px 190px 18px #24d050;
+}
+
+.proyecto-pensar__logo-ring::after {
+  top: 43%;
+  right: 5%;
+
+  width: 14px;
+  height: 14px;
+
+  background: #168cff;
+  box-shadow: 0 0 18px #168cff;
+}
+
+.proyecto-pensar__logo {
+  position: relative;
+  z-index: 2;
+
+  width: 84%;
+  max-height: 320px;
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 22px 27px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.18));
+
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.proyecto-pensar:hover .proyecto-pensar__logo {
+  transform: scale(1.06);
+
+  filter:
+    drop-shadow(0 25px 30px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 23px rgba(37, 151, 255, 0.4));
+}
+
+/* =========================
+   INFORMACIÓN
+========================= */
+
+.proyecto-pensar__information {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.proyecto-pensar__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  margin-bottom: 1.25rem;
+  padding: 0.55rem 1.1rem;
+
+  border-radius: 999px;
+
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+
+  background: rgba(255, 255, 255, 0.11);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+
+  animation: proyectoPensarBadge 2.6s ease-in-out infinite;
+}
+
+.proyecto-pensar__badge::before {
+  content: "";
+
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: #27d04f;
+  box-shadow: 0 0 12px #27d04f;
+}
+
+.proyecto-pensar__title {
+  max-width: 850px;
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(2.3rem, 4vw, 4.15rem);
+  font-weight: 950;
+  line-height: 1.04;
+  letter-spacing: -0.11rem;
+}
+
+.proyecto-pensar__title span {
+  color: transparent;
+
+  background: linear-gradient(90deg,
+      #ffdb19,
+      #39dc55,
+      #37a6ff);
+
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.proyecto-pensar__description {
+  max-width: 830px;
+  margin: 1.4rem 0 1.7rem;
+
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: 1.12rem;
+  line-height: 1.75;
+}
+
+/* =========================
+   HABILIDADES
+========================= */
+
+.proyecto-pensar__skills {
+  width: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  margin-bottom: 2rem;
+}
+
+.proyecto-pensar__skills span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+
+  padding: 0.72rem 1rem;
+
+  border-radius: 0.8rem;
+
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 800;
+
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.proyecto-pensar__skills span:hover {
+  transform: translateY(-5px);
+
+  background: rgba(255, 255, 255, 0.17);
+  border-color: rgba(78, 181, 255, 0.7);
+
+  box-shadow:
+    0 13px 28px rgba(0, 0, 0, 0.22),
+    0 0 18px rgba(57, 166, 255, 0.18);
+}
+
+/* Hace destacar el índice de productividad */
+
+
+/* =========================
+   BOTÓN
+========================= */
+
+.proyecto-pensar__button {
+  position: relative;
+
+  min-width: 285px;
+  min-height: 62px;
+
+  padding: 1rem 1.7rem;
+
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+
+  color: #071b3f;
+
+  font-size: 1.04rem;
+  font-weight: 950;
+
+  cursor: pointer;
+
+  background: linear-gradient(90deg,
+      #ffda19,
+      #43dc57,
+      #38a7ff,
+      #ffda19);
+
+  background-size: 300% 100%;
+
+  box-shadow:
+    0 15px 34px rgba(0, 0, 0, 0.32),
+    0 0 25px rgba(54, 165, 255, 0.3);
+
+  animation:
+    proyectoPensarButtonGradient 5s linear infinite,
+    proyectoPensarButtonPulse 2.5s ease-in-out infinite;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.proyecto-pensar__button::before {
+  content: "";
+
+  position: absolute;
+  inset: 3px;
+
+  border-radius: 0.82rem;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  pointer-events: none;
+}
+
+.proyecto-pensar__button span,
+.proyecto-pensar__button strong {
+  position: relative;
+  z-index: 2;
+}
+
+.proyecto-pensar__button strong {
+  font-size: 1.65rem;
+  line-height: 1;
+
+  transition: transform 0.25s ease;
+}
+
+.proyecto-pensar__button:hover {
+  transform: translateY(-7px) scale(1.03);
+
+  box-shadow:
+    0 22px 45px rgba(0, 0, 0, 0.4),
+    0 0 38px rgba(54, 165, 255, 0.55);
+}
+
+.proyecto-pensar__button:hover strong {
+  transform: translateX(8px);
+}
+
+.proyecto-pensar__button:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+.proyecto-pensar__notice {
+  margin: 1.1rem 0 0;
+
+  color: rgba(255, 255, 255, 0.57);
+
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* =========================================
+   ANIMACIONES
+========================================= */
+
+@keyframes proyectoPensarRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes proyectoPensarGlow {
+
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes proyectoPensarShine {
+
+  0%,
+  20% {
+    left: -35%;
+  }
+
+  65%,
+  100% {
+    left: 125%;
+  }
+}
+
+@keyframes proyectoPensarBadge {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes proyectoPensarButtonGradient {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 300% 50%;
+  }
+}
+
+@keyframes proyectoPensarButtonPulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 15px 34px rgba(0, 0, 0, 0.32),
+      0 0 15px rgba(54, 165, 255, 0.24);
+  }
+
+  50% {
+    box-shadow:
+      0 18px 42px rgba(0, 0, 0, 0.38),
+      0 0 36px rgba(54, 165, 255, 0.55);
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+  .proyecto-pensar {
+    padding: 3rem 2rem;
+  }
+
+  .proyecto-pensar__content {
+    grid-template-columns: 290px minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .proyecto-pensar__title {
+    letter-spacing: -0.07rem;
+  }
+}
+
+/* =========================================
+   MÓVIL
+========================================= */
+
+@media (max-width: 760px) {
+  .proyecto-pensar {
+    margin-bottom: 3rem;
+    padding: 2.2rem 1.15rem;
+
+    border-radius: 1.6rem;
+  }
+
+  .proyecto-pensar__content {
+    grid-template-columns: 1fr;
+    gap: 1.7rem;
+
+    text-align: center;
+  }
+
+  .proyecto-pensar__logo-container {
+    width: min(245px, 75vw);
+  }
+
+  .proyecto-pensar__logo {
+    max-height: 225px;
+  }
+
+  .proyecto-pensar__information {
+    align-items: center;
+  }
+
+  .proyecto-pensar__badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.04rem;
+  }
+
+  .proyecto-pensar__title {
+    font-size: 2.1rem;
+    line-height: 1.08;
+    letter-spacing: -0.04rem;
+  }
+
+  .proyecto-pensar__description {
+    margin-top: 1.1rem;
+
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .proyecto-pensar__skills {
+    justify-content: center;
+    gap: 0.55rem;
+  }
+
+  .proyecto-pensar__skills span {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.76rem;
+  }
+
+  .proyecto-pensar__skills span:last-child {
+    width: 100%;
+    max-width: 290px;
+  }
+
+  .proyecto-pensar__button {
+    width: 100%;
+    min-width: 0;
+    min-height: 58px;
+
+    font-size: 1rem;
+  }
+
+  .proyecto-pensar__notice {
+    text-align: center;
+  }
+}
+
+/* Reduce animaciones cuando el sistema lo solicita */
+@media (prefers-reduced-motion: reduce) {
+
+  .proyecto-pensar,
+  .proyecto-pensar *,
+  .proyecto-pensar::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

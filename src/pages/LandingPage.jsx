@@ -143,7 +143,7 @@ const LandingPage = () => {
           {menuOpen ? <FaTimes /> : <FaBars />}
         </div>
 
-        <div className="navbar_links">
+        <div className="navbar_links_lp">
           <button type="button" onClick={() => scrollToSection(inicioRef)}>
             Inicio
           </button>
@@ -314,6 +314,19 @@ const LandingPage = () => {
       </motion.section>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -327,6 +340,80 @@ const LandingPage = () => {
             Soluciones diseñadas para acompañar el crecimiento personal, empresarial y académico.
           </p>
         </div>
+
+
+
+
+
+        <div className="proyecto-pensar">
+          <div className="proyecto-pensar__glow proyecto-pensar__glow--one" />
+          <div className="proyecto-pensar__glow proyecto-pensar__glow--two" />
+
+          <div className="proyecto-pensar__content">
+            <motion.div
+              className="proyecto-pensar__logo-container"
+              animate={{
+                scale: [1, 1.05, 1],
+                opacity: [0.85, 1, 0.95],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <div className="proyecto-pensar__logo-ring" />
+
+              <img
+                src="/images/test_logo.png"
+                alt="Proyecto Pensar"
+                className="proyecto-pensar__logo"
+              />
+            </motion.div>
+
+            <div className="proyecto-pensar__information">
+              <span className="proyecto-pensar__badge">
+                Evaluación de Habilidades Blandas
+              </span>
+
+              <h3 className="proyecto-pensar__title">
+                Descubre cómo piensas,
+                <span> aprendes y trabajas</span>
+              </h3>
+
+              <p className="proyecto-pensar__description">
+                Realiza nuestro test de habilidades blandas y obtén una visión más
+                clara de tus fortalezas, tu estilo de comunicación y tu forma de
+                relacionarte con los demás.
+              </p>
+
+              <div className="proyecto-pensar__skills">
+                <span>🎯 Persistencia</span>
+                <span>💬 Comunicación</span>
+                <span>🧠 Tipo de cerebro</span>
+                <span>📚 Forma de aprendizaje</span>
+                <span>🤝 Negociación</span>
+                <span>👥 Trabajo en equipo</span>
+                <span>📈 Índice de productividad</span>
+              </div>
+
+              <button
+                type="button"
+                className="proyecto-pensar__button"
+                onClick={() => navigate("/proyectopensar")}
+              >
+                <span>Realizar test ahora</span>
+                <strong>→</strong>
+              </button>
+
+              <p className="proyecto-pensar__notice">
+                Una evaluación diseñada para conocerte mejor y potenciar tu
+                desarrollo personal y profesional.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="servicios_lista">
 
 

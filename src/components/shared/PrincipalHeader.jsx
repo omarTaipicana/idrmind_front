@@ -124,10 +124,10 @@ const PrincipalHeader = () => {
             Validacion
           </Link>
           <Link to="/edit_user" onClick={onClick}>
-            Editar Usuario
+            Gestion Per. Emp. 
           </Link>
           <Link to="/evaluacion-docente" onClick={onClick}>
-            Evaluación Docente
+            Inf. Satisfacción
           </Link>
         </>
       );
@@ -243,10 +243,10 @@ const PrincipalHeader = () => {
             Validacion
           </Link>
           <Link to="/edit_user" onClick={onClick}>
-            Editar Usuario
+            Gestion Per. Emp. 
           </Link>
           <Link to="/evaluacion-docente" onClick={onClick}>
-            Evaluación Docente
+            Inf. Satisfacción
           </Link>
         </>
       );
@@ -394,10 +394,10 @@ const PrincipalHeader = () => {
                   Validacion
                 </button>
                 <button type="button" onClick={() => { closeMenu(); navigate("/edit_user"); }}>
-                  Editar Usuario
+                  Gestion Per. Emp. 
                 </button>
                 <button type="button" onClick={() => { closeMenu(); navigate("/evaluacion-docente"); }}>
-                  Evaluación Docente
+                  Inf. Satisfacción
                 </button>
               </>
             )}
