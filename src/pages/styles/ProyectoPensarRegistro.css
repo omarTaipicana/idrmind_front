@@ -1,0 +1,422 @@
+:root {
+  --pensar-blue: #173a8a;
+  --pensar-blue-dark: #071b3f;
+  --pensar-cyan: #28a7e8;
+  --pensar-text: #101828;
+  --pensar-muted: #667085;
+  --pensar-border: #dbe4f0;
+  --pensar-bg: #f5f7fb;
+}
+
+.pensar-register {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 5%;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 27, 63, 0.97),
+      rgba(23, 58, 138, 0.9)
+    ),
+    url("/images/fondo.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.pensar-register__background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pensar-register__shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(10px);
+  opacity: 0.3;
+}
+
+.pensar-register__shape--one {
+  width: 420px;
+  height: 420px;
+  top: -180px;
+  right: -120px;
+  background: #28a7e8;
+}
+
+.pensar-register__shape--two {
+  width: 320px;
+  height: 320px;
+  bottom: -140px;
+  left: -100px;
+  background: #ffffff;
+}
+
+.pensar-register__shell {
+  position: relative;
+  z-index: 1;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns:
+    minmax(300px, 0.75fr)
+    minmax(560px, 1.25fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.pensar-register__back {
+  grid-column: 1 / -1;
+  width: fit-content;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pensar-register__intro {
+  position: sticky;
+  top: 2rem;
+  padding: 2.5rem;
+  border-radius: 2rem;
+  color: #ffffff;
+  background: rgba(7, 27, 63, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+}
+
+.pensar-register__brand {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.pensar-register__brand img {
+  width: 90px;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.pensar-register__badge {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(40, 167, 232, 0.2);
+  border: 1px solid rgba(40, 167, 232, 0.5);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pensar-register__intro h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.08;
+}
+
+.pensar-register__intro > p {
+  margin: 1.3rem 0 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.75;
+}
+
+.pensar-register__steps {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.pensar-register__steps article {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pensar-register__steps strong {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--pensar-cyan);
+}
+
+.pensar-register__steps span {
+  font-weight: 800;
+}
+
+.pensar-register__form {
+  padding: 2.5rem;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3);
+}
+
+.pensar-register__form-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.pensar-register__form-header span,
+.pensar-register__section-title span {
+  color: var(--pensar-cyan);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pensar-register__form-header h2,
+.pensar-register__section-title h3 {
+  margin: 0.35rem 0 0;
+  color: var(--pensar-blue-dark);
+}
+
+.pensar-register__course {
+  max-width: 230px;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: #eef6ff;
+  text-align: right;
+}
+
+.pensar-register__course small {
+  display: block;
+  color: var(--pensar-muted);
+}
+
+.pensar-register__course strong {
+  color: var(--pensar-blue);
+}
+
+.pensar-register__message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: 1rem;
+  line-height: 1.5;
+}
+
+.pensar-register__message--error {
+  color: #912018;
+  background: #fef3f2;
+  border-left: 5px solid #d92d20;
+}
+
+.pensar-register__message--success {
+  color: #05603a;
+  background: #ecfdf3;
+  border-left: 5px solid #12b76a;
+}
+
+.pensar-register__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.15rem;
+}
+
+.pensar-register__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.pensar-register__field--full {
+  grid-column: 1 / -1;
+}
+
+.pensar-register__field > span {
+  color: var(--pensar-blue-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.pensar-register__field input,
+.pensar-register__field select {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.85rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 0.9rem;
+  outline: none;
+  background: #eef4fb;
+  color: var(--pensar-text);
+  font-size: 0.96rem;
+  transition: 0.2s ease;
+}
+
+.pensar-register__field input:focus,
+.pensar-register__field select:focus {
+  border-color: var(--pensar-cyan);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px
+    rgba(40, 167, 232, 0.14);
+}
+
+.pensar-register__field select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.pensar-register__company {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--pensar-border);
+}
+
+.pensar-register__company-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.pensar-register__company-options label {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  padding: 1.1rem;
+  border: 1px solid var(--pensar-border);
+  border-radius: 1rem;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.pensar-register__company-options input {
+  margin-top: 0.2rem;
+  accent-color: var(--pensar-blue);
+}
+
+.pensar-register__company-options span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: var(--pensar-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.pensar-register__company-options strong {
+  color: var(--pensar-blue-dark);
+}
+
+.pensar-register__company-fields {
+  margin-top: 1.2rem;
+}
+
+.pensar-register__acceptance {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  margin-top: 1.8rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #f8fafc;
+  color: var(--pensar-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.pensar-register__acceptance input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--pensar-blue);
+}
+
+.pensar-register__submit {
+  width: 100%;
+  min-height: 56px;
+  margin-top: 1.4rem;
+  border: 0;
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--pensar-blue),
+    var(--pensar-blue-dark)
+  );
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 15px 30px
+    rgba(23, 58, 138, 0.28);
+  transition: 0.2s ease;
+}
+
+.pensar-register__submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px
+    rgba(23, 58, 138, 0.38);
+}
+
+.pensar-register__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pensar-register__unavailable {
+  margin: 1rem 0 0;
+  color: #b42318;
+  text-align: center;
+  font-weight: 800;
+}
+
+@media (max-width: 940px) {
+  .pensar-register {
+    padding: 2rem 1rem;
+  }
+
+  .pensar-register__shell {
+    grid-template-columns: 1fr;
+  }
+
+  .pensar-register__intro {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .pensar-register__intro,
+  .pensar-register__form {
+    padding: 1.4rem;
+    border-radius: 1.4rem;
+  }
+
+  .pensar-register__form-header {
+    flex-direction: column;
+  }
+
+  .pensar-register__course {
+    max-width: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .pensar-register__grid,
+  .pensar-register__company-options {
+    grid-template-columns: 1fr;
+  }
+
+  .pensar-register__field--full {
+    grid-column: auto;
+  }
+}

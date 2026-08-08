@@ -35,6 +35,8 @@ import Franquicias from "./components/Servicios/Franquicias";
 import SistemaDeEvaluacion from "./components/Servicios/SistemaDeEvaluacion";
 import EvaluacionDocente from "./pages/EvaluacionDocente";
 import EvaluacionCurso from "./pages/EvaluacionCurso";
+import ProyectoPensarRegistro from "./pages/ProyectoPensarRegistro";
+import ProyectoPensarTest from "./pages/ProyectoPensarTest";
 
 const App = () => {
   const location = useLocation();
@@ -82,6 +84,15 @@ const App = () => {
 
         <Route path="/register_discente/:code" element={<RegistroAlumnos />} />
         <Route path="/register_pago/:code" element={<RegistroPagos />} />
+        <Route
+          path="/proyectopensar"
+          element={<ProyectoPensarRegistro />}
+        />
+
+        <Route
+          path="/test-psicotecnico/:token"
+          element={<ProyectoPensarTest />}
+        />
 
         <Route path="/curso/:code" element={<CursoInfo />} />
         <Route path="/login" element={<Login />} />

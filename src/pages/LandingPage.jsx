@@ -288,7 +288,7 @@ const LandingPage = () => {
 
         <div className="curso_lista">
           {(courses || [])
-            .filter((c) => c.vigente === true)
+            .filter((c) => c.vigente === true && c.tipo === "curso")
             .map((c, index) => (
               <Link
                 key={c.sigla}

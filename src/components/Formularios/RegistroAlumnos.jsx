@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
 import useCrud from "../../hooks/useCrud";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { showAlert } from "../../store/states/alert.slice";
 import { useParams } from "react-router-dom";
+
 import "./styles/RegistroAlumnos.css";
 import IsLoading from "../shared/isLoading";
 
@@ -12,20 +18,107 @@ const RegistroAlumnos = () => {
   const PATH_VARIABLES = "/variables";
   const PATH_VALIDATE = "/validate";
   const PATH_INSCRIPCIONES = "/inscripcion";
+  const PATH_EMPRESAS = "/empresas";
+  const PATH_EMPRESA_SECCIONES =
+    "/empresa-secciones";
 
   const dispatch = useDispatch();
   const { code } = useParams();
 
-  const [idCourse, setIdCourse] = useState();
-  const [course, getCourse, , , , , isLoading, , , ,] = useCrud();
-  const [variables, getVariables] = useCrud();
-  const [, , postValidate, , , , , validate] = useCrud();
+  /* =========================================
+     ESTADOS GENERALES
+  ========================================= */
 
-  const [, , postInscripcion, , , error, isLoading2, newInscripcion] =
-    useCrud();
-  const [inscripcionExistente, setInscripcionExistente] = useState(null);
-  const [userValidacion, setUserValidacion] = useState(null);
-  const [userRegister, setUserRegister] = useState(null);
+  const [idCourse, setIdCourse] = useState(null);
+
+  const [
+    inscripcionExistente,
+    setInscripcionExistente,
+  ] = useState(null);
+
+  const [
+    userValidacion,
+    setUserValidacion,
+  ] = useState(null);
+
+  const [userRegister, setUserRegister] =
+    useState(null);
+
+  /* =========================================
+     EMPRESA Y SECCIÓN
+  ========================================= */
+
+  const [
+    empresaSeleccionada,
+    setEmpresaSeleccionada,
+  ] = useState("");
+
+  const [
+    seccionSeleccionada,
+    setSeccionSeleccionada,
+  ] = useState("");
+
+  /* =========================================
+     API
+  ========================================= */
+
+  const [
+    course,
+    getCourse,
+    ,
+    ,
+    ,
+    ,
+    isLoadingCourse,
+  ] = useCrud();
+
+  const [variables, getVariables] = useCrud();
+
+  const [
+    ,
+    ,
+    postValidate,
+    ,
+    ,
+    validateError,
+    isLoadingValidate,
+    validate,
+  ] = useCrud();
+
+  const [
+    empresas,
+    getEmpresas,
+    ,
+    ,
+    ,
+    empresasError,
+    isLoadingEmpresas,
+  ] = useCrud();
+
+  const [
+    empresaSecciones,
+    getEmpresaSecciones,
+    ,
+    ,
+    ,
+    seccionesError,
+    isLoadingSecciones,
+  ] = useCrud();
+
+  const [
+    ,
+    ,
+    postInscripcion,
+    ,
+    ,
+    error,
+    isLoadingInscripcion,
+    newInscripcion,
+  ] = useCrud();
+
+  /* =========================================
+     REACT HOOK FORM
+  ========================================= */
 
   const {
     register,
@@ -34,229 +127,611 @@ const RegistroAlumnos = () => {
     formState: { errors },
   } = useForm();
 
+  /* =========================================
+     DATOS NORMALIZADOS
+  ========================================= */
+
+  const coursesList = useMemo(() => {
+    if (Array.isArray(course)) return course;
+
+    return course?.data || [];
+  }, [course]);
+
+  const empresasList = useMemo(() => {
+    const lista = Array.isArray(empresas)
+      ? empresas
+      : empresas?.data || [];
+
+    return lista.filter(
+      (empresa) => empresa?.activo !== false
+    );
+  }, [empresas]);
+
+  const seccionesList = useMemo(() => {
+    const lista = Array.isArray(empresaSecciones)
+      ? empresaSecciones
+      : empresaSecciones?.data || [];
+
+    return lista.filter(
+      (seccion) => seccion?.activo !== false
+    );
+  }, [empresaSecciones]);
+
+  const variablesList = useMemo(() => {
+    if (Array.isArray(variables)) return variables;
+
+    return variables?.data || [];
+  }, [variables]);
+
+  /* =========================================
+     CARGA INICIAL
+  ========================================= */
+
   useEffect(() => {
     getCourse(PATH_COURSES);
     getVariables(PATH_VARIABLES);
+
+    getEmpresas(
+      `${PATH_EMPRESAS}?activo=true`
+    );
   }, []);
 
-  useEffect(() => {
-    if (error) {
-      const message = error.response?.data?.message ?? "Error inesperado";
-      dispatch(
-        showAlert({
-          message: `⚠️ ${message}`,
-          alertType: 1,
-        })
-      );
-    }
-  }, [error]);
+  /* =========================================
+     IDENTIFICAR CURSO
+  ========================================= */
 
   useEffect(() => {
-    if (newInscripcion) {
-      dispatch(
-        showAlert({
-          message: `⚠️ Estimad@ ${newInscripcion.user.firstName} ${newInscripcion.user.lastName}, se realizo tu inscripción correctamente`,
-          alertType: 2,
-        })
-      );
+    if (!coursesList.length || !code) return;
+
+    const foundCourse = coursesList.find(
+      (item) => item.sigla === code
+    );
+
+    if (foundCourse) {
+      setIdCourse(foundCourse.id);
     }
-  }, [newInscripcion]);
+  }, [coursesList, code]);
+
+  const cursoActivo = coursesList.find(
+    (item) => item.sigla === code
+  );
+
+  /* =========================================
+     ALERTAS DE ERROR
+  ========================================= */
 
   useEffect(() => {
-    if (course.length && code) {
-      const foundCourse = course.find((c) => c.sigla === code);
-      if (foundCourse) setIdCourse(foundCourse.id);
-    }
-  }, [course, code]);
+    if (!error) return;
 
-  const validarCedula = (cedula) => {
-    // Eliminar todos los caracteres que no sean dígitos
-    cedula = cedula?.replace(/\D/g, ""); // \D = todo lo que NO sea dígito
+    const message =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      "Error inesperado durante la inscripción.";
 
-    // Verificar que tenga exactamente 10 dígitos
-    if (!/^\d{10}$/.test(cedula)) return false;
+    dispatch(
+      showAlert({
+        message: `⚠️ ${message}`,
+        alertType: 1,
+      })
+    );
+  }, [error, dispatch]);
 
-    const digitos = cedula.split("").map(Number);
-    const digitoVerificador = digitos.pop();
-    let suma = 0;
+  useEffect(() => {
+    if (!validateError) return;
 
-    for (let i = 0; i < digitos.length; i++) {
-      let valor = digitos[i];
-      if (i % 2 === 0) {
-        valor *= 2;
-        if (valor > 9) valor -= 9;
-      }
-      suma += valor;
-    }
+    const message =
+      validateError?.response?.data?.message ||
+      validateError?.response?.data?.error ||
+      "No se pudo validar el usuario.";
 
-    const decenaSuperior = Math.ceil(suma / 10) * 10;
-    return decenaSuperior - suma === digitoVerificador;
-  };
+    dispatch(
+      showAlert({
+        message: `⚠️ ${message}`,
+        alertType: 1,
+      })
+    );
+  }, [validateError, dispatch]);
 
-  const capitalizeWords = (str) => {
-    return str
-      .trim() // elimina espacios al inicio y fin
-      .split(/\s+/) // separa por uno o más espacios
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-  };
+  useEffect(() => {
+    if (!empresasError) return;
+
+    dispatch(
+      showAlert({
+        message:
+          "⚠️ No se pudieron cargar las empresas.",
+        alertType: 1,
+      })
+    );
+  }, [empresasError, dispatch]);
+
+  useEffect(() => {
+    if (!seccionesError) return;
+
+    dispatch(
+      showAlert({
+        message:
+          "⚠️ No se pudieron cargar las secciones.",
+        alertType: 1,
+      })
+    );
+  }, [seccionesError, dispatch]);
+
+  /* =========================================
+     INSCRIPCIÓN EXITOSA
+  ========================================= */
+
+  useEffect(() => {
+    if (!newInscripcion) return;
+
+    const usuario = newInscripcion?.user;
+
+    dispatch(
+      showAlert({
+        message:
+          `✅ Estimad@ ${usuario?.firstName || ""} ` +
+          `${usuario?.lastName || ""}, ` +
+          "se realizó tu inscripción correctamente.",
+        alertType: 2,
+      })
+    );
+
+    setUserValidacion(null);
+    setUserRegister(null);
+    setEmpresaSeleccionada("");
+    setSeccionSeleccionada("");
+    reset();
+  }, [newInscripcion, dispatch, reset]);
+
+  /* =========================================
+     VALIDACIÓN DE USUARIO
+  ========================================= */
 
   const submitVal = (data) => {
-    const body = { ...data, code };
+    const body = {
+      email: String(data.email || "")
+        .trim()
+        .toLowerCase(),
+      code,
+    };
+
     postValidate(PATH_VALIDATE, body);
   };
 
   useEffect(() => {
-    if (validate) {
-      setUserValidacion(validate);
-      setUserRegister(validate.user);
-    }
-  }, [validate]);
+    if (!validate) return;
 
-  useEffect(() => {
-    if (validate?.enrolled) {
+    if (validate.enrolled) {
       setInscripcionExistente(validate.user);
       setUserValidacion(null);
+      setUserRegister(null);
+
       dispatch(
         showAlert({
-          message: "⚠️ Ya estás inscrito en este curso.",
+          message:
+            "⚠️ Ya estás inscrito en este curso.",
           alertType: 2,
         })
       );
+
+      return;
+    }
+
+    const usuario = validate.user || null;
+
+    setUserValidacion(validate);
+    setUserRegister(usuario);
+
+    /*
+     * Si el usuario ya existe, conservamos su empresa y
+     * sección. Estos datos solamente se mostrarán.
+     */
+    if (usuario) {
+      const empresaId = usuario.empresaId || "";
+      const seccionId = usuario.seccionId || "";
+
+      setEmpresaSeleccionada(empresaId);
+      setSeccionSeleccionada(seccionId);
+
+      if (empresaId) {
+        getEmpresaSecciones(
+          `${PATH_EMPRESA_SECCIONES}` +
+          `?empresaId=${empresaId}` +
+          `&activo=true`
+        );
+      }
+    } else {
+      /*
+       * Usuario nuevo: empieza como registro individual.
+       */
+      setEmpresaSeleccionada("");
+      setSeccionSeleccionada("");
     }
   }, [validate, dispatch]);
 
-  const submit = (data) => {
-    // Ajustar nombres y apellidos
-    const nombreFormateado = data.nombres ? capitalizeWords(data.nombres) : "";
-    const apellidoFormateado = data.apellidos
-      ? capitalizeWords(data.apellidos)
-      : "";
+  /* =========================================
+     CAMBIO DE EMPRESA
+  ========================================= */
 
-    // Ajustar email a minúsculas y quitar espacios al inicio/final
-    const emailFormateado = data.email ? data.email?.trim().toLowerCase() : "";
-    const confirmEmailFormateado = data.confirmEmail
-      ? data.confirmEmail.trim().toLowerCase()
-      : "";
+  const handleEmpresaChange = async (event) => {
+    const empresaId = event.target.value;
 
-    // Validaciones con datos formateados
+    setEmpresaSeleccionada(empresaId);
+    setSeccionSeleccionada("");
 
-    const cedulaLimpia = data.cedula?.trim().replace(/\D/g, "");
-    const isValidCedula = validarCedula(cedulaLimpia);
-    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailFormateado);
-    const celularLimpio = data.celular?.replace(/\D/g, ""); // Elimina todo lo que no sea dígito
-    const isValidCellular = /^09\d{8}$/.test(celularLimpio);
+    /*
+     * Valor vacío significa registro individual.
+     */
+    if (!empresaId) return;
 
-    if (!isValidCedula)
-      return dispatch(
-        showAlert({
-          message: "⚠️ La cédula ingresada es incorrecta.",
-          alertType: 1,
-        })
-      );
-
-    if (!isValidEmail)
-      return dispatch(
-        showAlert({ message: "⚠️ El email es incorrecto.", alertType: 1 })
-      );
-
-    if (!userRegister && emailFormateado !== confirmEmailFormateado) {
-      return dispatch(
-        showAlert({
-          message: "⚠️ Su correo no coincide con el correo de validación.",
-          alertType: 1,
-        })
-      );
-    }
-
-    if (!isValidCellular)
-      return dispatch(
-        showAlert({
-          message:
-            "⚠️ Celular inválido. Debe empezar con 09 y tener 10 dígitos.",
-          alertType: 1,
-        })
-      );
-
-    const body = {
-      ...data,
-      cedula: userRegister?.cI ? userRegister.cI : cedulaLimpia,
-      nombres: userRegister?.firstName
-        ? userRegister.firstName
-        : nombreFormateado,
-      apellidos: userRegister?.lastName
-        ? userRegister.lastName
-        : apellidoFormateado,
-      email: userRegister?.email ? userRegister.email : emailFormateado,
-      grado: userRegister?.grado ? userRegister.grado : data.grado,
-      subsistema: userRegister?.subsistema
-        ? userRegister.subsistema
-        : data.subsistema,
-
-      confirmEmail: confirmEmailFormateado,
-      curso: code,
-      courseId: idCourse,
-    };
-    postInscripcion(PATH_INSCRIPCIONES, body);
-    setUserValidacion();
-    reset();
+    await getEmpresaSecciones(
+      `${PATH_EMPRESA_SECCIONES}` +
+      `?empresaId=${empresaId}` +
+      `&activo=true`
+    );
   };
 
-  const cursoActivo = course.find((c) => c.sigla === code);
+  /* =========================================
+     DATOS DE EMPRESA EXISTENTE
+  ========================================= */
+
+  const empresaUsuario = useMemo(() => {
+    if (!userRegister?.empresaId) return null;
+
+    return (
+      empresasList.find(
+        (empresa) =>
+          String(empresa.id) ===
+          String(userRegister.empresaId)
+      ) || null
+    );
+  }, [empresasList, userRegister]);
+
+  const seccionUsuario = useMemo(() => {
+    if (!userRegister?.seccionId) return null;
+
+    return (
+      seccionesList.find(
+        (seccion) =>
+          String(seccion.id) ===
+          String(userRegister.seccionId)
+      ) || null
+    );
+  }, [seccionesList, userRegister]);
+
+  /* =========================================
+     FUNCIONES DE VALIDACIÓN
+  ========================================= */
+
+  const validarCedula = (cedula) => {
+    const valor = String(cedula || "").replace(
+      /\D/g,
+      ""
+    );
+
+    if (!/^\d{10}$/.test(valor)) {
+      return false;
+    }
+
+    const digitos = valor.split("").map(Number);
+    const digitoVerificador = digitos.pop();
+
+    let suma = 0;
+
+    for (
+      let index = 0;
+      index < digitos.length;
+      index += 1
+    ) {
+      let numero = digitos[index];
+
+      if (index % 2 === 0) {
+        numero *= 2;
+
+        if (numero > 9) {
+          numero -= 9;
+        }
+      }
+
+      suma += numero;
+    }
+
+    const decenaSuperior =
+      Math.ceil(suma / 10) * 10;
+
+    return (
+      decenaSuperior - suma ===
+      digitoVerificador
+    );
+  };
+
+  const capitalizeWords = (value = "") =>
+    String(value)
+      .trim()
+      .split(/\s+/)
+      .map(
+        (word) =>
+          word.charAt(0).toUpperCase() +
+          word.slice(1).toLowerCase()
+      )
+      .join(" ");
+
+  /* =========================================
+     CAMPOS FALTANTES DEL USUARIO EXISTENTE
+  ========================================= */
 
   const missing = {
     cedula: !userRegister?.cI?.trim(),
-    grado: !userRegister?.grado?.trim(),
-    subsistema: !userRegister?.subsistema?.trim(),
     celular: !userRegister?.cellular?.trim(),
     email: !userRegister?.email?.trim(),
     nombres: !userRegister?.firstName?.trim(),
     apellidos: !userRegister?.lastName?.trim(),
+
+    grado: !userRegister?.grado?.trim(),
+    subsistema:
+      !userRegister?.subsistema?.trim(),
   };
 
-  const showFullForm = !userRegister; // si no existe usuario -> formulario completo
-  const showConfirmEmail = showFullForm; // confirmación SOLO cuando no existe usuario
+  const tieneDatosFaltantes =
+    missing.cedula ||
+    missing.celular ||
+    missing.nombres ||
+    missing.apellidos;
 
+  /* =========================================
+     REGISTRAR INSCRIPCIÓN
+  ========================================= */
 
-  // 1) No existe curso
-  if (!cursoActivo) {
+  const submit = (data) => {
+    const nombreFormateado = data.nombres
+      ? capitalizeWords(data.nombres)
+      : "";
+
+    const apellidoFormateado = data.apellidos
+      ? capitalizeWords(data.apellidos)
+      : "";
+
+    const emailFormateado = String(
+      data.email || ""
+    )
+      .trim()
+      .toLowerCase();
+
+    const confirmEmailFormateado = String(
+      data.confirmEmail || ""
+    )
+      .trim()
+      .toLowerCase();
+
+    const cedulaLimpia = String(
+      data.cedula || ""
+    ).replace(/\D/g, "");
+
+    const celularLimpio = String(
+      data.celular || ""
+    ).replace(/\D/g, "");
+
+    const emailFinal =
+      userRegister?.email || emailFormateado;
+
+    const cedulaFinal =
+      userRegister?.cI || cedulaLimpia;
+
+    const celularFinal =
+      userRegister?.cellular || celularLimpio;
+
+    const nombresFinal =
+      userRegister?.firstName ||
+      nombreFormateado;
+
+    const apellidosFinal =
+      userRegister?.lastName ||
+      apellidoFormateado;
+
+    if (!validarCedula(cedulaFinal)) {
+      dispatch(
+        showAlert({
+          message:
+            "⚠️ La cédula ingresada es incorrecta.",
+          alertType: 1,
+        })
+      );
+
+      return;
+    }
+
+    const isValidEmail =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        emailFinal
+      );
+
+    if (!isValidEmail) {
+      dispatch(
+        showAlert({
+          message:
+            "⚠️ El correo electrónico es incorrecto.",
+          alertType: 1,
+        })
+      );
+
+      return;
+    }
+
+    if (
+      !userRegister &&
+      emailFormateado !== confirmEmailFormateado
+    ) {
+      dispatch(
+        showAlert({
+          message:
+            "⚠️ El correo no coincide con el correo de confirmación.",
+          alertType: 1,
+        })
+      );
+
+      return;
+    }
+
+    if (!/^09\d{8}$/.test(celularFinal)) {
+      dispatch(
+        showAlert({
+          message:
+            "⚠️ El celular debe iniciar con 09 y tener 10 dígitos.",
+          alertType: 1,
+        })
+      );
+
+      return;
+    }
+
+    /*
+     * Solo un usuario nuevo puede seleccionar empresa.
+     * Si selecciona empresa, la sección es obligatoria.
+     */
+    if (
+      !userRegister?.empresaId &&
+      empresaSeleccionada &&
+      !seccionSeleccionada
+    ) {
+      dispatch(
+        showAlert({
+          message:
+            "⚠️ Seleccione una sección de la empresa.",
+          alertType: 1,
+        })
+      );
+
+      return;
+    }
+
+    /*
+     * Usuario existente:
+     * conserva empresaId y seccionId registrados.
+     *
+     * Usuario nuevo:
+     * usa los valores seleccionados.
+     */
+    const usuarioTieneEmpresa =
+      Boolean(userRegister?.empresaId);
+
+    const empresaIdFinal = usuarioTieneEmpresa
+      ? userRegister.empresaId
+      : empresaSeleccionada || null;
+
+    const seccionIdFinal = empresaIdFinal
+      ? usuarioTieneEmpresa
+        ? userRegister.seccionId || null
+        : seccionSeleccionada || null
+      : null;
+
+    const body = {
+      ...data,
+
+      cedula: cedulaFinal,
+      nombres: nombresFinal,
+      apellidos: apellidosFinal,
+      celular: celularFinal,
+      email: emailFinal,
+
+      grado:
+        userRegister?.grado || data.grado || null,
+
+      subsistema:
+        userRegister?.subsistema ||
+        data.subsistema ||
+        null,
+
+      empresaId: empresaIdFinal,
+      seccionId: seccionIdFinal,
+
+      confirmEmail: confirmEmailFormateado,
+
+      curso: code,
+      courseId: idCourse,
+
+      aceptacion: Boolean(data.aceptacion),
+    };
+
+    postInscripcion(
+      PATH_INSCRIPCIONES,
+      body
+    );
+  };
+
+  /* =========================================
+     LIMPIAR VALIDACIÓN
+  ========================================= */
+
+  const volverAValidar = () => {
+    setInscripcionExistente(null);
+    setUserValidacion(null);
+    setUserRegister(null);
+
+    setEmpresaSeleccionada("");
+    setSeccionSeleccionada("");
+
+    reset();
+  };
+
+  /* =========================================
+     CURSO NO EXISTE
+  ========================================= */
+
+  if (
+    !isLoadingCourse &&
+    coursesList.length > 0 &&
+    !cursoActivo
+  ) {
     return (
       <div className="registro_container curso_no_encontrado">
-        {isLoading && <IsLoading />}
-
         <div className="mensaje_curso_caja">
           <h2>❌ Curso no disponible</h2>
+
           <p>
-            El curso con el código <strong>{code}</strong> no se encuentra
-            disponible o no existe en nuestra base de datos.
+            El curso con el código{" "}
+            <strong>{code}</strong> no está
+            disponible o no existe.
           </p>
-          <p>Por favor verifica el enlace o contacta con el administrador.</p>
+
+          <p>
+            Verifica el enlace o contacta con el
+            administrador.
+          </p>
         </div>
       </div>
     );
   }
 
-  // 2) Existe pero NO está vigente
+  /* =========================================
+     CURSO NO VIGENTE
+  ========================================= */
+
   if (cursoActivo?.vigente === false) {
     return (
       <div className="registro_container curso_no_encontrado">
-        {isLoading && <IsLoading />}
-
         <div className="mensaje_curso_caja mensaje_curso_caja--finalizado">
           <h2>⏳ Oferta académica finalizada</h2>
+
           <p>
-            La oferta académica del <strong>{cursoActivo?.nombre}</strong>{" "}
+            La oferta académica del{" "}
+            <strong>
+              {cursoActivo?.nombre}
+            </strong>{" "}
             ha finalizado.
           </p>
+
           <p>
-            Si necesitas información, por favor contacta con el administrador o
-            revisa nuestros cursos disponibles.
+            Para obtener más información, contacta
+            con el administrador.
           </p>
 
           <div className="mensaje_acciones">
-            <a className="mensaje_btn" href="/#/" >
+            <a
+              className="mensaje_btn"
+              href="/#/"
+            >
               Ir al inicio
             </a>
+
             <a
               className="mensaje_btn mensaje_btn--whatsapp"
               href="https://wa.me/593980773229"
@@ -271,50 +746,64 @@ const RegistroAlumnos = () => {
     );
   }
 
-  // 3) Existe y está vigente -> sigue normal
-
+  /* =========================================
+     COMPONENTE
+  ========================================= */
 
   return (
     <div className="registro_container">
-      {isLoading2 && <IsLoading />}
+      {(isLoadingCourse ||
+        isLoadingValidate ||
+        isLoadingInscripcion ||
+        isLoadingEmpresas ||
+        isLoadingSecciones) && <IsLoading />}
 
-      {/* ========= VISTA 1: VERIFICAR INSCRIPCIÓN ========= */}
+      {/* =====================================
+          VISTA 1: VALIDAR CORREO
+      ===================================== */}
+
       {!userValidacion ? (
         <div className="registro_wrapper registro_wrapper--verifica">
-          {/* Marca de agua + texto principal */}
           <div className="registro_intro">
+            <h2 className="registro_intro_title">
+              Inicia tu formación
+            </h2>
 
-            <h2 className="registro_intro_title">Inicia tu formación</h2>
             <p className="registro_intro_text">
-              Ingresa tu correo electrónico para comprobar si ya te encuentras
-              inscrito en este curso o si deseas registrarte para iniciar tu
-              formación.
+              Ingresa tu correo electrónico para
+              comprobar si ya tienes una cuenta y
+              continuar con tu inscripción.
             </p>
 
             <ul className="registro_intro_list">
               <li>
-                Si ya tienes una inscripción, te mostraremos tus datos y el
-                estado de tu participación.
+                Si ya tienes información registrada,
+                la mostraremos para que puedas
+                inscribirte en el nuevo curso.
               </li>
+
               <li>
-                Si aún no te has inscrito, podrás hacerlo fácilmente y comenzar
-                tu aprendizaje con nosotros.
+                Si eres un usuario nuevo, podrás
+                completar todos tus datos y seleccionar
+                tu empresa.
               </li>
             </ul>
 
             <p className="registro_intro_highlight">
-              ¡El primer paso para avanzar en tu capacitación está aquí!
+              ¡El primer paso para avanzar está aquí!
             </p>
           </div>
 
-          {/* Formulario de verificación */}
           <form
             className="formulario_registro_val"
             onSubmit={handleSubmit(submitVal)}
           >
             <div className="registro_val_field">
-              <label htmlFor="email" className="registro_label">
-                Email
+              <label
+                htmlFor="email"
+                className="registro_label"
+              >
+                Correo electrónico
               </label>
 
               <div className="registro_val_row">
@@ -322,34 +811,42 @@ const RegistroAlumnos = () => {
                   id="email"
                   type="email"
                   required
+                  autoComplete="email"
+                  placeholder="correo@ejemplo.com"
                   {...register("email")}
                 />
-                <button className="btn_inscripcion" type="submit">
+
+                <button
+                  className="btn_inscripcion"
+                  type="submit"
+                >
                   Continuar
                 </button>
               </div>
             </div>
           </form>
 
-          {/* Mensaje cuando ya está inscrito */}
           {inscripcionExistente && (
             <div className="usuario_existente">
-              <h3>Ya estás registrado en este curso:</h3>
+              <h3>
+                Ya estás inscrito en este curso
+              </h3>
+
               <p>
-                <strong>Nombres:</strong> {inscripcionExistente.firstName}{" "}
+                <strong>Nombres:</strong>{" "}
+                {inscripcionExistente.firstName}{" "}
                 {inscripcionExistente.lastName}
               </p>
+
               <p>
-                <strong>Email:</strong> {inscripcionExistente.email}
+                <strong>Correo:</strong>{" "}
+                {inscripcionExistente.email}
               </p>
 
               <button
                 className="btn_cerrar_existente"
-                onClick={() => {
-                  setInscripcionExistente(null);
-                  setUserValidacion(null);
-                  setUserRegister(null);
-                }}
+                type="button"
+                onClick={volverAValidar}
               >
                 Cerrar
               </button>
@@ -357,181 +854,468 @@ const RegistroAlumnos = () => {
           )}
         </div>
       ) : (
-        /* ========= VISTA 2: FORMULARIO DE INSCRIPCIÓN ========= */
+        /* ===================================
+           VISTA 2: FORMULARIO
+        =================================== */
+
         <div className="registro_wrapper registro_wrapper--form">
-          {/* Columna izquierda: formulario */}
           <div className="registro_left animate_slide_left">
+            <div className="registro_form_header">
+              <span className="registro_form_badge">
+                Formulario de inscripción
+              </span>
+
+              <h2>
+                {userRegister
+                  ? "Confirma tu información"
+                  : "Completa tus datos"}
+              </h2>
+
+              <p>
+                {userRegister
+                  ? "Encontramos tu perfil. Tus datos registrados se conservarán para esta nueva inscripción."
+                  : "Ingresa tus datos personales y selecciona si perteneces a una empresa."}
+              </p>
+            </div>
+
             <form
               className="formulario_registro"
               onSubmit={handleSubmit(submit)}
             >
-              {/* Columna 1 del formulario */}
-              <div className="form_column">
+              {/* ============================
+                  INFORMACIÓN EXISTENTE
+              ============================ */}
 
-                {userRegister && (
-                  <div className="incripcion_existente">
-                    <h3>✅ Información encontrada</h3>
+              {userRegister && (
+                <section className="registro_existing_card registro_full_width">
+                  <div className="registro_existing_header">
+                    <span>✅</span>
 
-                    <p><strong>Nombres:</strong> {userRegister.firstName || <em>Falta completar</em>}</p>
-                    <p><strong>Apellidos:</strong> {userRegister.lastName || <em>Falta completar</em>}</p>
-                    <p><strong>Cédula:</strong> {userRegister.cI || <em>Falta completar</em>}</p>
-                    <p><strong>Email:</strong> {userRegister.email || <em>Falta completar</em>}</p>
+                    <div>
+                      <h3>
+                        Información encontrada
+                      </h3>
 
-                    {(missing.cedula || missing.grado || missing.subsistema || missing.celular) && (
-                      <p className="mensaje_inscripcion">
-                        Tu perfil está incompleto. Completa los campos faltantes para continuar con la inscripción.
+                      <p>
+                        Estos datos ya están registrados
+                        en tu perfil.
                       </p>
+                    </div>
+                  </div>
+
+                  <div className="registro_existing_grid">
+                    <div>
+                      <small>Nombres</small>
+
+                      <strong>
+                        {userRegister.firstName ||
+                          "Falta completar"}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <small>Apellidos</small>
+
+                      <strong>
+                        {userRegister.lastName ||
+                          "Falta completar"}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <small>Cédula</small>
+
+                      <strong>
+                        {userRegister.cI ||
+                          "Falta completar"}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <small>Correo electrónico</small>
+
+                      <strong>
+                        {userRegister.email ||
+                          "Falta completar"}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <small>Celular</small>
+
+                      <strong>
+                        {userRegister.cellular ||
+                          "Falta completar"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {tieneDatosFaltantes && (
+                    <p className="mensaje_inscripcion">
+                      Tu perfil está incompleto. Completa
+                      únicamente los campos faltantes.
+                    </p>
+                  )}
+                </section>
+              )}
+
+              {/* ============================
+                  DATOS PERSONALES
+              ============================ */}
+
+              <section className="registro_form_section">
+                <div className="registro_section_title">
+                  <span>👤</span>
+
+                  <div>
+                    <h3>Información personal</h3>
+
+                    <p>
+                      Datos necesarios para tu inscripción.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="registro_fields_grid">
+                  {!userRegister && (
+                    <>
+                      <label className="registro_label">
+                        Confirmar correo electrónico
+
+                        <input
+                          type="email"
+                          required
+                          autoComplete="email"
+                          placeholder="Confirma tu correo"
+                          {...register(
+                            "confirmEmail"
+                          )}
+                        />
+                      </label>
+
+                      <label className="registro_label">
+                        Nombres
+
+                        <input
+                          type="text"
+                          required
+                          placeholder="Nombres completos"
+                          {...register("nombres")}
+                        />
+                      </label>
+
+                      <label className="registro_label">
+                        Apellidos
+
+                        <input
+                          type="text"
+                          required
+                          placeholder="Apellidos completos"
+                          {...register("apellidos")}
+                        />
+                      </label>
+
+                      <label className="registro_label">
+                        Cédula
+
+                        <input
+                          type="text"
+                          required
+                          maxLength={10}
+                          inputMode="numeric"
+                          placeholder="10 dígitos"
+                          {...register("cedula")}
+                        />
+                      </label>
+
+                      <label className="registro_label">
+                        Celular
+
+                        <input
+                          type="text"
+                          required
+                          maxLength={10}
+                          inputMode="numeric"
+                          placeholder="09XXXXXXXX"
+                          {...register("celular")}
+                        />
+                      </label>
+                    </>
+                  )}
+
+                  {userRegister && (
+                    <>
+                      {missing.nombres && (
+                        <label className="registro_label">
+                          Nombres
+
+                          <input
+                            type="text"
+                            required
+                            placeholder="Nombres completos"
+                            {...register("nombres")}
+                          />
+                        </label>
+                      )}
+
+                      {missing.apellidos && (
+                        <label className="registro_label">
+                          Apellidos
+
+                          <input
+                            type="text"
+                            required
+                            placeholder="Apellidos completos"
+                            {...register("apellidos")}
+                          />
+                        </label>
+                      )}
+
+                      {missing.cedula && (
+                        <label className="registro_label">
+                          Cédula
+
+                          <input
+                            type="text"
+                            required
+                            maxLength={10}
+                            inputMode="numeric"
+                            placeholder="10 dígitos"
+                            {...register("cedula")}
+                          />
+                        </label>
+                      )}
+
+                      {missing.celular && (
+                        <label className="registro_label">
+                          Celular
+
+                          <input
+                            type="text"
+                            required
+                            maxLength={10}
+                            inputMode="numeric"
+                            placeholder="09XXXXXXXX"
+                            {...register("celular")}
+                          />
+                        </label>
+                      )}
+
+                      {!missing.nombres && (
+                        <input
+                          type="hidden"
+                          value={
+                            userRegister.firstName
+                          }
+                          {...register("nombres")}
+                        />
+                      )}
+
+                      {!missing.apellidos && (
+                        <input
+                          type="hidden"
+                          value={
+                            userRegister.lastName
+                          }
+                          {...register("apellidos")}
+                        />
+                      )}
+
+                      {!missing.cedula && (
+                        <input
+                          type="hidden"
+                          value={userRegister.cI}
+                          {...register("cedula")}
+                        />
+                      )}
+
+                      {!missing.email && (
+                        <input
+                          type="hidden"
+                          value={userRegister.email}
+                          {...register("email")}
+                        />
+                      )}
+
+                      {!missing.celular && (
+                        <input
+                          type="hidden"
+                          value={
+                            userRegister.cellular
+                          }
+                          {...register("celular")}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </section>
+
+              {/* ============================
+                  EMPRESA Y SECCIÓN
+              ============================ */}
+
+              <section className="registro_form_section">
+                <div className="registro_section_title">
+                  <span>🏢</span>
+
+                  <div>
+                    <h3>Empresa y sección</h3>
+
+                    <p>
+                      Información institucional del participante.
+                    </p>
+                  </div>
+                </div>
+
+                {userRegister?.empresaId ? (
+                  /*
+                   * Usuario existente que ya tiene empresa:
+                   * solamente visualiza sus datos.
+                   */
+                  <div className="registro_company_existing">
+                    <div className="registro_company_icon">
+                      🏢
+                    </div>
+
+                    <div className="registro_company_details">
+                      <small>Empresa registrada</small>
+
+                      <strong>
+                        {empresaUsuario
+                          ? empresaUsuario.nombreComercial ||
+                          empresaUsuario.razonSocial
+                          : "Empresa asignada"}
+                      </strong>
+
+                      <span>
+                        <b>Sección:</b>{" "}
+                        {seccionUsuario?.nombre ||
+                          (userRegister.seccionId
+                            ? "Sección asignada"
+                            : "Sin sección específica")}
+                      </span>
+
+                      <p>
+                        Esta información pertenece a tu perfil y se
+                        conservará en la nueva inscripción.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  /*
+                   * Usuario nuevo o usuario existente sin empresa:
+                   * puede seleccionar empresa y sección.
+                   */
+                  <div className="registro_company_selector">
+                    {userRegister && (
+                      <div className="registro_company_pending">
+                        <span>ℹ️</span>
+
+                        <div>
+                          <strong>
+                            Tu perfil no tiene una empresa registrada
+                          </strong>
+
+                          <p>
+                            Puedes continuar como participante individual
+                            o seleccionar una empresa y su sección.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    <label className="registro_label">
+                      ¿Perteneces a una empresa?
+
+                      <select
+                        value={empresaSeleccionada}
+                        onChange={handleEmpresaChange}
+                      >
+                        <option value="">
+                          No pertenezco a una empresa
+                        </option>
+
+                        {empresasList.map((empresa) => (
+                          <option
+                            key={empresa.id}
+                            value={empresa.id}
+                          >
+                            {empresa.nombreComercial ||
+                              empresa.razonSocial}
+                          </option>
+                        ))}
+                      </select>
+
+                      <small className="registro_field_help">
+                        Selecciona “No pertenezco” si tu inscripción es
+                        individual.
+                      </small>
+                    </label>
+
+                    {empresaSeleccionada && (
+                      <label className="registro_label">
+                        Sección de la empresa
+
+                        <select
+                          value={seccionSeleccionada}
+                          onChange={(event) =>
+                            setSeccionSeleccionada(
+                              event.target.value
+                            )
+                          }
+                          required
+                        >
+                          <option value="">
+                            Seleccione una sección
+                          </option>
+
+                          {seccionesList.map((seccion) => (
+                            <option
+                              key={seccion.id}
+                              value={seccion.id}
+                            >
+                              {seccion.nombre}
+                            </option>
+                          ))}
+                        </select>
+
+                        {seccionesList.length === 0 &&
+                          !isLoadingSecciones && (
+                            <small className="registro_field_error">
+                              Esta empresa no tiene secciones disponibles.
+                            </small>
+                          )}
+                      </label>
+                    )}
+
+                    {!empresaSeleccionada && (
+                      <div className="registro_individual_notice">
+                        <span>👤</span>
+
+                        <div>
+                          <strong>
+                            Inscripción individual
+                          </strong>
+
+                          <p>
+                            No se asociará tu perfil a ninguna empresa ni
+                            sección.
+                          </p>
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}
+              </section>
 
+              {/* ============================
+                  ACEPTACIÓN Y ENVÍO
+              ============================ */}
 
-                {userRegister && (
-                  <>
-                    {missing.nombres && (
-                      <label className="registro_label">
-                        Nombres
-                        <input
-                          placeholder="Nombres completos"
-                          required
-                          {...register("nombres")}
-                          defaultValue=""
-                        />
-                      </label>
-                    )}
-
-                    {missing.apellidos && (
-                      <label className="registro_label">
-                        Apellidos
-                        <input
-                          placeholder="Apellidos completos"
-                          required
-                          {...register("apellidos")}
-                          defaultValue=""
-                        />
-                      </label>
-                    )}
-
-                    {missing.cedula && (
-                      <label className="registro_label">
-                        Cédula
-                        <input
-                          required
-                          {...register("cedula")}
-                          defaultValue=""
-                        />
-                      </label>
-                    )}
-
-
-                  </>
-                )}
-
-                {userRegister && (
-                  <>
-                    {!missing.cedula && (
-                      <input type="hidden" value={userRegister.cI} {...register("cedula")} />
-                    )}
-                    {!missing.nombres && (
-                      <input type="hidden" value={userRegister.firstName} {...register("nombres")} />
-                    )}
-                    {!missing.apellidos && (
-                      <input type="hidden" value={userRegister.lastName} {...register("apellidos")} />
-                    )}
-                    {!missing.email && (
-                      <input type="hidden" value={userRegister.email} {...register("email")} />
-                    )}
-                    {!missing.celular && (
-                      <input type="hidden" value={userRegister.cellular} {...register("celular")} />
-                    )}
-
-
-
-
-                  </>
-                )}
-
-                {!userRegister && (
-                  <>
-                    <label className="registro_label">
-                      Confirmar Email
-                      <input
-                        type="email"
-                        required
-                        {...register("confirmEmail")}
-                      />
-                    </label>
-
-                    <label className="registro_label">
-                      Nombres
-                      <input
-                        placeholder="Nombres completos (tildes y ñ si aplica)"
-                        required
-                        {...register("nombres")}
-                      />
-                    </label>
-
-                    <label className="registro_label">
-                      Apellidos
-                      <input
-                        placeholder="Apellidos completos (tildes y ñ si aplica)"
-                        required
-                        {...register("apellidos")}
-                      />
-                    </label>
-
-
-                    <label className="registro_label">
-                      Cédula
-                      <input
-                        required
-                        {...register("cedula")}
-                        defaultValue={userRegister?.cI || ""}
-                      />
-                    </label>
-                  </>
-                )}
-
-
-
-              </div>
-
-              {/* Columna 2 del formulario */}
-
-              <div className="form_column">
-                {userRegister && (
-                  <>
-                    {missing.celular && (
-                      <label className="registro_label">
-                        Celular
-                        <input required {...register("celular")} defaultValue="" />
-                      </label>
-                    )}
-
-
-
-                  </>
-                )}
-
-                {!userRegister && (
-                  <>
-                    <label className="registro_label">
-                      Celular
-                      <input required {...register("celular")} />
-                    </label>
-
-
-                  </>
-                )}
-
-
+              <section className="registro_form_section registro_form_section--final">
                 <div className="form_check_container">
                   <label className="form_check_label">
-                    Acepto recibir correos electrónicos con información sobre
-                    los cursos y otros contenidos relacionados. Entiendo que mis
-                    datos serán tratados de acuerdo con la política de
-                    privacidad y que puedo dejar de recibirlos en cualquier
-                    momento.
                     <input
                       type="checkbox"
                       {...register("aceptacion", {
@@ -540,41 +1324,84 @@ const RegistroAlumnos = () => {
                           "Debes aceptar la política para continuar.",
                       })}
                     />
+
+                    <span>
+                      Acepto recibir correos electrónicos
+                      con información sobre los cursos y
+                      otros contenidos relacionados.
+                      Entiendo que mis datos serán tratados
+                      de acuerdo con la política de
+                      privacidad.
+                    </span>
                   </label>
+
                   {errors.aceptacion && (
-                    <p className="form_error">{errors.aceptacion.message}</p>
+                    <p className="form_error">
+                      {errors.aceptacion.message}
+                    </p>
                   )}
                 </div>
 
-                <div className="form_button_inscripcion">
-                  <button className="btn_inscripcion" type="submit">
-                    Inscribirme <span>➜</span>
+                <div className="registro_form_actions">
+                  <button
+                    className="btn_inscripcion"
+                    type="submit"
+                    disabled={
+                      isLoadingInscripcion ||
+                      !idCourse
+                    }
+                  >
+                    Inscribirme
+                    <span>➜</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn_registro_secondary"
+                    onClick={volverAValidar}
+                  >
+                    Cambiar correo
                   </button>
                 </div>
-              </div>
+              </section>
             </form>
           </div>
 
-          {/* Columna derecha: info del curso con imagen de fondo */}
-          <div className="registro_right animate_slide_right">
+          {/* =================================
+              INFORMACIÓN DEL CURSO
+          ================================= */}
+
+          <aside className="registro_right animate_slide_right">
             {cursoActivo && (
               <div className="curso_fondo">
-                <div className="curso_overlay">
-                  <h2>{cursoActivo.nombre}</h2>
-                  <p>{cursoActivo.objetivo}</p>
-                </div>
-                <div
-                  className="curso_imagen"
+                <div className="curso_imagen"
                   style={{
-                    backgroundImage: `url(/images/${code}.jpg)`,
+                    backgroundImage:
+                      `url(/images/${code}.jpg)`,
                   }}
                 />
+
+                <div className="curso_overlay">
+                  <span className="curso_badge">
+                    Curso disponible
+                  </span>
+
+                  <h2>{cursoActivo.nombre}</h2>
+
+                  <p>{cursoActivo.objetivo}</p>
+
+                  <div className="curso_info_footer">
+                    <span>🎓 Formación profesional</span>
+                    <span>✓ Inscripción en línea</span>
+                  </div>
+                </div>
               </div>
             )}
-          </div>
+          </aside>
         </div>
       )}
     </div>
   );
 };
+
 export default RegistroAlumnos;
