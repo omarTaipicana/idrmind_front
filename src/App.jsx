@@ -37,6 +37,8 @@ import EvaluacionDocente from "./pages/EvaluacionDocente";
 import EvaluacionCurso from "./pages/EvaluacionCurso";
 import ProyectoPensarRegistro from "./pages/ProyectoPensarRegistro";
 import ProyectoPensarTest from "./pages/ProyectoPensarTest";
+import ProyectoPensarPago from "./pages/ProyectoPensarPago";
+import ProyectoPensarResultado from "./pages/ProyectoPensarResultado";
 
 const App = () => {
   const location = useLocation();
@@ -92,6 +94,18 @@ const App = () => {
         <Route
           path="/test-psicotecnico/:token"
           element={<ProyectoPensarTest />}
+        />
+
+        <Route
+          path="/pago-test/:token"
+          element={<ProyectoPensarPago />}
+        />
+
+        <Route
+          path="/resultado-psicometrico/:token"
+          element={
+            <ProyectoPensarResultado />
+          }
         />
 
         <Route path="/curso/:code" element={<CursoInfo />} />

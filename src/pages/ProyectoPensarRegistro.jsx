@@ -16,9 +16,11 @@ import "./styles/ProyectoPensarRegistro.css";
 ========================================================= */
 
 const PATH_COURSES = "/courses";
-const PATH_EMPRESAS = "/empresas";
+const PATH_EMPRESAS =
+  "/empresas/public";
+
 const PATH_EMPRESA_SECCIONES =
-  "/empresa-secciones";
+  "/empresa-secciones/public";
 
 const PATH_PSYCHOMETRIC_REGISTER =
   "/psychometric/register";
@@ -208,13 +210,13 @@ const ProyectoPensarRegistro = () => {
 
       const esTest =
         sigla ===
-          "test_psicotecnico" ||
+        "test_psicotecnico" ||
         sigla ===
-          "test_psicometrico" ||
+        "test_psicometrico" ||
         tipo ===
-          "test_psicotecnico" ||
+        "test_psicotecnico" ||
         tipo ===
-          "test_psicometrico";
+        "test_psicometrico";
 
       return (
         esTest &&
@@ -250,8 +252,8 @@ const ProyectoPensarRegistro = () => {
 
     getEmpresaSecciones(
       `${PATH_EMPRESA_SECCIONES}` +
-        `?empresaId=${empresaSeleccionada}` +
-        `&activo=true`
+      `?empresaId=${empresaSeleccionada}` +
+      `&activo=true`
     );
   }, [
     participacionEmpresarial,
@@ -267,7 +269,7 @@ const ProyectoPensarRegistro = () => {
 
     setMessage(
       registrationResult?.message ||
-        "Registro completado. Revisa tu correo para acceder al test."
+      "Registro completado. Revisa tu correo para acceder al test."
     );
 
     setLocalError("");
@@ -827,7 +829,7 @@ const ProyectoPensarRegistro = () => {
 
                   {!isLoadingEmpresas &&
                     empresasList.length ===
-                      0 && (
+                    0 && (
                       <small className="registro_field_error">
                         No existen empresas
                         disponibles.
@@ -877,7 +879,7 @@ const ProyectoPensarRegistro = () => {
                   {empresaSeleccionada &&
                     !isLoadingSecciones &&
                     seccionesList.length ===
-                      0 && (
+                    0 && (
                       <small className="registro_field_error">
                         Esta empresa no tiene
                         secciones disponibles.

@@ -1,0 +1,834 @@
+:root {
+  --pp-blue: #173a8a;
+  --pp-blue-dark: #071b3f;
+  --pp-cyan: #28a7e8;
+  --pp-bg: #f5f7fb;
+  --pp-text: #101828;
+  --pp-muted: #667085;
+  --pp-border: #dbe4f0;
+  --pp-success: #12b76a;
+  --pp-success-dark: #087443;
+  --pp-danger: #d92d20;
+}
+
+/* =========================================
+   PANTALLA
+========================================= */
+
+.ppago {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  padding: 2rem 4% 3rem;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(40, 167, 232, 0.14),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #f8fbff,
+      #eef3f9
+    );
+
+  color: var(--pp-text);
+  box-sizing: border-box;
+}
+
+.ppago *,
+.ppago *::before,
+.ppago *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   SHELL
+========================================= */
+
+.ppago__shell {
+  width: min(1250px, 100%);
+  margin: 0 auto;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.ppago__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 1.35rem 1.5rem;
+
+  border-radius: 1.4rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--pp-blue-dark),
+      var(--pp-blue)
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 20px 45px
+    rgba(7, 27, 63, 0.2);
+}
+
+.ppago__brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ppago__brand img {
+  width: 70px;
+  height: 70px;
+
+  flex-shrink: 0;
+
+  object-fit: contain;
+
+  padding: 0.25rem;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.1);
+}
+
+.ppago__brand span {
+  display: block;
+
+  margin-bottom: 0.2rem;
+
+  color: var(--pp-cyan);
+
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.ppago__brand h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(
+    1.45rem,
+    3vw,
+    2.1rem
+  );
+}
+
+.ppago__secureBadge {
+  padding: 0.55rem 0.9rem;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.22);
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.1);
+
+  color: #ffffff;
+
+  font-size: 0.82rem;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+/* =========================================
+   GRID
+========================================= */
+
+.ppago__grid {
+  display: grid;
+  grid-template-columns:
+    minmax(300px, 0.78fr)
+    minmax(0, 1.35fr);
+
+  gap: 1.3rem;
+
+  margin-top: 1.3rem;
+
+  align-items: start;
+}
+
+/* =========================================
+   TARJETAS
+========================================= */
+
+.ppago__infoCard,
+.ppago__formCard {
+  border: 1px solid
+    rgba(219, 228, 240, 0.9);
+
+  border-radius: 1.4rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 16px 38px
+    rgba(16, 24, 40, 0.08);
+}
+
+.ppago__infoCard {
+  position: sticky;
+  top: 1rem;
+
+  padding: 1.5rem;
+}
+
+.ppago__formCard {
+  padding: 1.65rem;
+}
+
+/* =========================================
+   TEXTOS
+========================================= */
+
+.ppago__eyebrow {
+  color: var(--pp-cyan);
+
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ppago__infoCard h2,
+.ppago__formHeader h2 {
+  margin: 0.35rem 0 0;
+
+  color: var(--pp-blue-dark);
+
+  line-height: 1.25;
+}
+
+.ppago__formHeader p {
+  margin-bottom: 0;
+
+  color: var(--pp-muted);
+
+  line-height: 1.65;
+}
+
+/* =========================================
+   INFORMACIÓN
+========================================= */
+
+.ppago__infoList {
+  display: grid;
+  gap: 0.75rem;
+
+  margin-top: 1.4rem;
+}
+
+.ppago__infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  padding: 0.95rem 1rem;
+
+  border-radius: 0.9rem;
+
+  background: #f7f9fc;
+}
+
+.ppago__infoItem span {
+  color: var(--pp-muted);
+
+  font-size: 0.78rem;
+}
+
+.ppago__infoItem strong {
+  color: var(--pp-blue-dark);
+
+  word-break: break-word;
+}
+
+/* =========================================
+   AVISO
+========================================= */
+
+.ppago__notice {
+  margin-top: 1.2rem;
+
+  padding: 1rem;
+
+  border-left:
+    5px solid var(--pp-cyan);
+
+  border-radius: 0.85rem;
+
+  background: #eef7ff;
+
+  color: #344054;
+
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.ppago__notice--info {
+  text-align: left;
+}
+
+/* =========================================
+   PROCESO
+========================================= */
+
+.ppago__process {
+  display: grid;
+  gap: 0.75rem;
+
+  margin-top: 1.25rem;
+}
+
+.ppago__process > div {
+  display: grid;
+  grid-template-columns:
+    auto 1fr;
+
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.ppago__process span {
+  width: 31px;
+  height: 31px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--pp-blue);
+
+  color: #ffffff;
+
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.ppago__process p {
+  margin: 0;
+
+  color: var(--pp-muted);
+
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.ppago__form {
+  display: grid;
+  gap: 1.1rem;
+
+  margin-top: 1.5rem;
+}
+
+.ppago__twoColumns {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+}
+
+.ppago__field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ppago__field label {
+  color: #344054;
+
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.ppago__field label span {
+  color: var(--pp-danger);
+}
+
+.ppago__field input,
+.ppago__field textarea {
+  width: 100%;
+
+  border: 1px solid
+    var(--pp-border);
+
+  border-radius: 0.85rem;
+
+  background: #ffffff;
+
+  color: var(--pp-text);
+
+  font-family: inherit;
+  font-size: 0.95rem;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ppago__field input {
+  min-height: 48px;
+
+  padding: 0 0.95rem;
+}
+
+.ppago__field textarea {
+  padding: 0.9rem;
+
+  resize: vertical;
+}
+
+.ppago__field input:focus,
+.ppago__field textarea:focus {
+  border-color: var(--pp-cyan);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(40, 167, 232, 0.12);
+}
+
+/* =========================================
+   VALOR
+========================================= */
+
+.ppago__moneyInput {
+  display: grid;
+  grid-template-columns:
+    auto 1fr;
+
+  align-items: center;
+
+  border: 1px solid
+    var(--pp-border);
+
+  border-radius: 0.85rem;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ppago__moneyInput:focus-within {
+  border-color: var(--pp-cyan);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(40, 167, 232, 0.12);
+}
+
+.ppago__moneyInput > span {
+  height: 100%;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0 0.9rem;
+
+  background: #f4f7fb;
+
+  color: var(--pp-blue);
+
+  font-weight: 900;
+}
+
+.ppago__moneyInput input {
+  border: 0;
+  border-radius: 0;
+}
+
+.ppago__moneyInput input:focus {
+  box-shadow: none;
+}
+
+/* =========================================
+   ARCHIVO
+========================================= */
+
+.ppago__fileBox {
+  min-height: 120px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 1rem;
+
+  padding: 1rem;
+
+  border: 2px dashed
+    var(--pp-border);
+
+  border-radius: 1rem;
+
+  background: #fafcff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.ppago__fileBox:hover {
+  border-color: var(--pp-cyan);
+
+  background: #f2f9ff;
+
+  transform: translateY(-1px);
+}
+
+.ppago__fileBox--selected {
+  border-style: solid;
+  border-color: var(--pp-success);
+
+  background: #f0fdf4;
+}
+
+.ppago__fileBox input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.ppago__fileIcon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #e9f5ff;
+
+  color: var(--pp-blue);
+
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.ppago__fileBox--selected
+  .ppago__fileIcon {
+  background: var(--pp-success);
+  color: #ffffff;
+}
+
+.ppago__fileBox div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ppago__fileBox strong {
+  color: var(--pp-blue-dark);
+}
+
+.ppago__fileBox span {
+  color: var(--pp-muted);
+
+  font-size: 0.82rem;
+}
+
+/* =========================================
+   ERROR
+========================================= */
+
+.ppago__formError {
+  padding: 0.9rem 1rem;
+
+  border-left:
+    5px solid var(--pp-danger);
+
+  border-radius: 0.85rem;
+
+  background: #fef3f2;
+
+  color: #912018;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* =========================================
+   BOTONES
+========================================= */
+
+.ppago__submitButton,
+.ppago__primaryButton {
+  min-height: 50px;
+
+  border: 0;
+
+  border-radius: 0.9rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--pp-blue),
+      var(--pp-blue-dark)
+    );
+
+  color: #ffffff;
+
+  font-size: 0.95rem;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 24px
+    rgba(23, 58, 138, 0.22);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.ppago__submitButton {
+  width: 100%;
+}
+
+.ppago__primaryButton {
+  padding: 0 1.4rem;
+}
+
+.ppago__submitButton:hover:not(
+    :disabled
+  ),
+.ppago__primaryButton:hover:not(
+    :disabled
+  ) {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 16px 30px
+    rgba(23, 58, 138, 0.28);
+}
+
+.ppago__submitButton:disabled,
+.ppago__primaryButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+
+  transform: none;
+  box-shadow: none;
+}
+
+.ppago__privacy {
+  margin: 0;
+
+  color: var(--pp-muted);
+
+  font-size: 0.78rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* =========================================
+   ESTADO FINAL / ERROR
+========================================= */
+
+.ppago__statusCard {
+  width: min(600px, 100%);
+
+  margin: min(14vh, 8rem) auto 0;
+
+  padding: 2.2rem;
+
+  border-radius: 1.5rem;
+
+  background: #ffffff;
+
+  text-align: center;
+
+  box-shadow:
+    0 22px 55px
+    rgba(7, 27, 63, 0.18);
+}
+
+.ppago__statusCard h1 {
+  margin: 0.7rem 0 0;
+
+  color: var(--pp-blue-dark);
+}
+
+.ppago__statusCard > p {
+  color: var(--pp-muted);
+
+  line-height: 1.7;
+}
+
+.ppago__statusIcon {
+  width: 72px;
+  height: 72px;
+
+  margin: 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #fef3f2;
+
+  color: var(--pp-danger);
+
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.ppago__statusIcon--success {
+  background: #ecfdf3;
+  color: var(--pp-success-dark);
+}
+
+.ppago__statusCard--success {
+  border-top:
+    5px solid var(--pp-success);
+}
+
+/* =========================================
+   RESUMEN
+========================================= */
+
+.ppago__summary {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 0.75rem;
+
+  margin: 1.5rem 0;
+}
+
+.ppago__summary div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  padding: 0.9rem;
+
+  border-radius: 0.85rem;
+
+  background: #f7f9fc;
+}
+
+.ppago__summary span {
+  color: var(--pp-muted);
+
+  font-size: 0.75rem;
+}
+
+.ppago__summary strong {
+  color: var(--pp-blue-dark);
+
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+  .ppago {
+    padding:
+      1rem 1rem 2rem;
+  }
+
+  .ppago__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ppago__infoCard {
+    position: static;
+  }
+
+  .ppago__summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .ppago {
+    padding:
+      0.75rem 0.75rem 1.5rem;
+  }
+
+  .ppago__header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: 1rem;
+  }
+
+  .ppago__brand img {
+    width: 58px;
+    height: 58px;
+  }
+
+  .ppago__secureBadge {
+    align-self: flex-start;
+  }
+
+  .ppago__twoColumns {
+    grid-template-columns: 1fr;
+  }
+
+  .ppago__infoCard,
+  .ppago__formCard {
+    padding: 1rem;
+  }
+
+  .ppago__fileBox {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ppago__statusCard {
+    margin-top: 2rem;
+
+    padding: 1.5rem;
+  }
+}

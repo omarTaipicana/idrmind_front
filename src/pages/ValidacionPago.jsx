@@ -1,115 +1,358 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { io } from "socket.io-client";
+
 import "./styles/ValidacionPago.css";
+
 import useCrud from "../hooks/useCrud";
+
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import useAuth from "../hooks/useAuth";
-import IsLoading from "../components/shared/isLoading";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { showAlert } from "../store/states/alert.slice";
-import axios from "axios";
-import getConfigToken from "../services/getConfigToken";
-const urlBase = import.meta.env.VITE_API_URL;
-const token = localStorage.getItem("token");
 
-const BASEURL = import.meta.env.VITE_API_URL;
-const SUPERADMIN = import.meta.env.VITE_CI_SUPERADMIN;
+import useAuth from "../hooks/useAuth";
+
+import IsLoading from "../components/shared/isLoading";
+
+import { useForm } from "react-hook-form";
+
+import { useDispatch } from "react-redux";
+
+import { showAlert } from "../store/states/alert.slice";
+
+import axios from "axios";
+
+import getConfigToken from "../services/getConfigToken";
+
+const urlBase =
+  import.meta.env.VITE_API_URL;
+
+const BASEURL =
+  import.meta.env.VITE_API_URL;
+
+const SUPERADMIN =
+  import.meta.env.VITE_CI_SUPERADMIN;
 
 const PATH_PAGOS = "/pagos";
 const PATH_VARIABLES = "/variables";
-// guarda posición
 
 const ValidacionPago = () => {
-  const [activeSection, setActiveSection] = useState("resumen");
-  const [menuOpen, setMenuOpen] = useState(false);
+  /* =========================================================
+     NAVEGACIÓN
+  ========================================================= */
+
+  const [
+    activeSection,
+    setActiveSection,
+  ] = useState("resumen");
+
+  const [
+    menuOpen,
+    setMenuOpen,
+  ] = useState(false);
+
   const menuRef = useRef();
 
-  const contentRef = useRef(null); // el contenedor que scrollea
-  const scrollPosRef = useRef(0);
-  const lastClickedRef = useRef(null);
-  const hamburgerRef = useRef();
-  const dispatch = useDispatch();
+  const contentRef = useRef(null);
 
-  const { register, handleSubmit, reset } = useForm();
+  const scrollPosRef =
+    useRef(0);
 
-  const [, , , loggedUser, , , , , , , , , , user] = useAuth();
-  const [pagoDashboard, getPagoDashboard] = useCrud();
-  const [inscripcion, getInscripcion] = useCrud();
-  const [variables, getVariables] = useCrud();
+  const lastClickedRef =
+    useRef(null);
 
-  const [showDelete, setShowDelete] = useState(false);
-  const [pagoIdDelete, setPagoIdDelete] = useState(null);
+  const hamburgerRef =
+    useRef();
 
-  const [showRestaurar, setShowRestaurar] = useState(false);
-  const [pagoIdRestaurar, setPagoIdRestaurar] = useState(null);
-  const [isEmitiendoFactura, setIsEmitiendoFactura] = useState(false);
-  const [facturandoPagoId, setFacturandoPagoId] = useState(null);
+  /* =========================================================
+     REDUX / FORM
+  ========================================================= */
 
-  const [papelera, setPapelera] = useState(false);
-  const [verificadoOriginal, setVerificadoOriginal] = useState(false);
-  const [generaFactura, setGeneraFactura] = useState();
+  const dispatch =
+    useDispatch();
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+  } = useForm();
 
-  const [pago, getPago, , , updatePago, error, isLoading] = useCrud();
+  /* =========================================================
+     AUTH
+  ========================================================= */
 
-  const [editPagoId, setEditPagoId] = useState(null);
-  const [observacion, setObservacion] = useState("");
-  const [editVerificado, setEditVerificado] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [
+    ,
+    ,
+    ,
+    loggedUser,
+    ,
+    ,
+    ,
+    ,
+    ,
+    ,
+    ,
+    ,
+    ,
+    user,
+  ] = useAuth();
 
+  /* =========================================================
+     CRUD
+  ========================================================= */
 
+  const [
+    pagoDashboard,
+    getPagoDashboard,
+  ] = useCrud();
 
-  const [editingEntregaId, setEditingEntregaId] = useState(null);
+  const [
+    inscripcion,
+    getInscripcion,
+  ] = useCrud();
 
-  const [filtroCurso, setFiltroCurso] = useState("");
-  const [filtroVerificado, setFiltroVerificado] = useState("");
-  const [filtroMoneda, setFiltroMoneda] = useState("");
-  const [filtroDistintivo, setFiltroDistintivo] = useState("");
-  const [filtroGrado, setFiltroGrado] = useState("");
-  const [filtroEntregado, setFiltroEntregado] = useState("");
+  const [
+    variables,
+    getVariables,
+  ] = useCrud();
 
-  const [filtroFechaInicio, setFiltroFechaInicio] = useState("");
-  const [filtroFechaFin, setFiltroFechaFin] = useState("");
+  const [
+    pago,
+    getPago,
+    ,
+    ,
+    updatePago,
+    error,
+    isLoading,
+  ] = useCrud();
 
-  const [filtroCertificado, setFiltroCertificado] = useState("");
+  /* =========================================================
+     MODALES
+  ========================================================= */
 
-  const [ordenFechaDesc, setOrdenFechaDesc] = useState(true);
+  const [
+    showDelete,
+    setShowDelete,
+  ] = useState(false);
+
+  const [
+    pagoIdDelete,
+    setPagoIdDelete,
+  ] = useState(null);
+
+  const [
+    showRestaurar,
+    setShowRestaurar,
+  ] = useState(false);
+
+  const [
+    pagoIdRestaurar,
+    setPagoIdRestaurar,
+  ] = useState(null);
+
+  /* =========================================================
+     FACTURACIÓN
+  ========================================================= */
+
+  const [
+    isEmitiendoFactura,
+    setIsEmitiendoFactura,
+  ] = useState(false);
+
+  const [
+    facturandoPagoId,
+    setFacturandoPagoId,
+  ] = useState(null);
+
+  const [
+    generaFactura,
+    setGeneraFactura,
+  ] = useState();
+
+  /* =========================================================
+     RESULTADO PSICOMÉTRICO
+  ========================================================= */
+
+  const [
+    generandoResultadoId,
+    setGenerandoResultadoId,
+  ] = useState(null);
+
+  /* =========================================================
+     PAGO / EDICIÓN
+  ========================================================= */
+
+  const [
+    papelera,
+    setPapelera,
+  ] = useState(false);
+
+  const [
+    editPagoId,
+    setEditPagoId,
+  ] = useState(null);
+
+  const [
+    observacion,
+    setObservacion,
+  ] = useState("");
+
+  const [
+    editVerificado,
+    setEditVerificado,
+  ] = useState(false);
+
+  const [
+    verificadoOriginal,
+    setVerificadoOriginal,
+  ] = useState(false);
+
+  const [
+    inputValue,
+    setInputValue,
+  ] = useState("");
+
+  const [
+    editingEntregaId,
+    setEditingEntregaId,
+  ] = useState(null);
+
+  /* =========================================================
+     FILTROS
+  ========================================================= */
+
+  const [
+    filtroCurso,
+    setFiltroCurso,
+  ] = useState("");
+
+  const [
+    filtroVerificado,
+    setFiltroVerificado,
+  ] = useState("");
+
+  const [
+    filtroMoneda,
+    setFiltroMoneda,
+  ] = useState("");
+
+  const [
+    filtroDistintivo,
+    setFiltroDistintivo,
+  ] = useState("");
+
+  const [
+    filtroGrado,
+    setFiltroGrado,
+  ] = useState("");
+
+  const [
+    filtroEntregado,
+    setFiltroEntregado,
+  ] = useState("");
+
+  const [
+    filtroFechaInicio,
+    setFiltroFechaInicio,
+  ] = useState("");
+
+  const [
+    filtroFechaFin,
+    setFiltroFechaFin,
+  ] = useState("");
+
+  const [
+    filtroCertificado,
+    setFiltroCertificado,
+  ] = useState("");
+
+  const [
+    ordenFechaDesc,
+    setOrdenFechaDesc,
+  ] = useState(true);
+
+  /* =========================================================
+     SCROLL
+  ========================================================= */
 
   const getScroller = () => {
-    const el = contentRef.current;
-    if (!el) return window;
+    const el =
+      contentRef.current;
 
-    const st = getComputedStyle(el);
-    const overflowY = st.overflowY;
+    if (!el) {
+      return window;
+    }
+
+    const st =
+      getComputedStyle(el);
+
+    const overflowY =
+      st.overflowY;
+
     const canScroll =
-      (overflowY === "auto" || overflowY === "scroll") &&
-      el.scrollHeight > el.clientHeight + 2;
+      (
+        overflowY === "auto" ||
+        overflowY === "scroll"
+      ) &&
+      el.scrollHeight >
+        el.clientHeight + 2;
 
-    return canScroll ? el : window; // ✅ si main no puede scrollear, usa window
+    return canScroll
+      ? el
+      : window;
   };
 
   const saveScroll = () => {
-    const scroller = getScroller();
+    const scroller =
+      getScroller();
+
     scrollPosRef.current =
-      scroller === window ? window.scrollY : scroller.scrollTop;
+      scroller === window
+        ? window.scrollY
+        : scroller.scrollTop;
   };
 
-  const SCROLL_OFFSET = -100; // 👈 ajusta a gusto (80, 120, 160...)
+  const SCROLL_OFFSET =
+    -100;
 
   const restoreScroll = () => {
-    const scroller = getScroller();
-    const top = Math.max(0, scrollPosRef.current - SCROLL_OFFSET);
+    const scroller =
+      getScroller();
 
-    if (scroller === window) window.scrollTo(0, top);
-    else scroller.scrollTop = top;
+    const top = Math.max(
+      0,
+      scrollPosRef.current -
+        SCROLL_OFFSET,
+    );
+
+    if (
+      scroller === window
+    ) {
+      window.scrollTo(
+        0,
+        top,
+      );
+    } else {
+      scroller.scrollTop =
+        top;
+    }
   };
 
+  /* =========================================================
+     ALERTA FACTURACIÓN
+  ========================================================= */
 
   useEffect(() => {
     if (generaFactura) {
-      const message = generaFactura.message ?? "Error inesperado";
+      const message =
+        generaFactura.message ??
+        "Error inesperado";
+
       dispatch(
         showAlert({
           message: `⚠️ ${message}`,
@@ -117,13 +360,22 @@ const ValidacionPago = () => {
         }),
       );
     }
-  }, [generaFactura]);
+  }, [
+    generaFactura,
+    dispatch,
+  ]);
 
-
+  /* =========================================================
+     ALERTA CRUD
+  ========================================================= */
 
   useEffect(() => {
     if (error) {
-      const message = error.response?.data?.message ?? "Error inesperado";
+      const message =
+        error.response?.data
+          ?.message ??
+        "Error inesperado";
+
       dispatch(
         showAlert({
           message: `⚠️ ${message}`,
@@ -131,41 +383,103 @@ const ValidacionPago = () => {
         }),
       );
     }
-  }, [error]);
+  }, [
+    error,
+    dispatch,
+  ]);
+
+  /* =========================================================
+     DEBOUNCE BÚSQUEDA
+  ========================================================= */
 
   useEffect(() => {
-    const handler = setTimeout(() => setFiltroGrado(inputValue), 2000);
-    return () => clearTimeout(handler);
+    const handler =
+      setTimeout(
+        () =>
+          setFiltroGrado(
+            inputValue,
+          ),
+        2000,
+      );
+
+    return () =>
+      clearTimeout(
+        handler,
+      );
   }, [inputValue]);
 
+  /* =========================================================
+     RESTAURAR SCROLL AL EDITAR
+  ========================================================= */
+
   useLayoutEffect(() => {
-    if (editPagoId == null) return;
+    if (
+      editPagoId == null
+    ) {
+      return;
+    }
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        restoreScroll();
+    requestAnimationFrame(
+      () => {
+        requestAnimationFrame(
+          () => {
+            restoreScroll();
 
-        // opcional: evitar que el focus auto provoque scroll
-        if (lastClickedRef.current?.focus) {
-          try {
-            lastClickedRef.current.focus({ preventScroll: true });
-          } catch {
-            lastClickedRef.current.focus();
-          }
-        }
-      });
-    });
+            if (
+              lastClickedRef
+                .current?.focus
+            ) {
+              try {
+                lastClickedRef.current.focus(
+                  {
+                    preventScroll:
+                      true,
+                  },
+                );
+              } catch {
+                lastClickedRef.current.focus();
+              }
+            }
+          },
+        );
+      },
+    );
   }, [editPagoId]);
+
+  /* =========================================================
+     CARGA PAGOS + SOCKET
+  ========================================================= */
 
   useEffect(() => {
     getPago(
-      `/pagos?curso=${filtroCurso}&verificado=${filtroVerificado}&moneda=${filtroMoneda}&distintivo=${filtroDistintivo}&entregado=${filtroEntregado}&certificado=${filtroCertificado}&busqueda=${filtroGrado}&fechaInicio=${filtroFechaInicio}&fechaFin=${filtroFechaFin}`,
+      `/pagos?curso=${filtroCurso}` +
+        `&verificado=${filtroVerificado}` +
+        `&moneda=${filtroMoneda}` +
+        `&distintivo=${filtroDistintivo}` +
+        `&entregado=${filtroEntregado}` +
+        `&certificado=${filtroCertificado}` +
+        `&busqueda=${filtroGrado}` +
+        `&fechaInicio=${filtroFechaInicio}` +
+        `&fechaFin=${filtroFechaFin}`,
     );
 
-    const socket = io(BASEURL);
-    socket.on("pagoActualizado", () => getPago(PATH_PAGOS));
+    const socket =
+      io(BASEURL);
 
-    return () => socket.disconnect();
+    socket.on(
+      "pagoActualizado",
+      () =>
+        getPago(PATH_PAGOS),
+    );
+
+    socket.on(
+      "resultadoPsicometricoGenerado",
+      () =>
+        getPago(PATH_PAGOS),
+    );
+
+    return () =>
+      socket.disconnect();
   }, [
     filtroCurso,
     filtroVerificado,
@@ -178,343 +492,1000 @@ const ValidacionPago = () => {
     filtroCertificado,
   ]);
 
+  /* =========================================================
+     CLASIFICAR PAGOS
+  ========================================================= */
+
   const pagosActivos = [];
   const pagosEliminados = [];
   const pagosDistintivos = [];
 
-  for (const pagoItem of pago) {
-    if (pagoItem.confirmacion) pagosActivos.push(pagoItem);
-    else pagosEliminados.push(pagoItem);
+  for (
+    const pagoItem
+    of Array.isArray(pago)
+      ? pago
+      : []
+  ) {
+    if (
+      pagoItem.confirmacion
+    ) {
+      pagosActivos.push(
+        pagoItem,
+      );
+    } else {
+      pagosEliminados.push(
+        pagoItem,
+      );
+    }
 
-    if (pagoItem.confirmacion && (pagoItem.distintivo || pagoItem.moneda)) {
-      pagosDistintivos.push(pagoItem);
+    if (
+      pagoItem.confirmacion &&
+      (
+        pagoItem.distintivo ||
+        pagoItem.moneda
+      )
+    ) {
+      pagosDistintivos.push(
+        pagoItem,
+      );
     }
   }
 
+  /* =========================================================
+     CARGA INICIAL
+  ========================================================= */
+
   useEffect(() => {
     getPago(PATH_PAGOS);
-    getVariables(PATH_VARIABLES);
-    getInscripcion("/inscripcion");
+
+    getVariables(
+      PATH_VARIABLES,
+    );
+
+    getInscripcion(
+      "/inscripcion",
+    );
+
     loggedUser();
-    getPagoDashboard(`/pagos_dashboard`);
+
+    getPagoDashboard(
+      "/pagos_dashboard",
+    );
   }, []);
 
-  const iniciarEdicion = (p, e) => {
-    lastClickedRef.current = e?.currentTarget || null;
+  /* =========================================================
+     INICIAR EDICIÓN
+  ========================================================= */
+
+  const iniciarEdicion = (
+    p,
+    e,
+  ) => {
+    lastClickedRef.current =
+      e?.currentTarget ||
+      null;
+
     saveScroll();
 
     setEditPagoId(p.id);
-    setVerificadoOriginal(!!p.verificado);
+
+    setVerificadoOriginal(
+      !!p.verificado,
+    );
 
     reset({
-      valorDepositado: p.valorDepositado || "",
-      entidad: p.entidad || "",
-      idDeposito: p.idDeposito || "",
-      verificado: !!p.verificado,
-      moneda: !!p.moneda,
-      distintivo: !!p.distintivo,
-      observacion: p.observacion || "",
+      valorDepositado:
+        p.valorDepositado ||
+        "",
+
+      entidad:
+        p.entidad || "",
+
+      idDeposito:
+        p.idDeposito || "",
+
+      verificado:
+        !!p.verificado,
+
+      moneda:
+        !!p.moneda,
+
+      distintivo:
+        !!p.distintivo,
+
+      observacion:
+        p.observacion || "",
     });
   };
 
   const cancelarEdicion = () => {
     setEditPagoId(null);
     setObservacion("");
-    setEditVerificado(false);
+    setEditVerificado(
+      false,
+    );
   };
 
-  const guardarEdicion = async (pagoId, data) => {
-    try {
-      await updatePago(PATH_PAGOS, pagoId, {
-        ...data,
-        valorDepositado: parseFloat(data.valorDepositado),
-        usuarioEdicion: user.email,
-      });
+  /* =========================================================
+     GUARDAR EDICIÓN
+  ========================================================= */
 
-      await getPago(PATH_PAGOS);
-      cancelarEdicion();
-    } catch (error) {
-      alert("Error al guardar los cambios.");
-    }
-  };
+  const guardarEdicion =
+    async (
+      pagoId,
+      data,
+    ) => {
+      try {
+        await updatePago(
+          PATH_PAGOS,
+          pagoId,
+          {
+            ...data,
 
-  const deletePagoPr = async (id) => {
-    try {
-      await updatePago(PATH_PAGOS, id, { confirmacion: false });
-      await getPago(PATH_PAGOS);
-      cancelarEdicion();
-      setShowDelete(false);
-    } catch (error) {
-      alert("Error al guardar los cambios.");
-    }
-  };
+            valorDepositado:
+              parseFloat(
+                data.valorDepositado,
+              ),
 
-  const restaurarPagoPr = async (id) => {
-    try {
-      await updatePago(PATH_PAGOS, id, { confirmacion: true });
-      await getPago(PATH_PAGOS);
-      cancelarEdicion();
-      setShowRestaurar(false);
-    } catch (error) {
-      alert("Error al guardar los cambios.");
-    }
-  };
+            usuarioEdicion:
+              user?.email ||
+              "",
+          },
+        );
 
-  const getListaCursos = (arr) => {
-    const cursosSet = new Set();
-    arr.forEach((p) => p.curso && cursosSet.add(p.curso));
-    return Array.from(cursosSet);
-  };
+        await getPago(
+          PATH_PAGOS,
+        );
 
-  const listaCursos = getListaCursos(pago);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        menuOpen &&
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        hamburgerRef.current &&
-        !hamburgerRef.current.contains(event.target)
-      ) {
-        setMenuOpen(false);
+        cancelarEdicion();
+      } catch (error) {
+        alert(
+          "Error al guardar los cambios.",
+        );
       }
     };
 
-    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+  /* =========================================================
+     ELIMINAR
+  ========================================================= */
+
+  const deletePagoPr =
+    async (id) => {
+      try {
+        await updatePago(
+          PATH_PAGOS,
+          id,
+          {
+            confirmacion:
+              false,
+          },
+        );
+
+        await getPago(
+          PATH_PAGOS,
+        );
+
+        cancelarEdicion();
+
+        setShowDelete(
+          false,
+        );
+      } catch (error) {
+        alert(
+          "Error al guardar los cambios.",
+        );
+      }
+    };
+
+  /* =========================================================
+     RESTAURAR
+  ========================================================= */
+
+  const restaurarPagoPr =
+    async (id) => {
+      try {
+        await updatePago(
+          PATH_PAGOS,
+          id,
+          {
+            confirmacion:
+              true,
+          },
+        );
+
+        await getPago(
+          PATH_PAGOS,
+        );
+
+        cancelarEdicion();
+
+        setShowRestaurar(
+          false,
+        );
+      } catch (error) {
+        alert(
+          "Error al guardar los cambios.",
+        );
+      }
+    };
+
+  /* =========================================================
+     LISTA CURSOS
+  ========================================================= */
+
+  const getListaCursos = (
+    arr,
+  ) => {
+    const cursosSet =
+      new Set();
+
+    arr.forEach((p) => {
+      if (p.curso) {
+        cursosSet.add(
+          p.curso,
+        );
+      }
+    });
+
+    return Array.from(
+      cursosSet,
+    );
+  };
+
+  const listaCursos =
+    getListaCursos(
+      Array.isArray(pago)
+        ? pago
+        : [],
+    );
+
+  /* =========================================================
+     CERRAR MENU MOBILE
+  ========================================================= */
+
+  useEffect(() => {
+    const handleClickOutside =
+      (event) => {
+        if (
+          menuOpen &&
+          menuRef.current &&
+          !menuRef.current.contains(
+            event.target,
+          ) &&
+          hamburgerRef.current &&
+          !hamburgerRef.current.contains(
+            event.target,
+          )
+        ) {
+          setMenuOpen(
+            false,
+          );
+        }
+      };
+
+    if (menuOpen) {
+      document.addEventListener(
+        "mousedown",
+        handleClickOutside,
+      );
+    }
+
+    return () =>
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside,
+      );
   }, [menuOpen]);
 
-  const ordenarPorFecha = (array) => {
-    return [...array].sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return ordenFechaDesc ? dateB - dateA : dateA - dateB;
-    });
+  /* =========================================================
+     ORDENAR FECHA
+  ========================================================= */
+
+  const ordenarPorFecha = (
+    array,
+  ) => {
+    return [...array].sort(
+      (a, b) => {
+        const dateA =
+          new Date(
+            a.createdAt,
+          );
+
+        const dateB =
+          new Date(
+            b.createdAt,
+          );
+
+        return ordenFechaDesc
+          ? dateB - dateA
+          : dateA - dateB;
+      },
+    );
   };
 
-  const pagosOrdenados = ordenarPorFecha(pagosActivos);
+  const pagosOrdenados =
+    ordenarPorFecha(
+      pagosActivos,
+    );
 
-  const descargarExcel = () => {
-    const datosExcel = pagosActivos.map((p) => ({
-      Grado: p?.inscripcion?.user?.grado || "",
-      Nombres: p?.inscripcion?.user?.firstName || "",
-      Apellidos: p?.inscripcion?.user?.lastName || "",
-      Cedula: p?.inscripcion?.user?.cI || "",
-      Curso: p.curso || "",
-      "Valor Depositado": p.valorDepositado || "0.00",
-      Comprobante: p.pagoUrl || "",
-      Verificado: p.verificado ? "Sí" : "No",
-      Fecha: p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "",
-      Email: p?.inscripcion?.user?.email || "",
-      Celular: p?.inscripcion?.user?.cellular || "",
-    }));
+  /* =========================================================
+     EXCEL PAGOS
+  ========================================================= */
 
-    const ws = XLSX.utils.json_to_sheet(datosExcel);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Pagos");
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([wbout], { type: "application/octet-stream" });
-    saveAs(blob, "pagos_filtrados.xlsx");
-  };
+  const descargarExcel =
+    () => {
+      const datosExcel =
+        pagosActivos.map(
+          (p) => ({
+            Grado:
+              p?.inscripcion
+                ?.user
+                ?.grado || "",
 
-  const descargarExcelInscripcion = () => {
-    const datosExcel = [...inscripcion]
-      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-      .map((i) => ({
-        id: i?.id || "",
-        grado: i?.user?.grado || "",
-        nombres: i?.user?.firstName || "",
-        apellidos: i?.user?.lastName || "",
-        cedula: i?.user?.cI || "",
-        email: i?.user?.email || "",
-        aceptacion: i?.aceptacion || "",
-        curso: i?.curso || "",
-        userId: i?.userId || "",
-        createdAt: i?.createdAt || "",
-        updatedAt: i?.updatedAt || "",
-        courseId: i?.courseId || "",
-        observacion: i?.observacion || "",
-        usuarioEdicion: i?.usuarioEdicion || "",
-      }));
+            Nombres:
+              p?.inscripcion
+                ?.user
+                ?.firstName ||
+              "",
 
-    const ws = XLSX.utils.json_to_sheet(datosExcel);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "inscripcion");
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([wbout], { type: "application/octet-stream" });
-    saveAs(blob, "inscripciones.xlsx");
-  };
+            Apellidos:
+              p?.inscripcion
+                ?.user
+                ?.lastName ||
+              "",
 
+            Cedula:
+              p?.inscripcion
+                ?.user?.cI ||
+              "",
 
+            Curso:
+              p.curso || "",
 
+            "Valor Depositado":
+              p.valorDepositado ||
+              "0.00",
 
+            Comprobante:
+              p.pagoUrl || "",
 
-  const emitirFacturaManual = async (pagoId) => {
-    try {
-      if (isEmitiendoFactura) return;
+            Verificado:
+              p.verificado
+                ? "Sí"
+                : "No",
 
-      setIsEmitiendoFactura(true);
-      setFacturandoPagoId(pagoId);
+            Fecha:
+              p.createdAt
+                ? new Date(
+                    p.createdAt,
+                  ).toLocaleDateString()
+                : "",
 
-      const { data } = await axios.post(
-        `${urlBase}/contifico/factura/emitir-manual`,
-        { pagoId },
+            Email:
+              p?.inscripcion
+                ?.user?.email ||
+              "",
+
+            Celular:
+              p?.inscripcion
+                ?.user
+                ?.cellular ||
+              "",
+          }),
+        );
+
+      const ws =
+        XLSX.utils.json_to_sheet(
+          datosExcel,
+        );
+
+      const wb =
+        XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        "Pagos",
       );
 
-      setGeneraFactura(data);
+      const wbout =
+        XLSX.write(wb, {
+          bookType: "xlsx",
+          type: "array",
+        });
 
-      getPago(PATH_PAGOS);
-    } catch (e) {
-      console.error("Error emitir factura:", e.response?.data || e.message);
-    } finally {
-      setIsEmitiendoFactura(false);
-      setFacturandoPagoId(null);
-    }
-  };
+      const blob =
+        new Blob(
+          [wbout],
+          {
+            type:
+              "application/octet-stream",
+          },
+        );
 
-  const getFacturaUI = (p) => {
-    // 1) No hay documento
-    if (!p.contificoDocumentoId) {
-      return { type: "emitir", label: "Emitir factura" };
-    }
+      saveAs(
+        blob,
+        "pagos_filtrados.xlsx",
+      );
+    };
 
-    // 2) Ya hay autorización => ver RIDE
-    if (p.contificoAutorizacion) {
+  /* =========================================================
+     EXCEL INSCRIPCIONES
+  ========================================================= */
+
+  const descargarExcelInscripcion =
+    () => {
+      const datosExcel = [
+        ...inscripcion,
+      ]
+        .sort(
+          (a, b) =>
+            new Date(
+              a.createdAt,
+            ) -
+            new Date(
+              b.createdAt,
+            ),
+        )
+        .map((i) => ({
+          id: i?.id || "",
+
+          grado:
+            i?.user?.grado ||
+            "",
+
+          nombres:
+            i?.user
+              ?.firstName ||
+            "",
+
+          apellidos:
+            i?.user
+              ?.lastName ||
+            "",
+
+          cedula:
+            i?.user?.cI ||
+            "",
+
+          email:
+            i?.user?.email ||
+            "",
+
+          aceptacion:
+            i?.aceptacion ||
+            "",
+
+          curso:
+            i?.curso || "",
+
+          userId:
+            i?.userId || "",
+
+          createdAt:
+            i?.createdAt ||
+            "",
+
+          updatedAt:
+            i?.updatedAt ||
+            "",
+
+          courseId:
+            i?.courseId ||
+            "",
+
+          observacion:
+            i?.observacion ||
+            "",
+
+          usuarioEdicion:
+            i?.usuarioEdicion ||
+            "",
+        }));
+
+      const ws =
+        XLSX.utils.json_to_sheet(
+          datosExcel,
+        );
+
+      const wb =
+        XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        "inscripcion",
+      );
+
+      const wbout =
+        XLSX.write(wb, {
+          bookType: "xlsx",
+          type: "array",
+        });
+
+      const blob =
+        new Blob(
+          [wbout],
+          {
+            type:
+              "application/octet-stream",
+          },
+        );
+
+      saveAs(
+        blob,
+        "inscripciones.xlsx",
+      );
+    };
+
+  /* =========================================================
+     FACTURACIÓN
+  ========================================================= */
+
+  const emitirFacturaManual =
+    async (pagoId) => {
+      try {
+        if (
+          isEmitiendoFactura
+        ) {
+          return;
+        }
+
+        setIsEmitiendoFactura(
+          true,
+        );
+
+        setFacturandoPagoId(
+          pagoId,
+        );
+
+        const { data } =
+          await axios.post(
+            `${urlBase}/contifico/factura/emitir-manual`,
+            {
+              pagoId,
+            },
+          );
+
+        setGeneraFactura(
+          data,
+        );
+
+        getPago(
+          PATH_PAGOS,
+        );
+      } catch (e) {
+        console.error(
+          "Error emitir factura:",
+          e.response?.data ||
+            e.message,
+        );
+      } finally {
+        setIsEmitiendoFactura(
+          false,
+        );
+
+        setFacturandoPagoId(
+          null,
+        );
+      }
+    };
+
+  const getFacturaUI = (
+    p,
+  ) => {
+    if (
+      !p.contificoDocumentoId
+    ) {
       return {
-        type: "ver",
-        label: "Ver factura",
-        href: p.contificoUrlRide || p.contificoUrlXml,
+        type: "emitir",
+        label:
+          "Emitir factura",
       };
     }
 
-    // 3) Hay documento pero no autorización
-    return { type: "pendiente", label: "Pendiente SRI" };
-  };
-  const limpiarFiltrosBase = () => {
-    setFiltroCurso("");
-    setFiltroVerificado("");
-    setFiltroMoneda("");
-    setFiltroDistintivo("");
-    setFiltroGrado("");
-    setInputValue("");
-    setFiltroEntregado("");
-    setFiltroFechaInicio("");
-    setFiltroFechaFin("");
-    setFiltroCertificado("");
-  };
+    if (
+      p.contificoAutorizacion
+    ) {
+      return {
+        type: "ver",
 
-  const handleCertificar = async (id) => {
-    if (!id) {
-      dispatch(
-        showAlert({
-          message: "❌ No se pudo obtener el ID del pago",
-          alertType: 1,
-        }),
-      );
-      return;
+        label:
+          "Ver factura",
+
+        href:
+          p.contificoUrlRide ||
+          p.contificoUrlXml,
+      };
     }
 
-    const ok = window.confirm(
-      "🎓 Estás a punto de generar el certificado oficial de este participante.\n\nUna vez emitido, el certificado quedará registrado en el sistema y será enviado al usuario.\n\n¿Deseas continuar?",
-    );
-
-    if (!ok) return;
-
-    try {
-      await axios.post(
-        `${urlBase}/pagos/${id}/certificado`,
-        {},
-        getConfigToken(),
-      );
-
-      dispatch(
-        showAlert({
-          message: "✅ Certificado generado y enviado correctamente",
-          alertType: 2,
-        }),
-      );
-
-      getPago(PATH_PAGOS);
-    } catch (error) {
-      console.error("Error certificando:", error);
-      console.error("Respuesta backend:", error?.response?.data);
-
-      dispatch(
-        showAlert({
-          message:
-            error?.response?.data?.message || "❌ Error al generar certificado",
-          alertType: 1,
-        }),
-      );
-    }
+    return {
+      type: "pendiente",
+      label: "Pendiente SRI",
+    };
   };
+
+  /* =========================================================
+     LIMPIAR FILTROS
+  ========================================================= */
+
+  const limpiarFiltrosBase =
+    () => {
+      setFiltroCurso("");
+      setFiltroVerificado("");
+      setFiltroMoneda("");
+      setFiltroDistintivo("");
+      setFiltroGrado("");
+      setInputValue("");
+      setFiltroEntregado("");
+      setFiltroFechaInicio("");
+      setFiltroFechaFin("");
+      setFiltroCertificado("");
+    };
+
+  /* =========================================================
+     CERTIFICAR
+  ========================================================= */
+
+  const handleCertificar =
+    async (id) => {
+      if (!id) {
+        dispatch(
+          showAlert({
+            message:
+              "❌ No se pudo obtener el ID del pago",
+
+            alertType: 1,
+          }),
+        );
+
+        return;
+      }
+
+      const ok =
+        window.confirm(
+          "🎓 Estás a punto de generar el certificado oficial de este participante.\n\n" +
+            "Una vez emitido, el certificado quedará registrado en el sistema y será enviado al usuario.\n\n" +
+            "¿Deseas continuar?",
+        );
+
+      if (!ok) {
+        return;
+      }
+
+      try {
+        await axios.post(
+          `${urlBase}/pagos/${id}/certificado`,
+          {},
+          getConfigToken(),
+        );
+
+        dispatch(
+          showAlert({
+            message:
+              "✅ Certificado generado y enviado correctamente",
+
+            alertType: 2,
+          }),
+        );
+
+        getPago(
+          PATH_PAGOS,
+        );
+      } catch (error) {
+        console.error(
+          "Error certificando:",
+          error,
+        );
+
+        console.error(
+          "Respuesta backend:",
+          error?.response?.data,
+        );
+
+        dispatch(
+          showAlert({
+            message:
+              error?.response
+                ?.data
+                ?.message ||
+              "❌ Error al generar certificado",
+
+            alertType: 1,
+          }),
+        );
+      }
+    };
+
+  /* =========================================================
+     GENERAR RESULTADO PSICOMÉTRICO
+  ========================================================= */
+
+  const handleGenerarResultado =
+    async (p) => {
+      if (!p?.id) {
+        dispatch(
+          showAlert({
+            message:
+              "❌ No se pudo obtener el ID del pago.",
+
+            alertType: 1,
+          }),
+        );
+
+        return;
+      }
+
+      if (
+        p.tipoPago !==
+          "test_psicometrico" ||
+        !p.psychometricEvaluationId
+      ) {
+        dispatch(
+          showAlert({
+            message:
+              "⚠️ Este pago no corresponde a una evaluación psicométrica.",
+
+            alertType: 1,
+          }),
+        );
+
+        return;
+      }
+
+      if (!p.verificado) {
+        dispatch(
+          showAlert({
+            message:
+              "⚠️ Primero debes validar el pago.",
+
+            alertType: 1,
+          }),
+        );
+
+        return;
+      }
+
+      const participante = [
+        p?.inscripcion?.user
+          ?.firstName,
+
+        p?.inscripcion?.user
+          ?.lastName,
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      const ok =
+        window.confirm(
+          `📊 Generar resultado psicométrico\n\n` +
+            `${
+              participante
+                ? `Participante: ${participante}\n`
+                : ""
+            }` +
+            `Test: ${p.curso || "-"}\n\n` +
+            `El resultado será liberado y se enviará al correo del participante un enlace personal para consultar su informe.\n\n` +
+            `¿Deseas continuar?`,
+        );
+
+      if (!ok) {
+        return;
+      }
+
+      try {
+        setGenerandoResultadoId(
+          p.id,
+        );
+
+        const { data } =
+          await axios.post(
+            `${urlBase}/pagos/${p.id}/resultado-psicometrico`,
+            {},
+            getConfigToken(),
+          );
+
+        dispatch(
+          showAlert({
+            message:
+              data?.message ||
+              "✅ Resultado generado y enviado correctamente.",
+
+            alertType: 2,
+          }),
+        );
+
+        await getPago(
+          `/pagos?curso=${filtroCurso}` +
+            `&verificado=${filtroVerificado}` +
+            `&moneda=${filtroMoneda}` +
+            `&distintivo=${filtroDistintivo}` +
+            `&entregado=${filtroEntregado}` +
+            `&certificado=${filtroCertificado}` +
+            `&busqueda=${filtroGrado}` +
+            `&fechaInicio=${filtroFechaInicio}` +
+            `&fechaFin=${filtroFechaFin}`,
+        );
+      } catch (error) {
+        console.error(
+          "Error generando resultado psicométrico:",
+          error?.response?.data ||
+            error,
+        );
+
+        const backendData =
+          error?.response?.data;
+
+        if (
+          backendData?.alreadySent
+        ) {
+          const fecha =
+            backendData
+              ?.resultadoEmailEnviadoAt
+              ? new Date(
+                  backendData.resultadoEmailEnviadoAt,
+                ).toLocaleString(
+                  "es-EC",
+                )
+              : null;
+
+          dispatch(
+            showAlert({
+              message:
+                "⚠️ El resultado ya fue enviado anteriormente." +
+                `${
+                  fecha
+                    ? ` Último envío: ${fecha}.`
+                    : ""
+                }`,
+
+              alertType: 1,
+            }),
+          );
+
+          return;
+        }
+
+        dispatch(
+          showAlert({
+            message:
+              backendData?.message ||
+              "❌ No se pudo generar el resultado psicométrico.",
+
+            alertType: 1,
+          }),
+        );
+      } finally {
+        setGenerandoResultadoId(
+          null,
+        );
+      }
+    };
+
+  /* =========================================================
+     RENDER
+  ========================================================= */
 
   const renderContent = () => {
-    switch (activeSection) {
+    switch (
+      activeSection
+    ) {
+      /* =====================================================
+         RESUMEN
+      ===================================================== */
+
       case "resumen":
         return (
           <section className="secCard">
             <div className="secCardHeader">
-              <h2 className="secTitle">📋 Resumen General</h2>
+              <h2 className="secTitle">
+                📋 Resumen General
+              </h2>
             </div>
 
             {!pagoDashboard ? (
-              <p className="secEmpty">Cargando resumen...</p>
+              <p className="secEmpty">
+                Cargando resumen...
+              </p>
             ) : (
               <div className="vpResumenGrid">
                 <div className="vpStatCard">
-                  <div className="vpStatLabel">Total Pagos / Validados</div>
+                  <div className="vpStatLabel">
+                    Total Pagos /
+                    Validados
+                  </div>
+
                   <div className="vpStatValue">
                     <span className="vpStatMain">
-                      {pagoDashboard.totalPagosNum}
+                      {
+                        pagoDashboard.totalPagosNum
+                      }
                     </span>
-                    <span className="vpStatSep">/</span>
+
+                    <span className="vpStatSep">
+                      /
+                    </span>
+
                     <span className="vpStatOk">
-                      {pagoDashboard.totalPagosVerificados}
+                      {
+                        pagoDashboard.totalPagosVerificados
+                      }
                     </span>
                   </div>
                 </div>
 
                 <div className="vpStatCard">
-                  <div className="vpStatLabel">Monedas / Entregadas</div>
+                  <div className="vpStatLabel">
+                    Monedas /
+                    Entregadas
+                  </div>
+
                   <div className="vpStatValue">
                     <span className="vpStatMain">
                       {pagoDashboard.conteoDistMoneda?.find(
-                        (c) => c.name === "Moneda",
-                      )?.value || 0}
+                        (c) =>
+                          c.name ===
+                          "Moneda",
+                      )?.value ||
+                        0}
                     </span>
-                    <span className="vpStatSep">/</span>
+
+                    <span className="vpStatSep">
+                      /
+                    </span>
+
                     <span className="vpStatOk">
                       {pagoDashboard.conteoDistMoneda?.find(
-                        (c) => c.name === "Moneda",
-                      )?.entregado || 0}
+                        (c) =>
+                          c.name ===
+                          "Moneda",
+                      )?.entregado ||
+                        0}
                     </span>
                   </div>
                 </div>
 
                 <div className="vpStatCard">
-                  <div className="vpStatLabel">Distintivos / Entregados</div>
+                  <div className="vpStatLabel">
+                    Distintivos /
+                    Entregados
+                  </div>
+
                   <div className="vpStatValue">
                     <span className="vpStatMain">
                       {pagoDashboard.conteoDistMoneda?.find(
-                        (c) => c.name === "Distintivo",
-                      )?.value || 0}
+                        (c) =>
+                          c.name ===
+                          "Distintivo",
+                      )?.value ||
+                        0}
                     </span>
-                    <span className="vpStatSep">/</span>
+
+                    <span className="vpStatSep">
+                      /
+                    </span>
+
                     <span className="vpStatOk">
                       {pagoDashboard.conteoDistMoneda?.find(
-                        (c) => c.name === "Distintivo",
-                      )?.entregado || 0}
+                        (c) =>
+                          c.name ===
+                          "Distintivo",
+                      )?.entregado ||
+                        0}
                     </span>
                   </div>
                 </div>
 
                 <div className="vpStatCard">
-                  <div className="vpStatLabel">Certificados pagados</div>
+                  <div className="vpStatLabel">
+                    Certificados pagados
+                  </div>
+
                   <div className="vpStatValue">
                     <span className="vpStatMain">
-                      {pagoDashboard.totalPagosDinstint}
+                      {
+                        pagoDashboard.totalPagosDinstint
+                      }
                     </span>
                   </div>
                 </div>
@@ -523,220 +1494,390 @@ const ValidacionPago = () => {
           </section>
         );
 
+      /* =====================================================
+         VALIDAR PAGOS
+      ===================================================== */
+
       case "validarPagos":
         return (
           <section className="secCard">
             <div className="secCardHeader">
-              <h2 className="secTitle">✅ Validar Pagos</h2>
+              <h2 className="secTitle">
+                ✅ Validar Pagos
+              </h2>
             </div>
 
             <div className="secFilters vpFiltersRow">
               <button
                 className="secBtnDanger"
-                onClick={limpiarFiltrosBase}
+                onClick={
+                  limpiarFiltrosBase
+                }
                 type="button"
               >
                 ❌ Eliminar filtros
               </button>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Curso</label>
+                <label className="vpLbl">
+                  Curso
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroCurso}
-                  onChange={(e) => setFiltroCurso(e.target.value)}
+                  value={
+                    filtroCurso
+                  }
+                  onChange={(e) =>
+                    setFiltroCurso(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  {listaCursos.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
+                  <option value="">
+                    Todos
+                  </option>
+
+                  {listaCursos.map(
+                    (c) => (
+                      <option
+                        key={c}
+                        value={c}
+                      >
+                        {c}
+                      </option>
+                    ),
+                  )}
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Verificado</label>
+                <label className="vpLbl">
+                  Verificado
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroVerificado}
-                  onChange={(e) => setFiltroVerificado(e.target.value)}
+                  value={
+                    filtroVerificado
+                  }
+                  onChange={(e) =>
+                    setFiltroVerificado(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  <option value="true">Verificados</option>
-                  <option value="false">No Verificados</option>
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Verificados
+                  </option>
+
+                  <option value="false">
+                    No Verificados
+                  </option>
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Moneda</label>
+                <label className="vpLbl">
+                  Moneda
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroMoneda}
-                  onChange={(e) => setFiltroMoneda(e.target.value)}
+                  value={
+                    filtroMoneda
+                  }
+                  onChange={(e) =>
+                    setFiltroMoneda(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  <option value="true">Sí</option>
-                  <option value="false">No</option>
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Sí
+                  </option>
+
+                  <option value="false">
+                    No
+                  </option>
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Distintivo</label>
+                <label className="vpLbl">
+                  Distintivo
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroDistintivo}
-                  onChange={(e) => setFiltroDistintivo(e.target.value)}
+                  value={
+                    filtroDistintivo
+                  }
+                  onChange={(e) =>
+                    setFiltroDistintivo(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  <option value="true">Sí</option>
-                  <option value="false">No</option>
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Sí
+                  </option>
+
+                  <option value="false">
+                    No
+                  </option>
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Nombres / Apellidos / Cédula</label>
+                <label className="vpLbl">
+                  Nombres /
+                  Apellidos /
+                  Cédula
+                </label>
+
                 <input
                   className="secInput"
                   type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  value={
+                    inputValue
+                  }
+                  onChange={(e) =>
+                    setInputValue(
+                      e.target.value,
+                    )
+                  }
                   placeholder="Buscar..."
                 />
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Fecha inicio</label>
+                <label className="vpLbl">
+                  Fecha inicio
+                </label>
+
                 <input
                   className="secInput"
                   type="date"
-                  value={filtroFechaInicio}
-                  onChange={(e) => setFiltroFechaInicio(e.target.value)}
+                  value={
+                    filtroFechaInicio
+                  }
+                  onChange={(e) =>
+                    setFiltroFechaInicio(
+                      e.target.value,
+                    )
+                  }
                 />
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Fecha fin</label>
+                <label className="vpLbl">
+                  Fecha fin
+                </label>
+
                 <input
                   className="secInput"
                   type="date"
-                  value={filtroFechaFin}
-                  onChange={(e) => setFiltroFechaFin(e.target.value)}
+                  value={
+                    filtroFechaFin
+                  }
+                  onChange={(e) =>
+                    setFiltroFechaFin(
+                      e.target.value,
+                    )
+                  }
                 />
               </div>
 
               <button
                 className="secBtnPrimary vpTrashBtn"
                 type="button"
-                onClick={() => setPapelera(!papelera)}
-                title={papelera ? "Volver a activos" : "Ver eliminados"}
+                onClick={() =>
+                  setPapelera(
+                    !papelera,
+                  )
+                }
+                title={
+                  papelera
+                    ? "Volver a activos"
+                    : "Ver eliminados"
+                }
               >
-                {papelera ? "↩️ Activos" : "🗑️ Papelera"}
+                {papelera
+                  ? "↩️ Activos"
+                  : "🗑️ Papelera"}
               </button>
             </div>
 
             {papelera ? (
               <p className="vpInfoDanger">
-                Mostrando {pagosEliminados.length} registros eliminados
+                Mostrando{" "}
+                {
+                  pagosEliminados.length
+                }{" "}
+                registros eliminados
               </p>
             ) : (
               <p className="vpInfo">
-                Mostrando {pagosActivos.length} resultados /{" "}
+                Mostrando{" "}
+                {
+                  pagosActivos.length
+                }{" "}
+                resultados /{" "}
                 <span className="vpInfoOk">
-                  {pagosActivos.filter((p) => p.verificado).length} pagos
-                  validados
+                  {
+                    pagosActivos.filter(
+                      (p) =>
+                        p.verificado,
+                    ).length
+                  }{" "}
+                  pagos validados
                 </span>
               </p>
             )}
 
-            {(papelera ? pagosEliminados : pagosOrdenados)?.length ? (
+            {(papelera
+              ? pagosEliminados
+              : pagosOrdenados
+            )?.length ? (
               <div className="secTableWrap">
                 <table className="secTable vpTable">
                   <thead>
                     <tr>
-                      <th>Discente</th>
+                      <th>
+                        Discente
+                      </th>
+
                       <th
                         className="vpThSortable"
-                        onClick={() => setOrdenFechaDesc((prev) => !prev)}
+                        onClick={() =>
+                          setOrdenFechaDesc(
+                            (prev) =>
+                              !prev,
+                          )
+                        }
                         title="Ordenar por fecha"
                       >
-                        Fecha {ordenFechaDesc ? "⬇️" : "⬆️"}
+                        Fecha{" "}
+                        {ordenFechaDesc
+                          ? "⬇️"
+                          : "⬆️"}
                       </th>
-                      <th>Curso</th>
-                      {/* <th>Distin</th>
-                      <th>Mon</th> */}
-                      <th>Valor</th>
-                      <th>Entidad</th>
-                      <th>Id Pago</th>
-                      <th>Comp</th>
-                      <th>Emp</th>
-                      <th>Mdt</th>
-                      <th>Int</th>
-                      <th>Calif</th>
-                      <th>Tiemp. Act</th>
-                      <th>Verif</th>
-                      <th>Obser</th>
-                      <th>Editor</th>
-                      <th colSpan={papelera ? 1 : 2}>
-                        {papelera ? "Restaurar" : "Acción"}
+
+                      <th>
+                        Curso
                       </th>
+
+                      <th>
+                        Valor
+                      </th>
+
+                      <th>
+                        Entidad
+                      </th>
+
+                      <th>
+                        Id Pago
+                      </th>
+
+                      <th>
+                        Comp
+                      </th>
+
+                      <th>
+                        Emp
+                      </th>
+
+                      <th>
+                        Mdt
+                      </th>
+
+                      <th>
+                        Int
+                      </th>
+
+                      <th>
+                        Calif
+                      </th>
+
+                      <th>
+                        Tiemp. Act
+                      </th>
+
+                      <th>
+                        Verif
+                      </th>
+
+                      <th>
+                        Obser
+                      </th>
+
+                      <th>
+                        Editor
+                      </th>
+
+                      <th>
+                        {papelera
+                          ? "Restaurar"
+                          : "Acciones"}
+                      </th>
+
+                      {!papelera && (
+                        <th>
+                          Elim.
+                        </th>
+                      )}
                     </tr>
                   </thead>
 
                   <tbody>
-                    {(papelera ? pagosEliminados : pagosOrdenados).map((p) => {
-                      const isEditing = editPagoId === p.id;
+                    {(papelera
+                      ? pagosEliminados
+                      : pagosOrdenados
+                    ).map((p) => {
+                      const isEditing =
+                        editPagoId ===
+                        p.id;
 
                       return (
-                        <tr key={p.id}>
+                        <tr
+                          key={p.id}
+                        >
                           <td className="vpTdWrap">
                             {p
-                              ? `${p?.inscripcion?.user?.firstName} ${p?.inscripcion?.user?.lastName}`
+                              ? `${p?.inscripcion?.user?.firstName || ""} ${
+                                  p
+                                    ?.inscripcion
+                                    ?.user
+                                    ?.lastName ||
+                                  ""
+                                }`
                               : "Sin Inscripción"}
                           </td>
 
                           <td>
                             {p.createdAt
-                              ? new Date(p.createdAt).toLocaleDateString()
+                              ? new Date(
+                                  p.createdAt,
+                                ).toLocaleDateString()
                               : "-"}
                           </td>
 
-                          <td className="vpTdWrap">{p.curso}</td>
-                          {/* 
-                          <td style={{ textAlign: "center" }}>
-                            {papelera ? (
-                              p.distintivo ? (
-                                "✅"
-                              ) : (
-                                "❌"
-                              )
-                            ) : isEditing ? (
-                              <input
-                                type="checkbox"
-                                {...register("distintivo")}
-                              />
-                            ) : p.distintivo ? (
-                              "✅"
-                            ) : (
-                              "❌"
-                            )}
+                          <td className="vpTdWrap">
+                            {p.curso}
                           </td>
-
-                          <td style={{ textAlign: "center" }}>
-                            {papelera ? (
-                              p.moneda ? (
-                                "✅"
-                              ) : (
-                                "❌"
-                              )
-                            ) : isEditing ? (
-                              <input type="checkbox" {...register("moneda")} />
-                            ) : p.moneda ? (
-                              "✅"
-                            ) : (
-                              "❌"
-                            )}
-                          </td> */}
 
                           <td>
                             {papelera ? (
@@ -745,7 +1886,9 @@ const ValidacionPago = () => {
                               <input
                                 type="number"
                                 step="0.01"
-                                {...register("valorDepositado")}
+                                {...register(
+                                  "valorDepositado",
+                                )}
                                 className="vpMiniInput"
                               />
                             ) : (
@@ -755,42 +1898,74 @@ const ValidacionPago = () => {
 
                           <td className="vpTdWrap">
                             {papelera ? (
-                              p.entidad || "---"
+                              p.entidad ||
+                              "---"
                             ) : isEditing ? (
                               <select
-                                {...register("entidad")}
+                                {...register(
+                                  "entidad",
+                                )}
                                 className="secInput vpMiniSelect"
                                 required
                               >
-                                <option value="">Entidad</option>
+                                <option value="">
+                                  Entidad
+                                </option>
+
                                 {[
                                   ...new Set(
                                     variables
-                                      .map((v) => v.entidad)
-                                      .filter(Boolean),
+                                      .map(
+                                        (
+                                          v,
+                                        ) =>
+                                          v.entidad,
+                                      )
+                                      .filter(
+                                        Boolean,
+                                      ),
                                   ),
-                                ].map((entidad, i) => (
-                                  <option key={i} value={entidad}>
-                                    {entidad}
-                                  </option>
-                                ))}
+                                ].map(
+                                  (
+                                    entidad,
+                                    i,
+                                  ) => (
+                                    <option
+                                      key={
+                                        i
+                                      }
+                                      value={
+                                        entidad
+                                      }
+                                    >
+                                      {
+                                        entidad
+                                      }
+                                    </option>
+                                  ),
+                                )}
                               </select>
                             ) : (
-                              p.entidad || "---"
+                              p.entidad ||
+                              "---"
                             )}
                           </td>
 
                           <td>
                             {papelera ? (
-                              p.idDeposito || "---"
+                              p.idDeposito ||
+                              "---"
                             ) : isEditing ? (
                               <input
                                 type="text"
-                                {...register("idDeposito")}
+                                {...register(
+                                  "idDeposito",
+                                )}
                                 className="vpMiniInput"
                               />
                             ) : (
-                              p.idDeposito || "---"
+                              p.idDeposito ||
+                              "---"
                             )}
                           </td>
 
@@ -798,7 +1973,9 @@ const ValidacionPago = () => {
                             {p.pagoUrl ? (
                               <a
                                 className="vpLink"
-                                href={p.pagoUrl}
+                                href={
+                                  p.pagoUrl
+                                }
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
@@ -809,12 +1986,14 @@ const ValidacionPago = () => {
                             )}
                           </td>
 
-
                           <td>
-                            {p.cert_emp === "true" ? (
+                            {p.cert_emp ===
+                            "true" ? (
                               p.urlCertificadoEmp ? (
                                 <a
-                                  href={p.urlCertificadoEmp}
+                                  href={
+                                    p.urlCertificadoEmp
+                                  }
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="btnVerCertificado"
@@ -830,10 +2009,13 @@ const ValidacionPago = () => {
                           </td>
 
                           <td>
-                            {p.cert_mdt === "true" ? (
+                            {p.cert_mdt ===
+                            "true" ? (
                               p.urlCertificadoMdt ? (
                                 <a
-                                  href={p.urlCertificadoMdt}
+                                  href={
+                                    p.urlCertificadoMdt
+                                  }
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="btnVerCertificado"
@@ -849,10 +2031,13 @@ const ValidacionPago = () => {
                           </td>
 
                           <td>
-                            {p.cert_int === "true" ? (
+                            {p.cert_int ===
+                            "true" ? (
                               p.urlCertificadoInt ? (
                                 <a
-                                  href={p.urlCertificadoInt}
+                                  href={
+                                    p.urlCertificadoInt
+                                  }
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="btnVerCertificado"
@@ -867,14 +2052,47 @@ const ValidacionPago = () => {
                             )}
                           </td>
 
-                          <td className="vpTdWrap">{p.notaFinal}</td>
-                          <td className="vpTdTiempo">
-                            <div><strong>Aula virtual:</strong> {p.tiempoActividadCurso}</div>
-                            <div><strong>Clase Zoom:</strong> {p.tiempoZoomCurso}</div>
-                            <div><strong>Total:</strong> {p.tiempoTotalCurso}</div>
+                          <td className="vpTdWrap">
+                            {p.notaFinal}
                           </td>
 
-                          <td style={{ textAlign: "center" }}>
+                          <td className="vpTdTiempo">
+                            <div>
+                              <strong>
+                                Aula
+                                virtual:
+                              </strong>{" "}
+                              {
+                                p.tiempoActividadCurso
+                              }
+                            </div>
+
+                            <div>
+                              <strong>
+                                Clase
+                                Zoom:
+                              </strong>{" "}
+                              {
+                                p.tiempoZoomCurso
+                              }
+                            </div>
+
+                            <div>
+                              <strong>
+                                Total:
+                              </strong>{" "}
+                              {
+                                p.tiempoTotalCurso
+                              }
+                            </div>
+                          </td>
+
+                          <td
+                            style={{
+                              textAlign:
+                                "center",
+                            }}
+                          >
                             {papelera ? (
                               p.verificado ? (
                                 "✅"
@@ -884,7 +2102,9 @@ const ValidacionPago = () => {
                             ) : isEditing ? (
                               <input
                                 type="checkbox"
-                                {...register("verificado")}
+                                {...register(
+                                  "verificado",
+                                )}
                               />
                             ) : p.verificado ? (
                               "✅"
@@ -895,89 +2115,209 @@ const ValidacionPago = () => {
 
                           <td className="vpTdWrap">
                             {papelera ? (
-                              p.observacion || "👍"
+                              p.observacion ||
+                              "👍"
                             ) : isEditing ? (
                               <input
                                 type="text"
-                                {...register("observacion")}
+                                {...register(
+                                  "observacion",
+                                )}
                                 className="vpMiniInput"
                               />
                             ) : (
-                              p.observacion || "👍"
+                              p.observacion ||
+                              "👍"
                             )}
                           </td>
 
                           <td className="vpTdWrap">
-                            {p.usuarioEdicion ? p.usuarioEdicion : "Sin editar"}
+                            {p.usuarioEdicion
+                              ? p.usuarioEdicion
+                              : "Sin editar"}
                           </td>
 
                           {papelera ? (
-                            <td className="vpTdWrap">
+                            <td>
                               <button
-                                className="secBtnPrimary vpBtnSmall"
+                                className="vpActionBtn vpActionBtn--restore"
                                 type="button"
+                                title="Restaurar registro"
                                 onClick={() => {
-                                  setShowRestaurar(true);
-                                  setPagoIdRestaurar(p.id);
+                                  setShowRestaurar(
+                                    true,
+                                  );
+
+                                  setPagoIdRestaurar(
+                                    p.id,
+                                  );
                                 }}
                               >
-                                Restaurar
+                                <span className="vpActionIcon">
+                                  ↩️
+                                </span>
+
+                                <span className="vpActionText">
+                                  Restaurar
+                                </span>
                               </button>
                             </td>
                           ) : (
                             <>
-                              <td className="vpTdWrap2">
+                              <td className="vpActionsCell">
                                 {isEditing ? (
-                                  <>
+                                  <div className="vpActions">
                                     <button
-                                      onClick={handleSubmit((data) =>
-                                        guardarEdicion(p.id, data),
+                                      onClick={handleSubmit(
+                                        (
+                                          data,
+                                        ) =>
+                                          guardarEdicion(
+                                            p.id,
+                                            data,
+                                          ),
                                       )}
-                                      className="vp-btn-save"
+                                      className="vpActionBtn vpActionBtn--save"
                                       type="button"
+                                      title="Guardar cambios"
                                     >
-                                      Guardar
+                                      <span className="vpActionIcon">
+                                        💾
+                                      </span>
+
+                                      <span className="vpActionText">
+                                        Guardar
+                                      </span>
                                     </button>
+
                                     <button
-                                      onClick={cancelarEdicion}
-                                      className="vp-btn-cancel"
+                                      onClick={
+                                        cancelarEdicion
+                                      }
+                                      className="vpActionBtn vpActionBtn--cancel"
                                       type="button"
+                                      title="Cancelar edición"
                                     >
-                                      Cancelar
+                                      <span className="vpActionIcon">
+                                        ✕
+                                      </span>
+
+                                      <span className="vpActionText">
+                                        Cancelar
+                                      </span>
                                     </button>
-                                  </>
+                                  </div>
                                 ) : (
-                                  <div>
+                                  <div className="vpActions">
+                                    {/* VALIDAR */}
+
                                     <button
-                                      onClick={(e) => iniciarEdicion(p, e)}
-                                      className="vp-btn-edit"
+                                      onClick={(
+                                        e,
+                                      ) =>
+                                        iniciarEdicion(
+                                          p,
+                                          e,
+                                        )
+                                      }
+                                      className="vpActionBtn vpActionBtn--edit"
                                       type="button"
+                                      title="Registrar o editar validación"
                                     >
-                                      Registrar Validación
+                                      <span className="vpActionIcon">
+                                        ✏️
+                                      </span>
+
+                                      <span className="vpActionText">
+                                        Validar
+                                      </span>
                                     </button>
-                                    {/* BOTÓN GENERAR CERTIFICADO */}
-                                    {p.verificado &&
-                                      p.cert_emp === "true" &&
-                                      !p.certificadoEmp && (
+
+                                    {/* RESULTADO PSICOMÉTRICO */}
+
+                                    {p.tipoPago ===
+                                      "test_psicometrico" &&
+                                      p.psychometricEvaluationId && (
                                         <button
-                                          className="btnCertificar"
-                                          onClick={() => handleCertificar(p.id)}
+                                          className="vpActionBtn vpActionBtn--result"
+                                          type="button"
+                                          disabled={
+                                            !p.verificado ||
+                                            generandoResultadoId ===
+                                              p.id
+                                          }
+                                          title={
+                                            !p.verificado
+                                              ? "Primero debes validar el pago"
+                                              : "Generar y enviar resultado psicométrico"
+                                          }
+                                          onClick={() =>
+                                            handleGenerarResultado(
+                                              p,
+                                            )
+                                          }
                                         >
-                                          🎓 Certificar
+                                          <span className="vpActionIcon">
+                                            {generandoResultadoId ===
+                                            p.id
+                                              ? "⏳"
+                                              : "📊"}
+                                          </span>
+
+                                          <span className="vpActionText">
+                                            {generandoResultadoId ===
+                                            p.id
+                                              ? "Generando"
+                                              : "Resultado"}
+                                          </span>
                                         </button>
                                       )}
 
-                                    {(() => {
-                                      const f = getFacturaUI(p);
+                                    {/* CERTIFICADO */}
 
-                                      // Emitir (solo si pago está verificado)
-                                      if (f.type === "emitir") {
+                                    {p.verificado &&
+                                      p.cert_emp ===
+                                        "true" &&
+                                      !p.certificadoEmp && (
+                                        <button
+                                          className="vpActionBtn vpActionBtn--certificate"
+                                          type="button"
+                                          title="Generar certificado"
+                                          onClick={() =>
+                                            handleCertificar(
+                                              p.id,
+                                            )
+                                          }
+                                        >
+                                          <span className="vpActionIcon">
+                                            🎓
+                                          </span>
+
+                                          <span className="vpActionText">
+                                            Certificar
+                                          </span>
+                                        </button>
+                                      )}
+
+                                    {/* FACTURA */}
+
+                                    {(() => {
+                                      const f =
+                                        getFacturaUI(
+                                          p,
+                                        );
+
+                                      if (
+                                        f.type ===
+                                        "emitir"
+                                      ) {
                                         return (
                                           <button
-                                            className="secBtnPrimary vpBtnSmall"
+                                            className="vpActionBtn vpActionBtn--invoice"
                                             type="button"
                                             disabled={
-                                              !p.verificado || isEmitiendoFactura
+                                              !p.verificado ||
+                                              isEmitiendoFactura
                                             }
                                             title={
                                               !p.verificado
@@ -985,67 +2325,108 @@ const ValidacionPago = () => {
                                                 : "Emitir factura en Contífico"
                                             }
                                             onClick={() =>
-                                              emitirFacturaManual(p.id)
+                                              emitirFacturaManual(
+                                                p.id,
+                                              )
                                             }
-                                            style={{ marginLeft: 8 }}
                                           >
-                                            {facturandoPagoId === p.id
-                                              ? "Facturando..."
-                                              : "Facturar"}
+                                            <span className="vpActionIcon">
+                                              {facturandoPagoId ===
+                                              p.id
+                                                ? "⏳"
+                                                : "🧾"}
+                                            </span>
+
+                                            <span className="vpActionText">
+                                              {facturandoPagoId ===
+                                              p.id
+                                                ? "Emitiendo"
+                                                : "Facturar"}
+                                            </span>
                                           </button>
                                         );
                                       }
 
-                                      // Pendiente
-                                      if (f.type === "pendiente") {
+                                      if (
+                                        f.type ===
+                                        "pendiente"
+                                      ) {
                                         return (
                                           <span
-                                            style={{ marginLeft: 10, fontSize: 12 }}
+                                            className="vpActionStatus vpActionStatus--pending"
+                                            title="Documento pendiente de autorización del SRI"
                                           >
-                                            🟡 Pendiente
+                                            <span>
+                                              🟡
+                                            </span>
+
+                                            <span>
+                                              SRI
+                                            </span>
                                           </span>
                                         );
                                       }
 
-                                      // Ver
-                                      return f.href ? (
-                                        <a
-                                          className="vpLink"
-                                          href={f.href}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          style={{ marginLeft: 10 }}
-                                        >
-                                          Ver
-                                        </a>
-                                      ) : (
+                                      if (
+                                        f.href
+                                      ) {
+                                        return (
+                                          <a
+                                            className="vpActionBtn vpActionBtn--view"
+                                            href={
+                                              f.href
+                                            }
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="Ver factura"
+                                          >
+                                            <span className="vpActionIcon">
+                                              📄
+                                            </span>
+
+                                            <span className="vpActionText">
+                                              Factura
+                                            </span>
+                                          </a>
+                                        );
+                                      }
+
+                                      return (
                                         <span
-                                          style={{ marginLeft: 10, fontSize: 12 }}
+                                          className="vpActionStatus vpActionStatus--ok"
+                                          title="Factura autorizada"
                                         >
-                                          🟢 Autorizada
+                                          <span>
+                                            🟢
+                                          </span>
+
+                                          <span>
+                                            SRI
+                                          </span>
                                         </span>
                                       );
                                     })()}
-
-
-
-
                                   </div>
                                 )}
-
-
                               </td>
 
-                              <td>
+                              <td className="vpDeleteCell">
                                 <button
-                                  className="secBtnDanger vpBtnSmall"
+                                  className="vpActionBtn vpActionBtn--delete vpActionBtn--iconOnly"
                                   type="button"
+                                  title="Eliminar registro"
+                                  aria-label="Eliminar registro"
                                   onClick={() => {
-                                    setShowDelete(true);
-                                    setPagoIdDelete(p.id);
+                                    setShowDelete(
+                                      true,
+                                    );
+
+                                    setPagoIdDelete(
+                                      p.id,
+                                    );
                                   }}
                                 >
-                                  Eliminar
+                                  🗑️
                                 </button>
                               </td>
                             </>
@@ -1057,201 +2438,791 @@ const ValidacionPago = () => {
                 </table>
               </div>
             ) : (
-              <p className="secEmpty">No hay pagos para mostrar.</p>
+              <p className="secEmpty">
+                No hay pagos para
+                mostrar.
+              </p>
             )}
           </section>
         );
+
+      /* =====================================================
+         ENTREGAS
+      ===================================================== */
 
       case "registrarEntregas":
         return (
           <section className="secCard">
             <div className="secCardHeader">
-              <h2 className="secTitle">🎁 Registrar Entregas</h2>
+              <h2 className="secTitle">
+                🎁 Registrar Entregas
+              </h2>
             </div>
 
             <div className="secFilters vpFiltersRow">
               <button
                 className="secBtnDanger"
-                onClick={limpiarFiltrosBase}
+                onClick={
+                  limpiarFiltrosBase
+                }
                 type="button"
               >
                 ❌ Eliminar filtros
               </button>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Curso</label>
+                <label className="vpLbl">
+                  Curso
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroCurso}
-                  onChange={(e) => setFiltroCurso(e.target.value)}
+                  value={
+                    filtroCurso
+                  }
+                  onChange={(e) =>
+                    setFiltroCurso(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  {listaCursos.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
+                  <option value="">
+                    Todos
+                  </option>
+
+                  {listaCursos.map(
+                    (c) => (
+                      <option
+                        key={c}
+                        value={c}
+                      >
+                        {c}
+                      </option>
+                    ),
+                  )}
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Verificado</label>
+                <label className="vpLbl">
+                  Verificado
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroVerificado}
-                  onChange={(e) => setFiltroVerificado(e.target.value)}
+                  value={
+                    filtroVerificado
+                  }
+                  onChange={(e) =>
+                    setFiltroVerificado(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  <option value="true">Verificados</option>
-                  <option value="false">No Verificados</option>
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Verificados
+                  </option>
+
+                  <option value="false">
+                    No Verificados
+                  </option>
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Moneda</label>
+                <label className="vpLbl">
+                  Moneda
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroMoneda}
-                  onChange={(e) => setFiltroMoneda(e.target.value)}
+                  value={
+                    filtroMoneda
+                  }
+                  onChange={(e) =>
+                    setFiltroMoneda(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  <option value="true">Sí</option>
-                  <option value="false">No</option>
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Sí
+                  </option>
+
+                  <option value="false">
+                    No
+                  </option>
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Distintivo</label>
+                <label className="vpLbl">
+                  Distintivo
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroDistintivo}
-                  onChange={(e) => setFiltroDistintivo(e.target.value)}
+                  value={
+                    filtroDistintivo
+                  }
+                  onChange={(e) =>
+                    setFiltroDistintivo(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  <option value="true">Sí</option>
-                  <option value="false">No</option>
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Sí
+                  </option>
+
+                  <option value="false">
+                    No
+                  </option>
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Entregado</label>
+                <label className="vpLbl">
+                  Entregado
+                </label>
+
                 <select
                   className="secInput"
-                  value={filtroEntregado}
-                  onChange={(e) => setFiltroEntregado(e.target.value)}
+                  value={
+                    filtroEntregado
+                  }
+                  onChange={(e) =>
+                    setFiltroEntregado(
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value="">Todos</option>
-                  <option value="true">Sí</option>
-                  <option value="false">No</option>
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Sí
+                  </option>
+
+                  <option value="false">
+                    No
+                  </option>
                 </select>
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Nombres / Apellidos / Cédula</label>
+                <label className="vpLbl">
+                  Nombres /
+                  Apellidos /
+                  Cédula
+                </label>
+
                 <input
                   className="secInput"
                   type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  value={
+                    inputValue
+                  }
+                  onChange={(e) =>
+                    setInputValue(
+                      e.target.value,
+                    )
+                  }
                   placeholder="Buscar..."
                 />
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Fecha inicio</label>
+                <label className="vpLbl">
+                  Fecha inicio
+                </label>
+
                 <input
                   className="secInput"
                   type="date"
-                  value={filtroFechaInicio}
-                  onChange={(e) => setFiltroFechaInicio(e.target.value)}
+                  value={
+                    filtroFechaInicio
+                  }
+                  onChange={(e) =>
+                    setFiltroFechaInicio(
+                      e.target.value,
+                    )
+                  }
                 />
               </div>
 
               <div className="secInputGroup">
-                <label className="vpLbl">Fecha fin</label>
+                <label className="vpLbl">
+                  Fecha fin
+                </label>
+
                 <input
                   className="secInput"
                   type="date"
-                  value={filtroFechaFin}
-                  onChange={(e) => setFiltroFechaFin(e.target.value)}
+                  value={
+                    filtroFechaFin
+                  }
+                  onChange={(e) =>
+                    setFiltroFechaFin(
+                      e.target.value,
+                    )
+                  }
                 />
               </div>
             </div>
 
             <p className="vpInfo">
-              Mostrando {pagosDistintivos.length} resultados
+              Mostrando{" "}
+              {
+                pagosDistintivos.length
+              }{" "}
+              resultados
             </p>
 
             <div className="secTableWrap">
               <table className="secTable vpTable">
                 <thead>
                   <tr>
-                    <th>Discente</th>
+                    <th>
+                      Discente
+                    </th>
+
                     <th
                       className="vpThSortable"
-                      onClick={() => setOrdenFechaDesc((prev) => !prev)}
+                      onClick={() =>
+                        setOrdenFechaDesc(
+                          (prev) =>
+                            !prev,
+                        )
+                      }
                       title="Ordenar por fecha"
                     >
-                      Fecha {ordenFechaDesc ? "⬇️" : "⬆️"}
+                      Fecha{" "}
+                      {ordenFechaDesc
+                        ? "⬇️"
+                        : "⬆️"}
                     </th>
-                    <th>Curso</th>
-                    <th>Moneda</th>
-                    <th>Distintivo</th>
-                    <th>Valor</th>
-                    <th>Verificado</th>
-                    <th>Comprobante</th>
-                    <th>Entregado</th>
-                    <th>Acción</th>
+
+                    <th>
+                      Curso
+                    </th>
+
+                    <th>
+                      Moneda
+                    </th>
+
+                    <th>
+                      Distintivo
+                    </th>
+
+                    <th>
+                      Valor
+                    </th>
+
+                    <th>
+                      Verificado
+                    </th>
+
+                    <th>
+                      Comprobante
+                    </th>
+
+                    <th>
+                      Entregado
+                    </th>
+
+                    <th>
+                      Acción
+                    </th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {pagosDistintivos.map((p) => {
-                    const startEditing = () => {
-                      setEditingEntregaId(p.id);
-                      reset({ entregado: p.entregado });
-                    };
+                  {pagosDistintivos.map(
+                    (p) => {
+                      const startEditing =
+                        () => {
+                          setEditingEntregaId(
+                            p.id,
+                          );
 
-                    const guardarEntrega = handleSubmit(async (data) => {
-                      try {
-                        await updatePago(PATH_PAGOS, p.id, {
-                          entregado: data.entregado,
-                        });
-                        await getPago(PATH_PAGOS);
-                        setEditingEntregaId(null);
-                      } catch (error) {
-                        alert("Error al actualizar entrega.");
+                          reset({
+                            entregado:
+                              p.entregado,
+                          });
+                        };
+
+                      const guardarEntrega =
+                        handleSubmit(
+                          async (
+                            data,
+                          ) => {
+                            try {
+                              await updatePago(
+                                PATH_PAGOS,
+                                p.id,
+                                {
+                                  entregado:
+                                    data.entregado,
+                                },
+                              );
+
+                              await getPago(
+                                PATH_PAGOS,
+                              );
+
+                              setEditingEntregaId(
+                                null,
+                              );
+                            } catch (error) {
+                              alert(
+                                "Error al actualizar entrega.",
+                              );
+                            }
+                          },
+                        );
+
+                      return (
+                        <tr
+                          key={p.id}
+                        >
+                          <td className="vpTdWrap">
+                            {p
+                              ? `${p?.inscripcion?.user?.grado || ""} ${p?.inscripcion?.user?.firstName || ""} ${p?.inscripcion?.user?.lastName || ""}`
+                              : "Sin Inscripción"}
+                          </td>
+
+                          <td>
+                            {p.createdAt
+                              ? new Date(
+                                  p.createdAt,
+                                ).toLocaleDateString()
+                              : "-"}
+                          </td>
+
+                          <td className="vpTdWrap">
+                            {p.curso}
+                          </td>
+
+                          <td
+                            style={{
+                              textAlign:
+                                "center",
+                            }}
+                          >
+                            {p.moneda
+                              ? "✅"
+                              : "❌"}
+                          </td>
+
+                          <td
+                            style={{
+                              textAlign:
+                                "center",
+                            }}
+                          >
+                            {p.distintivo
+                              ? "✅"
+                              : "❌"}
+                          </td>
+
+                          <td>
+                            {`$${p.valorDepositado || "0.00"}`}
+                          </td>
+
+                          <td
+                            style={{
+                              textAlign:
+                                "center",
+                            }}
+                          >
+                            {p.verificado
+                              ? "✅"
+                              : "❌"}
+                          </td>
+
+                          <td>
+                            {p.pagoUrl ? (
+                              <a
+                                className="vpLink"
+                                href={
+                                  p.pagoUrl
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Ver
+                              </a>
+                            ) : (
+                              "No disponible"
+                            )}
+                          </td>
+
+                          <td
+                            style={{
+                              textAlign:
+                                "center",
+                            }}
+                          >
+                            {editingEntregaId ===
+                            p.id ? (
+                              <input
+                                type="checkbox"
+                                {...register(
+                                  "entregado",
+                                )}
+                              />
+                            ) : p.entregado ? (
+                              "✅"
+                            ) : (
+                              "❌"
+                            )}
+                          </td>
+
+                          <td>
+                            {editingEntregaId ===
+                            p.id ? (
+                              <div className="vpActions">
+                                <button
+                                  onClick={
+                                    guardarEntrega
+                                  }
+                                  className="vpActionBtn vpActionBtn--save"
+                                  type="button"
+                                >
+                                  <span className="vpActionIcon">
+                                    💾
+                                  </span>
+
+                                  <span className="vpActionText">
+                                    Guardar
+                                  </span>
+                                </button>
+
+                                <button
+                                  onClick={() =>
+                                    setEditingEntregaId(
+                                      null,
+                                    )
+                                  }
+                                  className="vpActionBtn vpActionBtn--cancel"
+                                  type="button"
+                                >
+                                  <span className="vpActionIcon">
+                                    ✕
+                                  </span>
+
+                                  <span className="vpActionText">
+                                    Cancelar
+                                  </span>
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={
+                                  startEditing
+                                }
+                                className="vpActionBtn vpActionBtn--edit"
+                                type="button"
+                              >
+                                <span className="vpActionIcon">
+                                  🎁
+                                </span>
+
+                                <span className="vpActionText">
+                                  Entrega
+                                </span>
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    },
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        );
+
+      /* =====================================================
+         LISTA PAGOS
+      ===================================================== */
+
+      case "listaPagos":
+        return (
+          <section className="secCard">
+            <div className="secCardHeader">
+              <h2 className="secTitle">
+                💳 Lista de Pagos
+              </h2>
+            </div>
+
+            <div className="secFilters vpFiltersRow">
+              <div className="secInputGroup">
+                <label className="vpLbl">
+                  Verificado
+                </label>
+
+                <select
+                  className="secInput"
+                  value={
+                    filtroVerificado
+                  }
+                  onChange={(e) =>
+                    setFiltroVerificado(
+                      e.target.value,
+                    )
+                  }
+                >
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Verificados
+                  </option>
+
+                  <option value="false">
+                    No Verificados
+                  </option>
+                </select>
+              </div>
+
+              <div className="secInputGroup">
+                <label className="vpLbl">
+                  Certificado
+                </label>
+
+                <select
+                  className="secInput"
+                  value={
+                    filtroCertificado
+                  }
+                  onChange={(e) =>
+                    setFiltroCertificado(
+                      e.target.value,
+                    )
+                  }
+                >
+                  <option value="">
+                    Todos
+                  </option>
+
+                  <option value="true">
+                    Con Certificado
+                  </option>
+
+                  <option value="false">
+                    Sin Certificado
+                  </option>
+                </select>
+              </div>
+
+              <div className="secInputGroup">
+                <label className="vpLbl">
+                  Fecha inicio
+                </label>
+
+                <input
+                  className="secInput"
+                  type="date"
+                  value={
+                    filtroFechaInicio
+                  }
+                  onChange={(e) =>
+                    setFiltroFechaInicio(
+                      e.target.value,
+                    )
+                  }
+                />
+              </div>
+
+              <div className="secInputGroup">
+                <label className="vpLbl">
+                  Fecha fin
+                </label>
+
+                <input
+                  className="secInput"
+                  type="date"
+                  value={
+                    filtroFechaFin
+                  }
+                  onChange={(e) =>
+                    setFiltroFechaFin(
+                      e.target.value,
+                    )
+                  }
+                />
+              </div>
+
+              <button
+                className="secBtnDanger"
+                onClick={
+                  limpiarFiltrosBase
+                }
+                type="button"
+              >
+                ❌ Eliminar filtros
+              </button>
+
+              {SUPERADMIN ===
+                user?.cI && (
+                <button
+                  className="secBtnPrimary"
+                  onClick={
+                    descargarExcel
+                  }
+                  type="button"
+                >
+                  📥 Descargar Pagos
+                </button>
+              )}
+
+              {SUPERADMIN ===
+                user?.cI && (
+                <button
+                  className="secBtnPrimary"
+                  onClick={
+                    descargarExcelInscripcion
+                  }
+                  type="button"
+                >
+                  📥 Descargar
+                  Inscripciones
+                </button>
+              )}
+            </div>
+
+            <div className="secCount">
+              Total:{" "}
+              {
+                pagosActivos.length
+              }
+            </div>
+
+            <div className="secTableWrap">
+              <table className="secTable vpTable">
+                <thead>
+                  <tr>
+                    <th>
+                      Nombres
+                    </th>
+
+                    <th>
+                      Apellidos
+                    </th>
+
+                    <th>
+                      Cédula
+                    </th>
+
+                    <th
+                      className="vpThSortable"
+                      onClick={() =>
+                        setOrdenFechaDesc(
+                          (prev) =>
+                            !prev,
+                        )
                       }
-                    });
+                      title="Ordenar por fecha"
+                    >
+                      Fecha{" "}
+                      {ordenFechaDesc
+                        ? "⬇️"
+                        : "⬆️"}
+                    </th>
 
-                    return (
-                      <tr key={p.id}>
-                        <td className="vpTdWrap">
+                    <th>
+                      Curso
+                    </th>
+
+                    <th>
+                      Valor
+                    </th>
+
+                    <th>
+                      Comprobante
+                    </th>
+
+                    <th>
+                      Certificado
+                    </th>
+
+                    <th>
+                      Verificado
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {pagosActivos.map(
+                    (p) => (
+                      <tr
+                        key={p.id}
+                      >
+                        <td>
                           {p
-                            ? `${p?.inscripcion?.user?.grado} ${p?.inscripcion?.user?.firstName} ${p?.inscripcion?.user?.lastName}`
-                            : "Sin Inscripción"}
+                            ?.inscripcion
+                            ?.user
+                            ?.firstName ||
+                            "-"}
                         </td>
+
+                        <td>
+                          {p
+                            ?.inscripcion
+                            ?.user
+                            ?.lastName ||
+                            "-"}
+                        </td>
+
+                        <td>
+                          {p
+                            ?.inscripcion
+                            ?.user?.cI ||
+                            "-"}
+                        </td>
+
                         <td>
                           {p.createdAt
-                            ? new Date(p.createdAt).toLocaleDateString()
+                            ? new Date(
+                                p.createdAt,
+                              ).toLocaleDateString()
                             : "-"}
                         </td>
-                        <td className="vpTdWrap">{p.curso}</td>
-                        <td style={{ textAlign: "center" }}>
-                          {p.moneda ? "✅" : "❌"}
+
+                        <td className="vpTdWrap">
+                          {p.curso}
                         </td>
-                        <td style={{ textAlign: "center" }}>
-                          {p.distintivo ? "✅" : "❌"}
+
+                        <td>
+                          $
+                          {p.valorDepositado ||
+                            "0.00"}
                         </td>
-                        <td>{`$${p.valorDepositado || "0.00"}`}</td>
-                        <td style={{ textAlign: "center" }}>
-                          {p.verificado ? "✅" : "❌"}
-                        </td>
+
                         <td>
                           {p.pagoUrl ? (
                             <a
                               className="vpLink"
-                              href={p.pagoUrl}
+                              href={
+                                p.pagoUrl
+                              }
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -1262,219 +3233,58 @@ const ValidacionPago = () => {
                           )}
                         </td>
 
-                        <td style={{ textAlign: "center" }}>
-                          {editingEntregaId === p.id ? (
-                            <input type="checkbox" {...register("entregado")} />
-                          ) : p.entregado ? (
-                            "✅"
+                        <td>
+                          {p?.urlCertificado ? (
+                            <a
+                              className="vpLink"
+                              href={
+                                p.urlCertificado
+                              }
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Ver
+                            </a>
                           ) : (
-                            "❌"
+                            "No disponible"
                           )}
                         </td>
 
-                        <td>
-                          {editingEntregaId === p.id ? (
-                            <>
-                              <button
-                                onClick={guardarEntrega}
-                                className="vp-btn-save"
-                                type="button"
-                              >
-                                Guardar
-                              </button>
-                              <button
-                                onClick={() => setEditingEntregaId(null)}
-                                className="vp-btn-cancel"
-                                type="button"
-                              >
-                                Cancelar
-                              </button>
-                            </>
-                          ) : (
-                            <button
-                              onClick={startEditing}
-                              className="vp-btn-edit"
-                              type="button"
-                            >
-                              Registrar Entrega
-                            </button>
-                          )}
+                        <td
+                          style={{
+                            textAlign:
+                              "center",
+                          }}
+                        >
+                          {p.verificado
+                            ? "✅"
+                            : "❌"}
                         </td>
                       </tr>
-                    );
-                  })}
+                    ),
+                  )}
                 </tbody>
               </table>
             </div>
           </section>
         );
 
-      case "listaPagos":
-        return (
-          <section className="secCard">
-            <div className="secCardHeader">
-              <h2 className="secTitle">💳 Lista de Pagos</h2>
-            </div>
-
-            <div className="secFilters vpFiltersRow">
-              <div className="secInputGroup">
-                <label className="vpLbl">Verificado</label>
-                <select
-                  className="secInput"
-                  value={filtroVerificado}
-                  onChange={(e) => setFiltroVerificado(e.target.value)}
-                >
-                  <option value="">Todos</option>
-                  <option value="true">Verificados</option>
-                  <option value="false">No Verificados</option>
-                </select>
-              </div>
-
-              <div className="secInputGroup">
-                <label className="vpLbl">Certificado</label>
-                <select
-                  className="secInput"
-                  value={filtroCertificado}
-                  onChange={(e) => setFiltroCertificado(e.target.value)}
-                >
-                  <option value="">Todos</option>
-                  <option value="true">Con Certificado</option>
-                  <option value="false">Sin Certificado</option>
-                </select>
-              </div>
-
-              <div className="secInputGroup">
-                <label className="vpLbl">Fecha inicio</label>
-                <input
-                  className="secInput"
-                  type="date"
-                  value={filtroFechaInicio}
-                  onChange={(e) => setFiltroFechaInicio(e.target.value)}
-                />
-              </div>
-
-              <div className="secInputGroup">
-                <label className="vpLbl">Fecha fin</label>
-                <input
-                  className="secInput"
-                  type="date"
-                  value={filtroFechaFin}
-                  onChange={(e) => setFiltroFechaFin(e.target.value)}
-                />
-              </div>
-
-              <button
-                className="secBtnDanger"
-                onClick={limpiarFiltrosBase}
-                type="button"
-              >
-                ❌ Eliminar filtros
-              </button>
-
-              {SUPERADMIN === user?.cI && (
-                <button
-                  className="secBtnPrimary"
-                  onClick={descargarExcel}
-                  type="button"
-                >
-                  📥 Descargar Pagos
-                </button>
-              )}
-
-              {SUPERADMIN === user?.cI && (
-                <button
-                  className="secBtnPrimary"
-                  onClick={descargarExcelInscripcion}
-                  type="button"
-                >
-                  📥 Descargar Inscripciones
-                </button>
-              )}
-            </div>
-
-            <div className="secCount">Total: {pagosActivos.length}</div>
-
-            <div className="secTableWrap">
-              <table className="secTable vpTable">
-                <thead>
-                  <tr>
-                    <th>Nombres</th>
-                    <th>Apellidos</th>
-                    <th>Cédula</th>
-                    <th
-                      className="vpThSortable"
-                      onClick={() => setOrdenFechaDesc((prev) => !prev)}
-                      title="Ordenar por fecha"
-                    >
-                      Fecha {ordenFechaDesc ? "⬇️" : "⬆️"}
-                    </th>
-                    <th>Curso</th>
-                    <th>Valor</th>
-                    <th>Comprobante</th>
-                    <th>Certificado</th>
-                    <th>Verificado</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {pagosActivos.map((p) => (
-                    <tr key={p.id}>
-                      <td>{p?.inscripcion?.user?.firstName || "-"}</td>
-                      <td>{p?.inscripcion?.user?.lastName || "-"}</td>
-                      <td>{p?.inscripcion?.user?.cI || "-"}</td>
-                      <td>
-                        {p.createdAt
-                          ? new Date(p.createdAt).toLocaleDateString()
-                          : "-"}
-                      </td>
-                      <td className="vpTdWrap">{p.curso}</td>
-                      <td>${p.valorDepositado || "0.00"}</td>
-                      <td>
-                        {p.pagoUrl ? (
-                          <a
-                            className="vpLink"
-                            href={p.pagoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Ver
-                          </a>
-                        ) : (
-                          "No disponible"
-                        )}
-                      </td>
-                      <td>
-                        {p?.urlCertificado ? (
-                          <a
-                            className="vpLink"
-                            href={p?.urlCertificado}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Ver
-                          </a>
-                        ) : (
-                          "No disponible"
-                        )}
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        {p.verificado ? "✅" : "❌"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        );
+      /* =====================================================
+         INSCRITOS
+      ===================================================== */
 
       case "listaInscritos":
         return (
           <section className="secCard">
             <div className="secCardHeader">
-              <h2 className="secTitle">📋 Lista de Inscritos</h2>
+              <h2 className="secTitle">
+                📋 Lista de Inscritos
+              </h2>
             </div>
-            <p className="secEmpty">📌 Próximamente…</p>
+
+            <p className="secEmpty">
+              📌 Próximamente…
+            </p>
           </section>
         );
 
@@ -1483,104 +3293,202 @@ const ValidacionPago = () => {
     }
   };
 
+  /* =========================================================
+     RETURN PRINCIPAL
+  ========================================================= */
+
   return (
     <div className="secPage">
-      {isLoading && <IsLoading />}
+      {isLoading && (
+        <IsLoading />
+      )}
 
-      {/* Overlay para mobile */}
       <div
-        className={`secOverlay ${menuOpen ? "open" : ""}`}
-        onClick={() => setMenuOpen(false)}
-        aria-hidden={!menuOpen}
+        className={`secOverlay ${
+          menuOpen
+            ? "open"
+            : ""
+        }`}
+        onClick={() =>
+          setMenuOpen(false)
+        }
+        aria-hidden={
+          !menuOpen
+        }
       />
 
       <div className="secShell vpShell">
         <button
           ref={hamburgerRef}
-          className={`secHamburger ${menuOpen ? "is-open" : ""}`}
-          onClick={() => setMenuOpen(!menuOpen)}
+          className={`secHamburger ${
+            menuOpen
+              ? "is-open"
+              : ""
+          }`}
+          onClick={() =>
+            setMenuOpen(
+              !menuOpen,
+            )
+          }
           aria-label="Toggle menu"
-          aria-expanded={menuOpen}
+          aria-expanded={
+            menuOpen
+          }
           type="button"
         >
-          <span className="secHamburgerLine"></span>
-          <span className="secHamburgerLine"></span>
-          <span className="secHamburgerLine"></span>
+          <span className="secHamburgerLine" />
+          <span className="secHamburgerLine" />
+          <span className="secHamburgerLine" />
         </button>
 
-        <nav className={`secMenu ${menuOpen ? "open" : ""}`} ref={menuRef}>
+        <nav
+          className={`secMenu ${
+            menuOpen
+              ? "open"
+              : ""
+          }`}
+          ref={menuRef}
+        >
           <div className="secMenuHeader">
             <img
               src="/images/idrmind_sf.png"
               alt="iDr.Mind."
               className="secMenuLogo"
             />
-            <p className="secMenuSubtitle">Validación de Pagos</p>
+
+            <p className="secMenuSubtitle">
+              Validación de Pagos
+            </p>
           </div>
 
           <button
-            className={`secMenuBtn ${activeSection === "resumen" ? "active" : ""}`}
-            onClick={() => setActiveSection("resumen")}
+            className={`secMenuBtn ${
+              activeSection ===
+              "resumen"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveSection(
+                "resumen",
+              )
+            }
             type="button"
           >
             📋 Resumen
           </button>
 
           <button
-            className={`secMenuBtn ${activeSection === "validarPagos" ? "active" : ""}`}
-            onClick={() => setActiveSection("validarPagos")}
+            className={`secMenuBtn ${
+              activeSection ===
+              "validarPagos"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveSection(
+                "validarPagos",
+              )
+            }
             type="button"
           >
             ✅ Validar Pagos
           </button>
 
           <button
-            className={`secMenuBtn ${activeSection === "registrarEntregas" ? "active" : ""}`}
-            onClick={() => setActiveSection("registrarEntregas")}
+            className={`secMenuBtn ${
+              activeSection ===
+              "registrarEntregas"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveSection(
+                "registrarEntregas",
+              )
+            }
             type="button"
           >
             🎁 Entregas
           </button>
 
           <button
-            className={`secMenuBtn ${activeSection === "listaPagos" ? "active" : ""}`}
-            onClick={() => setActiveSection("listaPagos")}
+            className={`secMenuBtn ${
+              activeSection ===
+              "listaPagos"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveSection(
+                "listaPagos",
+              )
+            }
             type="button"
           >
             💳 Lista Pagos
           </button>
 
           <button
-            className={`secMenuBtn ${activeSection === "listaInscritos" ? "active" : ""}`}
-            onClick={() => setActiveSection("listaInscritos")}
+            className={`secMenuBtn ${
+              activeSection ===
+              "listaInscritos"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveSection(
+                "listaInscritos",
+              )
+            }
             type="button"
           >
             📋 Lista Inscritos
           </button>
         </nav>
 
-        <main ref={contentRef} className="secContent vpContent">
+        <main
+          ref={contentRef}
+          className="secContent vpContent"
+        >
           {renderContent()}
         </main>
 
-        {/* MODALES */}
+        {/* =================================================
+            MODAL ELIMINAR
+        ================================================= */}
+
         {showDelete && (
           <div className="modal_overlay">
             <article className="user_delete_content">
-              <span>¿Deseas eliminar el registro?</span>
+              <span>
+                ¿Deseas eliminar
+                el registro?
+              </span>
+
               <section className="btn_content">
                 <button
                   className="btn yes"
-                  onClick={() => deletePagoPr(pagoIdDelete)}
+                  onClick={() =>
+                    deletePagoPr(
+                      pagoIdDelete,
+                    )
+                  }
                   type="button"
                 >
                   Sí
                 </button>
+
                 <button
                   className="btn no"
                   onClick={() => {
-                    setShowDelete(false);
-                    setPagoIdDelete(null);
+                    setShowDelete(
+                      false,
+                    );
+
+                    setPagoIdDelete(
+                      null,
+                    );
                   }}
                   type="button"
                 >
@@ -1591,23 +3499,41 @@ const ValidacionPago = () => {
           </div>
         )}
 
+        {/* =================================================
+            MODAL RESTAURAR
+        ================================================= */}
+
         {showRestaurar && (
           <div className="modal_overlay">
             <article className="user_delete_content">
-              <span>¿Deseas restaurar registro?</span>
+              <span>
+                ¿Deseas restaurar
+                registro?
+              </span>
+
               <section className="btn_content">
                 <button
                   className="btn yes"
-                  onClick={() => restaurarPagoPr(pagoIdRestaurar)}
+                  onClick={() =>
+                    restaurarPagoPr(
+                      pagoIdRestaurar,
+                    )
+                  }
                   type="button"
                 >
                   Sí
                 </button>
+
                 <button
                   className="btn no"
                   onClick={() => {
-                    setShowRestaurar(false);
-                    setPagoIdRestaurar(null);
+                    setShowRestaurar(
+                      false,
+                    );
+
+                    setPagoIdRestaurar(
+                      null,
+                    );
                   }}
                   type="button"
                 >
