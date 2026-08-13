@@ -38,6 +38,20 @@ const ProyectoPensarTest = () => {
   ] = useState(true);
 
   /* =======================================================
+   MODALES
+======================================================= */
+
+  const [
+    showFinishModal,
+    setShowFinishModal,
+  ] = useState(false);
+
+  const [
+    showCompletedModal,
+    setShowCompletedModal,
+  ] = useState(false);
+
+  /* =======================================================
      ESTADO DEL TEST
   ======================================================= */
 
@@ -251,13 +265,13 @@ const ProyectoPensarTest = () => {
     const hasNumeric =
       answer.valorNumerico !== null &&
       answer.valorNumerico !==
-        undefined &&
+      undefined &&
       answer.valorNumerico !== "";
 
     const hasBoolean =
       answer.valorBooleano !== null &&
       answer.valorBooleano !==
-        undefined;
+      undefined;
 
     const hasText = Boolean(
       String(
@@ -288,15 +302,15 @@ const ProyectoPensarTest = () => {
     if (!answer) return false;
 
     switch (
-      question.tipoRespuesta
+    question.tipoRespuesta
     ) {
       case "escala_bipolar":
       case "escala_1_5":
         return (
           answer.valorNumerico !==
-            null &&
+          null &&
           answer.valorNumerico !==
-            undefined &&
+          undefined &&
           answer.valorNumerico !== ""
         );
 
@@ -312,12 +326,12 @@ const ProyectoPensarTest = () => {
       case "seleccion_ponderada": {
         const minimum = Number(
           question.seleccionesMinimas ??
-            2
+          2
         );
 
         const maximum = Number(
           question.seleccionesMaximas ??
-            2
+          2
         );
 
         const selected =
@@ -325,7 +339,7 @@ const ProyectoPensarTest = () => {
             answer.selectedOptions
           )
             ? answer.selectedOptions
-                .length
+              .length
             : 0;
 
         return (
@@ -357,7 +371,7 @@ const ProyectoPensarTest = () => {
     ).filter(
       (question) =>
         question.obligatoria !==
-          false &&
+        false &&
         !isQuestionComplete(
           question
         )
@@ -410,12 +424,12 @@ const ProyectoPensarTest = () => {
   const localProgressPercentage =
     totalQuestions > 0
       ? Number(
-          (
-            (localAnsweredQuestions /
-              totalQuestions) *
-            100
-          ).toFixed(2)
-        )
+        (
+          (localAnsweredQuestions /
+            totalQuestions) *
+          100
+        ).toFixed(2)
+      )
       : 0;
 
   const pendingRequiredQuestions =
@@ -423,7 +437,7 @@ const ProyectoPensarTest = () => {
       return allQuestions.filter(
         (question) =>
           question.obligatoria !==
-            false &&
+          false &&
           !isQuestionComplete(
             question
           )
@@ -436,7 +450,7 @@ const ProyectoPensarTest = () => {
   const canFinish =
     totalQuestions > 0 &&
     pendingRequiredQuestions.length ===
-      0;
+    0;
 
   /* =======================================================
      ACTUALIZAR RESPUESTA
@@ -454,7 +468,7 @@ const ProyectoPensarTest = () => {
           questionId,
 
           ...previous[
-            questionId
+          questionId
           ],
 
           ...answerData,
@@ -534,7 +548,7 @@ const ProyectoPensarTest = () => {
       const maximumSelections =
         Number(
           question.seleccionesMaximas ??
-            2
+          2
         );
 
       if (
@@ -593,7 +607,7 @@ const ProyectoPensarTest = () => {
       );
 
     switch (
-      question.tipoRespuesta
+    question.tipoRespuesta
     ) {
       /* =================================================
          ANIMODO
@@ -602,12 +616,12 @@ const ProyectoPensarTest = () => {
       case "escala_bipolar": {
         const min = Number(
           question.valorMinimo ??
-            1
+          1
         );
 
         const max = Number(
           question.valorMaximo ??
-            6
+          6
         );
 
         const values =
@@ -704,12 +718,12 @@ const ProyectoPensarTest = () => {
       case "escala_1_5": {
         const min = Number(
           question.valorMinimo ??
-            1
+          1
         );
 
         const max = Number(
           question.valorMaximo ??
-            5
+          5
         );
 
         const values =
@@ -772,7 +786,7 @@ const ProyectoPensarTest = () => {
                       {value === min
                         ? "Bajo"
                         : value ===
-                            max
+                          max
                           ? "Alto"
                           : ""}
                     </small>
@@ -839,13 +853,13 @@ const ProyectoPensarTest = () => {
         const minimumSelections =
           Number(
             question.seleccionesMinimas ??
-              2
+            2
           );
 
         const maximumSelections =
           Number(
             question.seleccionesMaximas ??
-              2
+            2
           );
 
         return (
@@ -888,7 +902,7 @@ const ProyectoPensarTest = () => {
                   !selected &&
                   selectedOptionIds
                     .length >=
-                    maximumSelections;
+                  maximumSelections;
 
                 return (
                   <label
@@ -940,15 +954,15 @@ const ProyectoPensarTest = () => {
 
             {selectedOptionIds.length <
               minimumSelections && (
-              <p className="psychometric-question__validation">
-                Debes seleccionar{" "}
-                {
-                  minimumSelections
-                }{" "}
-                opciones para completar
-                esta pregunta.
-              </p>
-            )}
+                <p className="psychometric-question__validation">
+                  Debes seleccionar{" "}
+                  {
+                    minimumSelections
+                  }{" "}
+                  opciones para completar
+                  esta pregunta.
+                </p>
+              )}
           </div>
         );
       }
@@ -979,7 +993,7 @@ const ProyectoPensarTest = () => {
       .map((question) => {
         const answer =
           localAnswers[
-            question.id
+          question.id
           ];
 
         if (!answer) return null;
@@ -1005,29 +1019,29 @@ const ProyectoPensarTest = () => {
               answer.selectedOptions
             )
               ? answer.selectedOptions
-                  .map(
-                    (
-                      selected,
-                      index
-                    ) => ({
-                      optionId:
-                        typeof selected ===
+                .map(
+                  (
+                    selected,
+                    index
+                  ) => ({
+                    optionId:
+                      typeof selected ===
                         "string"
-                          ? selected
-                          : selected.optionId,
+                        ? selected
+                        : selected.optionId,
 
-                      prioridad:
-                        typeof selected ===
+                    prioridad:
+                      typeof selected ===
                         "string"
-                          ? index + 1
-                          : selected.prioridad ??
-                            index + 1,
-                    })
-                  )
-                  .filter(
-                    (selected) =>
-                      selected.optionId
-                  )
+                        ? index + 1
+                        : selected.prioridad ??
+                        index + 1,
+                  })
+                )
+                .filter(
+                  (selected) =>
+                    selected.optionId
+                )
               : [],
         };
       })
@@ -1078,7 +1092,7 @@ const ProyectoPensarTest = () => {
       if (showMessage) {
         setSaveMessage(
           response.data?.message ||
-            "Respuestas guardadas correctamente."
+          "Respuestas guardadas correctamente."
         );
       }
 
@@ -1087,13 +1101,13 @@ const ProyectoPensarTest = () => {
       console.error(
         "Error guardando respuestas:",
         error.response?.data ||
-          error
+        error
       );
 
       setSaveError(
         error.response?.data
           ?.message ||
-          "No se pudieron guardar las respuestas."
+        "No se pudieron guardar las respuestas."
       );
 
       return false;
@@ -1183,7 +1197,7 @@ const ProyectoPensarTest = () => {
         (question) =>
           hasAnswer(
             localAnswers[
-              question.id
+            question.id
             ]
           )
       )
@@ -1271,7 +1285,7 @@ const ProyectoPensarTest = () => {
           (question) =>
             hasAnswer(
               localAnswers[
-                question.id
+              question.id
               ]
             )
         )
@@ -1364,26 +1378,13 @@ const ProyectoPensarTest = () => {
       return false;
     };
 
-  const finishEvaluation =
+  /* =======================================================
+ CONFIRMAR FINALIZACIÓN
+======================================================= */
+
+  const confirmFinishEvaluation =
     async () => {
-      if (
-        !validateCurrentSection()
-      ) {
-        return;
-      }
-
-      if (
-        !showFirstPendingQuestion()
-      ) {
-        return;
-      }
-
-      const confirmed =
-        window.confirm(
-          "¿Está seguro de finalizar el test? Después de finalizarlo ya no podrá modificar sus respuestas."
-        );
-
-      if (!confirmed) return;
+      setShowFinishModal(false);
 
       setIsFinishing(true);
       setFinishError("");
@@ -1391,6 +1392,10 @@ const ProyectoPensarTest = () => {
       setSaveMessage("");
 
       try {
+        /* ===============================================
+           1. GUARDAR TODAS LAS RESPUESTAS
+        =============================================== */
+
         const saved =
           await saveAnswers(
             allQuestions,
@@ -1401,8 +1406,13 @@ const ProyectoPensarTest = () => {
           setFinishError(
             "No fue posible guardar todas las respuestas antes de finalizar."
           );
+
           return;
         }
+
+        /* ===============================================
+           2. FINALIZAR EVALUACIÓN
+        =============================================== */
 
         const response =
           await axios.post(
@@ -1411,14 +1421,26 @@ const ProyectoPensarTest = () => {
             )}/finish`
           );
 
+        /* ===============================================
+           3. GUARDAR RESPUESTA
+        =============================================== */
+
         setCompletedData(
           response.data
+        );
+
+        /* ===============================================
+           4. MOSTRAR MODAL DE ÉXITO
+        =============================================== */
+
+        setShowCompletedModal(
+          true
         );
       } catch (error) {
         console.error(
           "Error finalizando el test:",
           error.response?.data ||
-            error
+          error
         );
 
         setFinishError(
@@ -1430,6 +1452,26 @@ const ProyectoPensarTest = () => {
         setIsFinishing(false);
       }
     };
+
+  /* =======================================================
+     SOLICITAR FINALIZACIÓN
+  ======================================================= */
+
+  const finishEvaluation = () => {
+    if (!validateCurrentSection()) {
+      return;
+    }
+
+    if (!showFirstPendingQuestion()) {
+      return;
+    }
+
+    /*
+     * En lugar de window.confirm,
+     * abrimos modal profesional.
+     */
+    setShowFinishModal(true);
+  };
 
   /* =======================================================
      ERRORES DE ACCESO
@@ -1500,42 +1542,7 @@ const ProyectoPensarTest = () => {
     );
   }
 
-  if (completedData) {
-    return (
-      <main className="psychometric-test-error">
-        <div className="psychometric-test-error__card">
-          <img
-            src="/images/test_logo.png"
-            alt="Proyecto Pensar"
-          />
-
-          <h1>
-            Test completado
-          </h1>
-
-          <p>
-            {completedData.message ||
-              "Tu evaluación fue finalizada correctamente."}
-          </p>
-
-          <p>
-            Revisa tu correo para
-            conocer las siguientes
-            indicaciones.
-          </p>
-
-          <button
-            type="button"
-            onClick={() =>
-              navigate("/")
-            }
-          >
-            Volver al inicio
-          </button>
-        </div>
-      </main>
-    );
-  }
+ 
 
   if (
     !testAccess ||
@@ -1580,10 +1587,271 @@ const ProyectoPensarTest = () => {
 
   return (
     <main className="psychometric-test">
+
+
+{/* =====================================================
+    MODAL CONFIRMAR FINALIZACIÓN
+===================================================== */}
+
+{showFinishModal && (
+  <div
+    className="psychometric-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="finish-modal-title"
+  >
+    <div
+      className="psychometric-modal__backdrop"
+      onClick={() =>
+        !isFinishing &&
+        setShowFinishModal(false)
+      }
+    />
+
+    <div className="psychometric-modal__card">
+      <button
+        type="button"
+        className="psychometric-modal__close"
+        onClick={() =>
+          setShowFinishModal(false)
+        }
+        disabled={isFinishing}
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+
+      <div className="psychometric-modal__brand">
+        <img
+          src="/images/test_logo.png"
+          alt="Proyecto Pensar"
+        />
+      </div>
+
+      <div className="psychometric-modal__icon psychometric-modal__icon--question">
+        ✓
+      </div>
+
+      <span className="psychometric-modal__eyebrow">
+        PROYECTO PENSAR
+      </span>
+
+      <h2 id="finish-modal-title">
+        ¿Finalizar tu evaluación?
+      </h2>
+
+      <p>
+        Has completado todas las
+        preguntas obligatorias del
+        test.
+      </p>
+
+      <div className="psychometric-modal__notice">
+        <span className="psychometric-modal__notice-icon">
+          !
+        </span>
+
+        <div>
+          <strong>
+            Confirma antes de continuar
+          </strong>
+
+          <p>
+            Una vez finalizada la
+            evaluación ya no podrás
+            modificar tus respuestas.
+          </p>
+        </div>
+      </div>
+
+      <div className="psychometric-modal__summary">
+        <div>
+          <span>
+            Preguntas
+          </span>
+
+          <strong>
+            {localAnsweredQuestions}
+            {" / "}
+            {totalQuestions}
+          </strong>
+        </div>
+
+        <div>
+          <span>
+            Progreso
+          </span>
+
+          <strong>
+            {Math.round(
+              localProgressPercentage
+            )}
+            %
+          </strong>
+        </div>
+
+        <div>
+          <span>
+            Evaluación
+          </span>
+
+          <strong>
+            #
+            {evaluation
+              ?.numeroEvaluacion ||
+              1}
+          </strong>
+        </div>
+      </div>
+
+      <div className="psychometric-modal__actions">
+        <button
+          type="button"
+          className="psychometric-modal__button psychometric-modal__button--secondary"
+          onClick={() =>
+            setShowFinishModal(
+              false
+            )
+          }
+          disabled={isFinishing}
+        >
+          Seguir revisando
+        </button>
+
+        <button
+          type="button"
+          className="psychometric-modal__button psychometric-modal__button--primary"
+          onClick={
+            confirmFinishEvaluation
+          }
+          disabled={isFinishing}
+        >
+          {isFinishing
+            ? "Finalizando..."
+            : "Sí, finalizar test"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+{/* =====================================================
+    MODAL EVALUACIÓN COMPLETADA
+===================================================== */}
+
+{showCompletedModal &&
+  completedData && (
+    <div
+      className="psychometric-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="completed-modal-title"
+    >
+      <div className="psychometric-modal__backdrop" />
+
+      <div className="psychometric-modal__card psychometric-modal__card--success">
+        <div className="psychometric-modal__brand">
+          <img
+            src="/images/test_logo.png"
+            alt="Proyecto Pensar"
+          />
+        </div>
+
+        <div className="psychometric-modal__success-animation">
+          <span className="psychometric-modal__success-ring" />
+
+          <span className="psychometric-modal__success-check">
+            ✓
+          </span>
+        </div>
+
+        <span className="psychometric-modal__eyebrow">
+          EVALUACIÓN FINALIZADA
+        </span>
+
+        <h2 id="completed-modal-title">
+          ¡Test completado correctamente!
+        </h2>
+
+        <p className="psychometric-modal__lead">
+          {completedData?.message ||
+            "Tu evaluación fue finalizada correctamente."}
+        </p>
+
+        <div className="psychometric-modal__success-panel">
+          <div className="psychometric-modal__mail-icon">
+            ✉
+          </div>
+
+          <div>
+            <strong>
+              Revisa tu correo electrónico
+            </strong>
+
+            <p>
+              Te enviaremos las siguientes
+              indicaciones para continuar
+              con el proceso de Proyecto
+              Pensar.
+            </p>
+
+            {user?.email && (
+              <span>
+                {user.email}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="psychometric-modal__completed-info">
+          <div>
+            <span>
+              Evaluación
+            </span>
+
+            <strong>
+              #
+              {evaluation
+                ?.numeroEvaluacion ||
+                1}
+            </strong>
+          </div>
+
+          <div>
+            <span>
+              Estado
+            </span>
+
+            <strong>
+              Completada
+            </strong>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="psychometric-modal__button psychometric-modal__button--primary psychometric-modal__button--full"
+          onClick={() =>
+            navigate("/")
+          }
+        >
+          Finalizar y volver al inicio
+        </button>
+
+        <small className="psychometric-modal__security">
+          Tus respuestas han sido
+          registradas correctamente.
+        </small>
+      </div>
+    </div>
+  )}
+
+
       {(isSaving ||
         isFinishing) && (
-        <IsLoading />
-      )}
+          <IsLoading />
+        )}
 
       <header className="psychometric-test__header">
         <div className="psychometric-test__brand">
@@ -1703,17 +1971,17 @@ const ProyectoPensarTest = () => {
 
       {(saveMessage ||
         saveError) && (
-        <div
-          className={
-            saveError
-              ? "psychometric-test__save-message psychometric-test__save-message--error"
-              : "psychometric-test__save-message psychometric-test__save-message--success"
-          }
-        >
-          {saveError ||
-            saveMessage}
-        </div>
-      )}
+          <div
+            className={
+              saveError
+                ? "psychometric-test__save-message psychometric-test__save-message--error"
+                : "psychometric-test__save-message psychometric-test__save-message--success"
+            }
+          >
+            {saveError ||
+              saveMessage}
+          </div>
+        )}
 
       <div className="psychometric-test__layout">
         {/* =================================
@@ -1835,23 +2103,23 @@ const ProyectoPensarTest = () => {
 
             {currentSection
               .descripcion && (
-              <p>
-                {
-                  currentSection
-                    .descripcion
-                }
-              </p>
-            )}
+                <p>
+                  {
+                    currentSection
+                      .descripcion
+                  }
+                </p>
+              )}
 
             {currentSection
               .instrucciones && (
-              <div className="psychometric-test__instructions">
-                {
-                  currentSection
-                    .instrucciones
-                }
-              </div>
-            )}
+                <div className="psychometric-test__instructions">
+                  {
+                    currentSection
+                      .instrucciones
+                  }
+                </div>
+              )}
           </div>
 
           <div className="psychometric-test__questions">
@@ -1869,7 +2137,7 @@ const ProyectoPensarTest = () => {
 
                 const pending =
                   question.obligatoria !==
-                    false &&
+                  false &&
                   !answered;
 
                 return (
@@ -1886,7 +2154,7 @@ const ProyectoPensarTest = () => {
                         : "",
 
                       pending &&
-                      sectionError
+                        sectionError
                         ? "psychometric-question--pending"
                         : "",
                     ]
@@ -1901,21 +2169,21 @@ const ProyectoPensarTest = () => {
                       <div>
                         {question.tipoRespuesta !==
                           "escala_bipolar" && (
-                          <h3>
-                            {
-                              question.pregunta
-                            }
-                          </h3>
-                        )}
+                            <h3>
+                              {
+                                question.pregunta
+                              }
+                            </h3>
+                          )}
 
                         {question
                           .instrucciones && (
-                          <p>
-                            {
-                              question.instrucciones
-                            }
-                          </p>
-                        )}
+                            <p>
+                              {
+                                question.instrucciones
+                              }
+                            </p>
+                          )}
                       </div>
 
                       {answered && (
@@ -1995,14 +2263,13 @@ const ProyectoPensarTest = () => {
                 {isSaving
                   ? "Guardando..."
                   : isSectionComplete(
-                        currentSection
-                      )
+                    currentSection
+                  )
                     ? "Guardar y continuar →"
-                    : `Faltan ${
-                        getPendingInSection(
-                          currentSection
-                        ).length
-                      } preguntas`}
+                    : `Faltan ${getPendingInSection(
+                      currentSection
+                    ).length
+                    } preguntas`}
               </button>
             ) : (
               <button

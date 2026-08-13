@@ -5,22 +5,21 @@ import {
 } from "react";
 
 import {
-  useNavigate,
   useParams,
 } from "react-router-dom";
 
 import axios from "axios";
+
+import getConfigToken from "../services/getConfigToken";
 
 import "./styles/ProyectoPensarResultado.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL;
 
-const ProyectoPensarResultado = () => {
-  const { token } = useParams();
-
-  const navigate =
-    useNavigate();
+const ProyectoPensarResultadoAdmin = () => {
+  const { evaluationId } =
+    useParams();
 
   const [
     loading,
@@ -43,7 +42,7 @@ const ProyectoPensarResultado = () => {
   ] = useState(false);
 
   /* =========================================================
-     CARGAR RESULTADO
+     CARGAR RESULTADO ADMINISTRATIVO
   ========================================================= */
 
   useEffect(() => {
@@ -52,13 +51,13 @@ const ProyectoPensarResultado = () => {
     const loadResult =
       async () => {
         if (
-          !token ||
+          !evaluationId ||
           !String(
-            token,
+            evaluationId,
           ).trim()
         ) {
           setError(
-            "El enlace del resultado no es válido.",
+            "No se recibió una evaluación válida.",
           );
 
           setLoading(false);
@@ -68,13 +67,15 @@ const ProyectoPensarResultado = () => {
 
         try {
           setLoading(true);
+
           setError("");
 
           const {
             data: response,
           } =
             await axios.get(
-              `${API_URL}/psychometric/result/${token}`,
+              `${API_URL}/psychometric/results/${evaluationId}`,
+              getConfigToken(),
             );
 
           if (!mounted) {
@@ -88,7 +89,7 @@ const ProyectoPensarResultado = () => {
           }
 
           console.error(
-            "Error cargando resultado psicométrico:",
+            "Error cargando resultado psicométrico administrativo:",
             err?.response?.data ||
               err,
           );
@@ -98,11 +99,10 @@ const ProyectoPensarResultado = () => {
 
           if (
             err?.response
-              ?.status === 410
+              ?.status === 401
           ) {
             setError(
-              backend?.message ||
-                "El enlace del resultado ha expirado.",
+              "Tu sesión no es válida o ha expirado.",
             );
           } else if (
             err?.response
@@ -110,7 +110,7 @@ const ProyectoPensarResultado = () => {
           ) {
             setError(
               backend?.message ||
-                "El resultado todavía no está disponible.",
+                "No tienes permisos para consultar este resultado.",
             );
           } else if (
             err?.response
@@ -118,7 +118,7 @@ const ProyectoPensarResultado = () => {
           ) {
             setError(
               backend?.message ||
-                "No se encontró el resultado solicitado.",
+                "No se encontró la evaluación solicitada.",
             );
           } else {
             setError(
@@ -138,54 +138,66 @@ const ProyectoPensarResultado = () => {
     return () => {
       mounted = false;
     };
-  }, [token]);
+  }, [evaluationId]);
 
   /* =========================================================
-     DATOS
+     NORMALIZAR RESPUESTA
   ========================================================= */
 
-  const user =
-    data?.user || {};
-
   const evaluation =
-    data?.evaluation || {};
+    data?.evaluation ||
+    data ||
+    {};
+
+  const user =
+    data?.user ||
+    evaluation
+      ?.inscripcion
+      ?.user ||
+    {};
 
   const course =
-    data?.course || {};
+    data?.course ||
+    evaluation
+      ?.test
+      ?.course ||
+    {};
 
-  /*
-   * La personalidad puede venir
-   * a nivel superior o dentro del
-   * resultado almacenado.
-   */
   const result =
-    data?.result || {};
+    data?.result ||
+    evaluation?.resultado ||
+    {};
 
   const personality =
     data?.personality ||
     result?.personality ||
+    evaluation
+      ?.personality ||
     {};
 
-  const payment =
-    data?.payment || {};
-
   const animodo =
-    result?.animodo || {};
-
-  const communication =
-    result?.communication || {};
+    result?.animodo ||
+    {};
 
   const brain =
-    result?.brain || {};
+    result?.brain ||
+    {};
 
-  const negotiation =
-    result?.negotiation || {};
+  const communication =
+    result?.communication ||
+    {};
 
   const vak =
-    result?.vak || {};
+    result?.vak ||
+    {};
+
+  const negotiation =
+    result?.negotiation ||
+    {};
 
   const persistence =
-    result?.persistence || {};
+    result?.persistence ||
+    {};
 
   /* =========================================================
      NOMBRE
@@ -195,12 +207,14 @@ const ProyectoPensarResultado = () => {
     useMemo(
       () =>
         [
+          user?.grado,
           user?.firstName,
           user?.lastName,
         ]
           .filter(Boolean)
           .join(" "),
       [
+        user?.grado,
         user?.firstName,
         user?.lastName,
       ],
@@ -224,9 +238,20 @@ const ProyectoPensarResultado = () => {
           timeZone:
             "America/Guayaquil",
 
-          year: "numeric",
-          month: "long",
-          day: "2-digit",
+          year:
+            "numeric",
+
+          month:
+            "long",
+
+          day:
+            "2-digit",
+
+          hour:
+            "2-digit",
+
+          minute:
+            "2-digit",
         },
       ).format(
         new Date(value),
@@ -275,54 +300,19 @@ const ProyectoPensarResultado = () => {
       return "0%";
     }
 
-    /*
-     * Mostramos entero como Excel.
-     * Ej:
-     * 21.59 -> 22 %
-     */
     return `${Math.round(
       number,
     )}%`;
   };
 
   /* =========================================================
-     ABRIR PDF
-  ========================================================= */
-
-  const handleOpenPdf =
-    async () => {
-      if (!token) {
-        return;
-      }
-
-      try {
-        setOpeningPdf(true);
-
-        const pdfUrl =
-          `${API_URL}/psychometric/result/${token}/pdf`;
-
-        window.open(
-          pdfUrl,
-          "_blank",
-          "noopener,noreferrer",
-        );
-      } finally {
-        setTimeout(
-          () => {
-            setOpeningPdf(false);
-          },
-          500,
-        );
-      }
-    };
-
-  /* =========================================================
-     RESULTADOS CALCULADOS
+     DATOS DE RESULTADO
   ========================================================= */
 
   const animodoResult =
     animodo?.animal ||
-    personality?.resultadoAnimodo ||
+    personality
+      ?.resultadoAnimodo ||
     personality?.animal ||
     "-";
 
@@ -337,7 +327,8 @@ const ProyectoPensarResultado = () => {
 
   const brainCategory =
     brain?.brainCategory ||
-    personality?.categoriaCerebro ||
+    personality
+      ?.categoriaCerebro ||
     "-";
 
   const headColor =
@@ -346,7 +337,8 @@ const ProyectoPensarResultado = () => {
     "-";
 
   const chestColor =
-    communication?.dominantColor ||
+    communication
+      ?.dominantColor ||
     personality?.colorPecho ||
     "-";
 
@@ -358,13 +350,12 @@ const ProyectoPensarResultado = () => {
     "-";
 
   /* =========================================================
-     BARRA DE PORCENTAJE
+     BARRA
   ========================================================= */
 
   const PercentageBar = ({
     label,
     value,
-    valueLabel,
   }) => {
     const normalized =
       Math.max(
@@ -383,10 +374,9 @@ const ProyectoPensarResultado = () => {
           </span>
 
           <strong>
-            {valueLabel ??
-              formatPercent(
-                normalized,
-              )}
+            {formatPercent(
+              normalized,
+            )}
           </strong>
         </div>
 
@@ -404,54 +394,134 @@ const ProyectoPensarResultado = () => {
   };
 
   /* =========================================================
-     BARRA DE PUNTAJE
+     ABRIR PDF ADMINISTRATIVO
   ========================================================= */
 
-  const ScoreBar = ({
-    label,
-    value,
-    maxValue,
-  }) => {
-    const score =
-      Number(value) || 0;
+  const handleOpenPdf =
+    async () => {
+      if (!evaluationId) {
+        return;
+      }
 
-    const maximum =
-      Number(maxValue) || 1;
+      try {
+        setOpeningPdf(true);
 
-    const percent =
-      Math.max(
-        0,
-        Math.min(
-          100,
-          (score / maximum) *
-            100,
-        ),
-      );
+        /*
+         * El endpoint administrativo
+         * requiere JWT.
+         *
+         * Se solicita como blob.
+         */
+        const response =
+          await axios.get(
+            `${API_URL}/psychometric/results/${evaluationId}/pdf`,
+            {
+              ...getConfigToken(),
 
-    return (
-      <div className="ppr-score">
-        <div className="ppr-score__head">
-          <span>
-            {label}
-          </span>
+              responseType:
+                "blob",
+            },
+          );
 
-          <strong>
-            {score}
-          </strong>
-        </div>
+        const blob =
+          new Blob(
+            [response.data],
+            {
+              type:
+                "application/pdf",
+            },
+          );
 
-        <div className="ppr-score__track">
-          <span
-            className="ppr-score__fill"
-            style={{
-              width:
-                `${percent}%`,
-            }}
-          />
-        </div>
-      </div>
-    );
-  };
+        const pdfUrl =
+          window.URL.createObjectURL(
+            blob,
+          );
+
+        const newWindow =
+          window.open(
+            pdfUrl,
+            "_blank",
+          );
+
+        /*
+         * Si el navegador bloquea
+         * la nueva pestaña,
+         * se descarga el documento.
+         */
+        if (!newWindow) {
+          const link =
+            document.createElement(
+              "a",
+            );
+
+          link.href =
+            pdfUrl;
+
+          link.download =
+            `resultado-proyecto-pensar-${evaluationId}.pdf`;
+
+          document.body.appendChild(
+            link,
+          );
+
+          link.click();
+
+          link.remove();
+        }
+
+        setTimeout(
+          () => {
+            window.URL.revokeObjectURL(
+              pdfUrl,
+            );
+          },
+          10000,
+        );
+      } catch (error) {
+        console.error(
+          "Error abriendo PDF psicométrico:",
+          error,
+        );
+
+        const contentType =
+          error?.response
+            ?.headers?.[
+            "content-type"
+          ];
+
+        if (
+          error?.response
+            ?.data instanceof
+            Blob &&
+          contentType?.includes(
+            "application/json",
+          )
+        ) {
+          try {
+            const text =
+              await error.response.data.text();
+
+            const json =
+              JSON.parse(text);
+
+            alert(
+              json?.message ||
+                "No fue posible generar el PDF.",
+            );
+
+            return;
+          } catch {
+            // continúa
+          }
+        }
+
+        alert(
+          "No fue posible generar el PDF del resultado.",
+        );
+      } finally {
+        setOpeningPdf(false);
+      }
+    };
 
   /* =========================================================
      LOADING
@@ -464,13 +534,12 @@ const ProyectoPensarResultado = () => {
           <div className="ppr-spinner" />
 
           <h2>
-            Cargando tu resultado...
+            Cargando resultado...
           </h2>
 
           <p>
-            Estamos preparando la
-            información de tu
-            evaluación.
+            Consultando la evaluación
+            psicométrica.
           </p>
         </div>
       </div>
@@ -490,30 +559,19 @@ const ProyectoPensarResultado = () => {
           </div>
 
           <h2>
-            No fue posible abrir el
-            resultado
+            No fue posible abrir el resultado
           </h2>
 
           <p>
             {error}
           </p>
-
-          <button
-            type="button"
-            className="ppr-btn ppr-btn--secondary"
-            onClick={() =>
-              navigate("/")
-            }
-          >
-            Volver
-          </button>
         </div>
       </div>
     );
   }
 
   /* =========================================================
-     RESULTADO
+     RENDER
   ========================================================= */
 
   return (
@@ -521,22 +579,22 @@ const ProyectoPensarResultado = () => {
       <div className="ppr-shell">
 
         {/* ===================================================
-            ENCABEZADO EMPRESARIAL
+            HERO
         =================================================== */}
 
         <section className="ppr-hero">
           <div className="ppr-hero__content">
             <span className="ppr-eyebrow">
-              PROYECTO PENSAR
+              RESULTADO ADMINISTRATIVO
             </span>
 
             <h1>
-              Informe de resultados
+              Informe psicométrico
             </h1>
 
             <p className="ppr-hero__subtitle">
               {course?.nombre ||
-                "Test Psicotécnico de Personalidad"}
+                "Proyecto Pensar"}
             </p>
 
             <div className="ppr-person">
@@ -566,7 +624,7 @@ const ProyectoPensarResultado = () => {
 
               <div>
                 <span>
-                  Fecha
+                  Finalizada
                 </span>
 
                 <strong>
@@ -590,7 +648,7 @@ const ProyectoPensarResultado = () => {
                 }
               >
                 {openingPdf
-                  ? "⏳ Abriendo..."
+                  ? "⏳ Generando PDF..."
                   : "📄 Ver informe PDF"}
               </button>
             </div>
@@ -642,6 +700,49 @@ const ProyectoPensarResultado = () => {
         </section>
 
         {/* ===================================================
+            DATOS ADMINISTRATIVOS
+        =================================================== */}
+
+        <section className="ppr-validation">
+          <div>
+            <span>
+              Estado evaluación
+            </span>
+
+            <strong>
+              {evaluation?.estado ||
+                "-"}
+            </strong>
+          </div>
+
+          <div>
+            <span>
+              Resultado liberado
+            </span>
+
+            <strong>
+              {evaluation
+                ?.resultadoLiberado
+                ? "Sí"
+                : "No"}
+            </strong>
+          </div>
+
+          <div>
+            <span>
+              Evaluación
+            </span>
+
+            <strong>
+              N.º{" "}
+              {evaluation
+                ?.numeroEvaluacion ||
+                "-"}
+            </strong>
+          </div>
+        </section>
+
+        {/* ===================================================
             DIAGNÓSTICO FINAL
         =================================================== */}
 
@@ -658,7 +759,7 @@ const ProyectoPensarResultado = () => {
             </div>
 
             <span className="ppr-status-badge">
-              Resultado liberado
+              Vista administrativa
             </span>
           </div>
 
@@ -680,7 +781,9 @@ const ProyectoPensarResultado = () => {
                     ?.sentirPensar ??
                     "-"}
                 </b>
+
                 {" · "}
+
                 Actuar / Observar:{" "}
                 <b>
                   {animodo?.axes
@@ -717,7 +820,7 @@ const ProyectoPensarResultado = () => {
               </strong>
 
               <small>
-                Color de cabeza:{" "}
+                Color asociado:{" "}
                 <b>
                   {headColor}
                 </b>
@@ -841,7 +944,7 @@ const ProyectoPensarResultado = () => {
         </section>
 
         {/* ===================================================
-            COLORES DE COMUNICACIÓN
+            COMUNICACIÓN
         =================================================== */}
 
         <section className="ppr-card">
@@ -939,7 +1042,7 @@ const ProyectoPensarResultado = () => {
         </section>
 
         {/* ===================================================
-            TIPO DE CEREBRO
+            CEREBRO
         =================================================== */}
 
         <section className="ppr-card">
@@ -1049,7 +1152,7 @@ const ProyectoPensarResultado = () => {
         </section>
 
         {/* ===================================================
-            NEGOCIACIÓN
+            FORMA NEGOCIADORA
         =================================================== */}
 
         <section className="ppr-card">
@@ -1129,8 +1232,9 @@ const ProyectoPensarResultado = () => {
             </div>
 
             <div className="ppr-result-chip">
-              {vak?.dominantStyle ||
-                "-"}
+              {prettyText(
+                vak?.dominantStyle,
+              )}
             </div>
           </div>
 
@@ -1377,54 +1481,74 @@ const ProyectoPensarResultado = () => {
         </section>
 
         {/* ===================================================
-            INFORMACIÓN DE VALIDACIÓN
+            INFORMACIÓN ADMINISTRATIVA
         =================================================== */}
 
-        <section className="ppr-validation">
-          <div>
-            <span>
-              Estado
-            </span>
+        <section className="ppr-card">
+          <div className="ppr-section-heading">
+            <div>
+              <span className="ppr-section-kicker">
+                INFORMACIÓN ADMINISTRATIVA
+              </span>
 
-            <strong>
-              Resultado validado
-            </strong>
+              <h2>
+                Datos de la evaluación
+              </h2>
+            </div>
           </div>
 
-          <div>
-            <span>
-              Evaluación
-            </span>
+          <div className="ppr-diagnostic-grid">
+            <article className="ppr-diagnostic-item">
+              <span>
+                EVALUATION ID
+              </span>
 
-            <strong>
-              N.º{" "}
-              {evaluation
-                ?.numeroEvaluacion ||
-                "-"}
-            </strong>
+              <strong
+                style={{
+                  fontSize:
+                    "0.73rem",
+                  wordBreak:
+                    "break-all",
+                }}
+              >
+                {evaluation?.id ||
+                  evaluationId}
+              </strong>
+            </article>
+
+            <article className="ppr-diagnostic-item">
+              <span>
+                PERSONALITY ID
+              </span>
+
+              <strong
+                style={{
+                  fontSize:
+                    "0.73rem",
+                  wordBreak:
+                    "break-all",
+                }}
+              >
+                {evaluation
+                  ?.personalityId ||
+                  personality?.id ||
+                  "-"}
+              </strong>
+            </article>
+
+            <article className="ppr-diagnostic-item">
+              <span>
+                RESULTADO LIBERADO
+              </span>
+
+              <strong>
+                {evaluation
+                  ?.resultadoLiberado
+                  ? "Sí"
+                  : "No"}
+              </strong>
+            </article>
           </div>
-
-          {payment
-            ?.valorDepositado !==
-            undefined &&
-            payment
-              ?.valorDepositado !==
-              null && (
-              <div>
-                <span>
-                  Pago registrado
-                </span>
-
-                <strong>
-                  $
-                  {Number(
-                    payment
-                      .valorDepositado ||
-                      0,
-                  ).toFixed(2)}
-                </strong>
-              </div>
-            )}
         </section>
 
         {/* ===================================================
@@ -1433,34 +1557,34 @@ const ProyectoPensarResultado = () => {
 
         <footer className="ppr-footer">
           <p>
-            Este informe constituye
-            una herramienta de
-            autoconocimiento y
-            desarrollo. Los resultados
-            deben interpretarse de
-            manera integral.
+            Vista administrativa del resultado
+            psicométrico. Esta información es de
+            carácter personal y debe manejarse de
+            acuerdo con las políticas de acceso del
+            sistema.
           </p>
 
-          <button
-            type="button"
-            className="ppr-btn ppr-btn--primary"
-            onClick={
-              handleOpenPdf
-            }
-            disabled={
-              openingPdf
-            }
-          >
-            {openingPdf
-              ? "⏳ Abriendo..."
-              : "📄 Ver informe completo en PDF"}
-          </button>
+          <div className="ppr-footer__actions">
+            <button
+              type="button"
+              className="ppr-btn ppr-btn--primary"
+              onClick={
+                handleOpenPdf
+              }
+              disabled={
+                openingPdf
+              }
+            >
+              {openingPdf
+                ? "⏳ Generando..."
+                : "📄 Ver informe PDF"}
+            </button>
+          </div>
 
           <small>
             ©{" "}
             {new Date().getFullYear()}{" "}
-            iDr.Mind. Todos los
-            derechos reservados.
+            iDr.Mind.
           </small>
         </footer>
       </div>
@@ -1468,4 +1592,4 @@ const ProyectoPensarResultado = () => {
   );
 };
 
-export default ProyectoPensarResultado;
+export default ProyectoPensarResultadoAdmin;

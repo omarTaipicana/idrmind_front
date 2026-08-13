@@ -55,6 +55,9 @@ const ValidacionPago = () => {
     setMenuOpen,
   ] = useState(false);
 
+
+
+
   const menuRef = useRef();
 
   const contentRef = useRef(null);
@@ -155,6 +158,8 @@ const ValidacionPago = () => {
     setPagoIdRestaurar,
   ] = useState(null);
 
+
+
   /* =========================================================
      FACTURACIÓN
   ========================================================= */
@@ -181,6 +186,42 @@ const ValidacionPago = () => {
   const [
     generandoResultadoId,
     setGenerandoResultadoId,
+  ] = useState(null);
+
+  /* =========================================================
+   MODAL RESULTADO PSICOMÉTRICO
+========================================================= */
+
+  const [
+    showResultadoModal,
+    setShowResultadoModal,
+  ] = useState(false);
+
+  const [
+    resultadoModalPago,
+    setResultadoModalPago,
+  ] = useState(null);
+
+  const [
+    resultadoModalStatus,
+    setResultadoModalStatus,
+  ] = useState("confirm");
+
+  /*
+   * confirm
+   * success
+   * error
+   * alreadySent
+   */
+
+  const [
+    resultadoModalMessage,
+    setResultadoModalMessage,
+  ] = useState("");
+
+  const [
+    resultadoModalFecha,
+    setResultadoModalFecha,
   ] = useState(null);
 
   /* =========================================================
@@ -300,7 +341,7 @@ const ValidacionPago = () => {
         overflowY === "scroll"
       ) &&
       el.scrollHeight >
-        el.clientHeight + 2;
+      el.clientHeight + 2;
 
     return canScroll
       ? el
@@ -327,7 +368,7 @@ const ValidacionPago = () => {
     const top = Math.max(
       0,
       scrollPosRef.current -
-        SCROLL_OFFSET,
+      SCROLL_OFFSET,
     );
 
     if (
@@ -453,14 +494,14 @@ const ValidacionPago = () => {
   useEffect(() => {
     getPago(
       `/pagos?curso=${filtroCurso}` +
-        `&verificado=${filtroVerificado}` +
-        `&moneda=${filtroMoneda}` +
-        `&distintivo=${filtroDistintivo}` +
-        `&entregado=${filtroEntregado}` +
-        `&certificado=${filtroCertificado}` +
-        `&busqueda=${filtroGrado}` +
-        `&fechaInicio=${filtroFechaInicio}` +
-        `&fechaFin=${filtroFechaFin}`,
+      `&verificado=${filtroVerificado}` +
+      `&moneda=${filtroMoneda}` +
+      `&distintivo=${filtroDistintivo}` +
+      `&entregado=${filtroEntregado}` +
+      `&certificado=${filtroCertificado}` +
+      `&busqueda=${filtroGrado}` +
+      `&fechaInicio=${filtroFechaInicio}` +
+      `&fechaFin=${filtroFechaFin}`,
     );
 
     const socket =
@@ -610,40 +651,85 @@ const ValidacionPago = () => {
      GUARDAR EDICIÓN
   ========================================================= */
 
-  const guardarEdicion =
-    async (
-      pagoId,
-      data,
-    ) => {
-      try {
-        await updatePago(
-          PATH_PAGOS,
-          pagoId,
-          {
-            ...data,
+  const guardarEdicion = async (pagoId, data) => {
+    try {
+      const entidad = String(
+        data.entidad || ""
+      ).trim();
 
-            valorDepositado:
-              parseFloat(
-                data.valorDepositado,
-              ),
+      const idDeposito = String(
+        data.idDeposito || ""
+      ).trim();
 
-            usuarioEdicion:
-              user?.email ||
-              "",
-          },
-        );
+      /*
+       * Si se intenta VALIDAR el pago,
+       * Entidad e Id Pago son obligatorios.
+       */
+      if (data.verificado) {
+        if (!entidad) {
+          dispatch(
+            showAlert({
+              message:
+                "⚠️ Debes seleccionar la entidad antes de validar el pago.",
+              alertType: 1,
+            })
+          );
 
-        await getPago(
-          PATH_PAGOS,
-        );
+          return;
+        }
 
-        cancelarEdicion();
-      } catch (error) {
-        alert(
-          "Error al guardar los cambios.",
-        );
+        if (!idDeposito) {
+          dispatch(
+            showAlert({
+              message:
+                "⚠️ Debes ingresar el Id Pago antes de validar el pago.",
+              alertType: 1,
+            })
+          );
+
+          return;
+        }
       }
-    };
+
+      await updatePago(
+        PATH_PAGOS,
+        pagoId,
+        {
+          ...data,
+
+          entidad,
+          idDeposito,
+
+          valorDepositado:
+            parseFloat(
+              data.valorDepositado
+            ),
+
+          usuarioEdicion:
+            user?.email || "",
+        }
+      );
+
+      await getPago(
+        PATH_PAGOS
+      );
+
+      cancelarEdicion();
+    } catch (error) {
+      console.error(
+        "Error al guardar pago:",
+        error
+      );
+
+      dispatch(
+        showAlert({
+          message:
+            "❌ Error al guardar los cambios.",
+          alertType: 1,
+        })
+      );
+    }
+  };
 
   /* =========================================================
      ELIMINAR
@@ -857,8 +943,8 @@ const ValidacionPago = () => {
             Fecha:
               p.createdAt
                 ? new Date(
-                    p.createdAt,
-                  ).toLocaleDateString()
+                  p.createdAt,
+                ).toLocaleDateString()
                 : "",
 
             Email:
@@ -1058,7 +1144,7 @@ const ValidacionPago = () => {
         console.error(
           "Error emitir factura:",
           e.response?.data ||
-            e.message,
+          e.message,
         );
       } finally {
         setIsEmitiendoFactura(
@@ -1145,8 +1231,8 @@ const ValidacionPago = () => {
       const ok =
         window.confirm(
           "🎓 Estás a punto de generar el certificado oficial de este participante.\n\n" +
-            "Una vez emitido, el certificado quedará registrado en el sistema y será enviado al usuario.\n\n" +
-            "¿Deseas continuar?",
+          "Una vez emitido, el certificado quedará registrado en el sistema y será enviado al usuario.\n\n" +
+          "¿Deseas continuar?",
         );
 
       if (!ok) {
@@ -1201,120 +1287,172 @@ const ValidacionPago = () => {
      GENERAR RESULTADO PSICOMÉTRICO
   ========================================================= */
 
-  const handleGenerarResultado =
-    async (p) => {
+  /* =========================================================
+     SOLICITAR GENERAR RESULTADO PSICOMÉTRICO
+  ========================================================= */
+
+  const handleGenerarResultado = (p) => {
+    if (!p?.id) {
+      setResultadoModalPago(null);
+
+      setResultadoModalStatus(
+        "error"
+      );
+
+      setResultadoModalMessage(
+        "No se pudo obtener el ID del pago."
+      );
+
+      setShowResultadoModal(
+        true
+      );
+
+      return;
+    }
+
+    if (
+      p.tipoPago !==
+      "test_psicometrico" ||
+      !p.psychometricEvaluationId
+    ) {
+      setResultadoModalPago(
+        p
+      );
+
+      setResultadoModalStatus(
+        "error"
+      );
+
+      setResultadoModalMessage(
+        "Este pago no corresponde a una evaluación psicométrica válida."
+      );
+
+      setShowResultadoModal(
+        true
+      );
+
+      return;
+    }
+
+    if (!p.verificado) {
+      setResultadoModalPago(
+        p
+      );
+
+      setResultadoModalStatus(
+        "error"
+      );
+
+      setResultadoModalMessage(
+        "Primero debes validar el pago antes de generar el resultado."
+      );
+
+      setShowResultadoModal(
+        true
+      );
+
+      return;
+    }
+
+    /*
+     * Abrimos modal profesional
+     * de confirmación.
+     */
+    setResultadoModalPago(
+      p
+    );
+
+    setResultadoModalStatus(
+      "confirm"
+    );
+
+    setResultadoModalMessage(
+      ""
+    );
+
+    setResultadoModalFecha(
+      null
+    );
+
+    setShowResultadoModal(
+      true
+    );
+  };
+
+  /* =========================================================
+   CONFIRMAR GENERACIÓN DE RESULTADO
+========================================================= */
+
+  const confirmarGenerarResultado =
+    async () => {
+      const p =
+        resultadoModalPago;
+
       if (!p?.id) {
-        dispatch(
-          showAlert({
-            message:
-              "❌ No se pudo obtener el ID del pago.",
-
-            alertType: 1,
-          }),
-        );
-
-        return;
-      }
-
-      if (
-        p.tipoPago !==
-          "test_psicometrico" ||
-        !p.psychometricEvaluationId
-      ) {
-        dispatch(
-          showAlert({
-            message:
-              "⚠️ Este pago no corresponde a una evaluación psicométrica.",
-
-            alertType: 1,
-          }),
-        );
-
-        return;
-      }
-
-      if (!p.verificado) {
-        dispatch(
-          showAlert({
-            message:
-              "⚠️ Primero debes validar el pago.",
-
-            alertType: 1,
-          }),
-        );
-
-        return;
-      }
-
-      const participante = [
-        p?.inscripcion?.user
-          ?.firstName,
-
-        p?.inscripcion?.user
-          ?.lastName,
-      ]
-        .filter(Boolean)
-        .join(" ");
-
-      const ok =
-        window.confirm(
-          `📊 Generar resultado psicométrico\n\n` +
-            `${
-              participante
-                ? `Participante: ${participante}\n`
-                : ""
-            }` +
-            `Test: ${p.curso || "-"}\n\n` +
-            `El resultado será liberado y se enviará al correo del participante un enlace personal para consultar su informe.\n\n` +
-            `¿Deseas continuar?`,
-        );
-
-      if (!ok) {
         return;
       }
 
       try {
         setGenerandoResultadoId(
-          p.id,
+          p.id
+        );
+
+        setResultadoModalStatus(
+          "processing"
+        );
+
+        setResultadoModalMessage(
+          "Generando el resultado psicométrico..."
         );
 
         const { data } =
           await axios.post(
             `${urlBase}/pagos/${p.id}/resultado-psicometrico`,
             {},
-            getConfigToken(),
+            getConfigToken()
           );
 
-        dispatch(
-          showAlert({
-            message:
-              data?.message ||
-              "✅ Resultado generado y enviado correctamente.",
+        /* ===============================================
+           ÉXITO
+        =============================================== */
 
-            alertType: 2,
-          }),
+        setResultadoModalStatus(
+          "success"
         );
+
+        setResultadoModalMessage(
+          data?.message ||
+          "El resultado psicométrico fue generado y enviado correctamente."
+        );
+
+        /* ===============================================
+           REFRESCAR LISTADO
+        =============================================== */
 
         await getPago(
           `/pagos?curso=${filtroCurso}` +
-            `&verificado=${filtroVerificado}` +
-            `&moneda=${filtroMoneda}` +
-            `&distintivo=${filtroDistintivo}` +
-            `&entregado=${filtroEntregado}` +
-            `&certificado=${filtroCertificado}` +
-            `&busqueda=${filtroGrado}` +
-            `&fechaInicio=${filtroFechaInicio}` +
-            `&fechaFin=${filtroFechaFin}`,
+          `&verificado=${filtroVerificado}` +
+          `&moneda=${filtroMoneda}` +
+          `&distintivo=${filtroDistintivo}` +
+          `&entregado=${filtroEntregado}` +
+          `&certificado=${filtroCertificado}` +
+          `&busqueda=${filtroGrado}` +
+          `&fechaInicio=${filtroFechaInicio}` +
+          `&fechaFin=${filtroFechaFin}`
         );
       } catch (error) {
         console.error(
           "Error generando resultado psicométrico:",
           error?.response?.data ||
-            error,
+          error
         );
 
         const backendData =
           error?.response?.data;
+
+        /* ===============================================
+           YA ENVIADO
+        =============================================== */
 
         if (
           backendData?.alreadySent
@@ -1323,43 +1461,79 @@ const ValidacionPago = () => {
             backendData
               ?.resultadoEmailEnviadoAt
               ? new Date(
-                  backendData.resultadoEmailEnviadoAt,
-                ).toLocaleString(
-                  "es-EC",
-                )
+                backendData
+                  .resultadoEmailEnviadoAt
+              ).toLocaleString(
+                "es-EC"
+              )
               : null;
 
-          dispatch(
-            showAlert({
-              message:
-                "⚠️ El resultado ya fue enviado anteriormente." +
-                `${
-                  fecha
-                    ? ` Último envío: ${fecha}.`
-                    : ""
-                }`,
+          setResultadoModalStatus(
+            "alreadySent"
+          );
 
-              alertType: 1,
-            }),
+          setResultadoModalFecha(
+            fecha
+          );
+
+          setResultadoModalMessage(
+            "El resultado psicométrico ya fue generado y enviado anteriormente."
           );
 
           return;
         }
 
-        dispatch(
-          showAlert({
-            message:
-              backendData?.message ||
-              "❌ No se pudo generar el resultado psicométrico.",
+        /* ===============================================
+           ERROR
+        =============================================== */
 
-            alertType: 1,
-          }),
+        setResultadoModalStatus(
+          "error"
+        );
+
+        setResultadoModalMessage(
+          backendData?.message ||
+          "No se pudo generar el resultado psicométrico."
         );
       } finally {
         setGenerandoResultadoId(
-          null,
+          null
         );
       }
+    };
+
+
+  /* =========================================================
+ CERRAR MODAL RESULTADO
+========================================================= */
+
+  const cerrarResultadoModal =
+    () => {
+      if (
+        generandoResultadoId
+      ) {
+        return;
+      }
+
+      setShowResultadoModal(
+        false
+      );
+
+      setResultadoModalPago(
+        null
+      );
+
+      setResultadoModalStatus(
+        "confirm"
+      );
+
+      setResultadoModalMessage(
+        ""
+      );
+
+      setResultadoModalFecha(
+        null
+      );
     };
 
   /* =========================================================
@@ -1368,7 +1542,7 @@ const ValidacionPago = () => {
 
   const renderContent = () => {
     switch (
-      activeSection
+    activeSection
     ) {
       /* =====================================================
          RESUMEN
@@ -1857,21 +2031,20 @@ const ValidacionPago = () => {
                         >
                           <td className="vpTdWrap">
                             {p
-                              ? `${p?.inscripcion?.user?.firstName || ""} ${
-                                  p
-                                    ?.inscripcion
-                                    ?.user
-                                    ?.lastName ||
-                                  ""
-                                }`
+                              ? `${p?.inscripcion?.user?.firstName || ""} ${p
+                                ?.inscripcion
+                                ?.user
+                                ?.lastName ||
+                              ""
+                              }`
                               : "Sin Inscripción"}
                           </td>
 
                           <td>
                             {p.createdAt
                               ? new Date(
-                                  p.createdAt,
-                                ).toLocaleDateString()
+                                p.createdAt,
+                              ).toLocaleDateString()
                               : "-"}
                           </td>
 
@@ -1988,7 +2161,7 @@ const ValidacionPago = () => {
 
                           <td>
                             {p.cert_emp ===
-                            "true" ? (
+                              "true" ? (
                               p.urlCertificadoEmp ? (
                                 <a
                                   href={
@@ -2010,7 +2183,7 @@ const ValidacionPago = () => {
 
                           <td>
                             {p.cert_mdt ===
-                            "true" ? (
+                              "true" ? (
                               p.urlCertificadoMdt ? (
                                 <a
                                   href={
@@ -2032,7 +2205,7 @@ const ValidacionPago = () => {
 
                           <td>
                             {p.cert_int ===
-                            "true" ? (
+                              "true" ? (
                               p.urlCertificadoInt ? (
                                 <a
                                   href={
@@ -2235,49 +2408,66 @@ const ValidacionPago = () => {
 
                                     {/* RESULTADO PSICOMÉTRICO */}
 
-                                    {p.tipoPago ===
-                                      "test_psicometrico" &&
+                                    {p.tipoPago === "test_psicometrico" &&
                                       p.psychometricEvaluationId && (
-                                        <button
-                                          className="vpActionBtn vpActionBtn--result"
-                                          type="button"
-                                          disabled={
-                                            !p.verificado ||
-                                            generandoResultadoId ===
-                                              p.id
-                                          }
-                                          title={
-                                            !p.verificado
-                                              ? "Primero debes validar el pago"
-                                              : "Generar y enviar resultado psicométrico"
-                                          }
-                                          onClick={() =>
-                                            handleGenerarResultado(
-                                              p,
-                                            )
-                                          }
-                                        >
-                                          <span className="vpActionIcon">
-                                            {generandoResultadoId ===
-                                            p.id
-                                              ? "⏳"
-                                              : "📊"}
-                                          </span>
+                                        <>
+                                          {p.resultadoPsicometrico
+                                            ?.resultadoGenerado ? (
+                                            <a
+                                              className="vpActionBtn vpActionBtn--view"
+                                              href={`/#/resultado-psicometrico-admin/${p.psychometricEvaluationId}`}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              title="Ver resultado psicométrico"
+                                            >
+                                              <span className="vpActionIcon">
+                                                👁️
+                                              </span>
 
-                                          <span className="vpActionText">
-                                            {generandoResultadoId ===
-                                            p.id
-                                              ? "Generando"
-                                              : "Resultado"}
-                                          </span>
-                                        </button>
+                                              <span className="vpActionText">
+                                                Ver
+                                              </span>
+                                            </a>
+                                          ) : (
+                                            <button
+                                              className="vpActionBtn vpActionBtn--result"
+                                              type="button"
+                                              disabled={
+                                                !p.verificado ||
+                                                generandoResultadoId === p.id
+                                              }
+                                              title={
+                                                !p.verificado
+                                                  ? "Primero debes validar el pago"
+                                                  : "Generar y enviar resultado psicométrico"
+                                              }
+                                              onClick={() =>
+                                                handleGenerarResultado(p)
+                                              }
+                                            >
+                                              <span className="vpActionIcon">
+                                                {generandoResultadoId ===
+                                                  p.id
+                                                  ? "⏳"
+                                                  : "📊"}
+                                              </span>
+
+                                              <span className="vpActionText">
+                                                {generandoResultadoId ===
+                                                  p.id
+                                                  ? "Generando"
+                                                  : "Resultado"}
+                                              </span>
+                                            </button>
+                                          )}
+                                        </>
                                       )}
 
                                     {/* CERTIFICADO */}
 
                                     {p.verificado &&
                                       p.cert_emp ===
-                                        "true" &&
+                                      "true" &&
                                       !p.certificadoEmp && (
                                         <button
                                           className="vpActionBtn vpActionBtn--certificate"
@@ -2332,14 +2522,14 @@ const ValidacionPago = () => {
                                           >
                                             <span className="vpActionIcon">
                                               {facturandoPagoId ===
-                                              p.id
+                                                p.id
                                                 ? "⏳"
                                                 : "🧾"}
                                             </span>
 
                                             <span className="vpActionText">
                                               {facturandoPagoId ===
-                                              p.id
+                                                p.id
                                                 ? "Emitiendo"
                                                 : "Facturar"}
                                             </span>
@@ -2808,8 +2998,8 @@ const ValidacionPago = () => {
                           <td>
                             {p.createdAt
                               ? new Date(
-                                  p.createdAt,
-                                ).toLocaleDateString()
+                                p.createdAt,
+                              ).toLocaleDateString()
                               : "-"}
                           </td>
 
@@ -2878,7 +3068,7 @@ const ValidacionPago = () => {
                             }}
                           >
                             {editingEntregaId ===
-                            p.id ? (
+                              p.id ? (
                               <input
                                 type="checkbox"
                                 {...register(
@@ -2894,7 +3084,7 @@ const ValidacionPago = () => {
 
                           <td>
                             {editingEntregaId ===
-                            p.id ? (
+                              p.id ? (
                               <div className="vpActions">
                                 <button
                                   onClick={
@@ -3082,30 +3272,30 @@ const ValidacionPago = () => {
 
               {SUPERADMIN ===
                 user?.cI && (
-                <button
-                  className="secBtnPrimary"
-                  onClick={
-                    descargarExcel
-                  }
-                  type="button"
-                >
-                  📥 Descargar Pagos
-                </button>
-              )}
+                  <button
+                    className="secBtnPrimary"
+                    onClick={
+                      descargarExcel
+                    }
+                    type="button"
+                  >
+                    📥 Descargar Pagos
+                  </button>
+                )}
 
               {SUPERADMIN ===
                 user?.cI && (
-                <button
-                  className="secBtnPrimary"
-                  onClick={
-                    descargarExcelInscripcion
-                  }
-                  type="button"
-                >
-                  📥 Descargar
-                  Inscripciones
-                </button>
-              )}
+                  <button
+                    className="secBtnPrimary"
+                    onClick={
+                      descargarExcelInscripcion
+                    }
+                    type="button"
+                  >
+                    📥 Descargar
+                    Inscripciones
+                  </button>
+                )}
             </div>
 
             <div className="secCount">
@@ -3201,8 +3391,8 @@ const ValidacionPago = () => {
                         <td>
                           {p.createdAt
                             ? new Date(
-                                p.createdAt,
-                              ).toLocaleDateString()
+                              p.createdAt,
+                            ).toLocaleDateString()
                             : "-"}
                         </td>
 
@@ -3304,11 +3494,10 @@ const ValidacionPago = () => {
       )}
 
       <div
-        className={`secOverlay ${
-          menuOpen
-            ? "open"
-            : ""
-        }`}
+        className={`secOverlay ${menuOpen
+          ? "open"
+          : ""
+          }`}
         onClick={() =>
           setMenuOpen(false)
         }
@@ -3318,13 +3507,441 @@ const ValidacionPago = () => {
       />
 
       <div className="secShell vpShell">
+
+        {/* =================================================
+    MODAL RESULTADO PSICOMÉTRICO
+================================================= */}
+
+        {showResultadoModal && (
+          <div
+            className="vpResultModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="vp-result-modal-title"
+          >
+            <div
+              className="vpResultModal__backdrop"
+              onClick={() => {
+                if (
+                  resultadoModalStatus !==
+                  "processing"
+                ) {
+                  cerrarResultadoModal();
+                }
+              }}
+            />
+
+            <article
+              className={`vpResultModal__card vpResultModal__card--${resultadoModalStatus}`}
+            >
+              {resultadoModalStatus !==
+                "processing" && (
+                  <button
+                    type="button"
+                    className="vpResultModal__close"
+                    onClick={
+                      cerrarResultadoModal
+                    }
+                    aria-label="Cerrar"
+                  >
+                    ×
+                  </button>
+                )}
+
+              {/* =============================================
+          LOGO
+      ============================================= */}
+
+              <div className="vpResultModal__brand">
+                <img
+                  src="/images/test_logo.png"
+                  alt="Proyecto Pensar"
+                />
+              </div>
+
+              {/* =============================================
+          CONFIRMAR
+      ============================================= */}
+
+              {resultadoModalStatus ===
+                "confirm" && (
+                  <>
+                    <div className="vpResultModal__icon vpResultModal__icon--confirm">
+                      📊
+                    </div>
+
+                    <span className="vpResultModal__eyebrow">
+                      PROYECTO PENSAR
+                    </span>
+
+                    <h2 id="vp-result-modal-title">
+                      Generar resultado psicométrico
+                    </h2>
+
+                    <p className="vpResultModal__lead">
+                      Estás a punto de liberar
+                      el resultado de esta
+                      evaluación y enviarlo al
+                      participante.
+                    </p>
+
+                    <div className="vpResultModal__participant">
+                      <div className="vpResultModal__avatar">
+                        {resultadoModalPago
+                          ?.inscripcion
+                          ?.user
+                          ?.firstName?.charAt(
+                            0
+                          )
+                          ?.toUpperCase() ||
+                          "P"}
+                      </div>
+
+                      <div>
+                        <span>
+                          Participante
+                        </span>
+
+                        <strong>
+                          {[
+                            resultadoModalPago
+                              ?.inscripcion
+                              ?.user
+                              ?.firstName,
+
+                            resultadoModalPago
+                              ?.inscripcion
+                              ?.user
+                              ?.lastName,
+                          ]
+                            .filter(Boolean)
+                            .join(" ") ||
+                            "Participante"}
+                        </strong>
+
+                        {resultadoModalPago
+                          ?.inscripcion
+                          ?.user
+                          ?.email && (
+                            <small>
+                              {
+                                resultadoModalPago
+                                  .inscripcion
+                                  .user.email
+                              }
+                            </small>
+                          )}
+                      </div>
+                    </div>
+
+                    <div className="vpResultModal__summary">
+                      <div>
+                        <span>
+                          Test
+                        </span>
+
+                        <strong>
+                          {resultadoModalPago
+                            ?.curso ||
+                            "-"}
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span>
+                          Pago
+                        </span>
+
+                        <strong>
+                          Validado
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span>
+                          Evaluación
+                        </span>
+
+                        <strong>
+                          Disponible
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="vpResultModal__notice">
+                      <span>
+                        ✉️
+                      </span>
+
+                      <div>
+                        <strong>
+                          Se enviará por correo
+                        </strong>
+
+                        <p>
+                          El participante recibirá
+                          un enlace personal para
+                          consultar su informe de
+                          resultados.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="vpResultModal__actions">
+                      <button
+                        type="button"
+                        className="vpResultModal__btn vpResultModal__btn--secondary"
+                        onClick={
+                          cerrarResultadoModal
+                        }
+                      >
+                        Cancelar
+                      </button>
+
+                      <button
+                        type="button"
+                        className="vpResultModal__btn vpResultModal__btn--primary"
+                        onClick={
+                          confirmarGenerarResultado
+                        }
+                      >
+                        Generar y enviar
+                      </button>
+                    </div>
+                  </>
+                )}
+
+              {/* =============================================
+          PROCESANDO
+      ============================================= */}
+
+              {resultadoModalStatus ===
+                "processing" && (
+                  <>
+                    <div className="vpResultModal__loader">
+                      <span />
+                    </div>
+
+                    <span className="vpResultModal__eyebrow">
+                      PROCESANDO
+                    </span>
+
+                    <h2>
+                      Generando resultado
+                    </h2>
+
+                    <p className="vpResultModal__lead">
+                      Estamos preparando el
+                      informe psicométrico y el
+                      enlace personal del
+                      participante.
+                    </p>
+
+                    <div className="vpResultModal__processingSteps">
+                      <div>
+                        <span>
+                          ✓
+                        </span>
+
+                        <p>
+                          Validando evaluación
+                        </p>
+                      </div>
+
+                      <div>
+                        <span>
+                          ✓
+                        </span>
+
+                        <p>
+                          Preparando resultados
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="vpResultModal__processingDot">
+                          •
+                        </span>
+
+                        <p>
+                          Generando acceso al
+                          informe
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+              {/* =============================================
+          ÉXITO
+      ============================================= */}
+
+              {resultadoModalStatus ===
+                "success" && (
+                  <>
+                    <div className="vpResultModal__successAnimation">
+                      <span className="vpResultModal__successRing" />
+
+                      <span className="vpResultModal__successCheck">
+                        ✓
+                      </span>
+                    </div>
+
+                    <span className="vpResultModal__eyebrow">
+                      RESULTADO GENERADO
+                    </span>
+
+                    <h2>
+                      Informe disponible
+                    </h2>
+
+                    <p className="vpResultModal__lead">
+                      {resultadoModalMessage}
+                    </p>
+
+                    <div className="vpResultModal__successPanel">
+                      <div>
+                        ✉️
+                      </div>
+
+                      <section>
+                        <strong>
+                          Correo enviado
+                        </strong>
+
+                        <p>
+                          El participante ya puede
+                          acceder a su informe
+                          mediante el enlace
+                          personal enviado a su
+                          correo electrónico.
+                        </p>
+
+                        {resultadoModalPago
+                          ?.inscripcion
+                          ?.user
+                          ?.email && (
+                            <span>
+                              {
+                                resultadoModalPago
+                                  .inscripcion
+                                  .user.email
+                              }
+                            </span>
+                          )}
+                      </section>
+                    </div>
+
+                    <div className="vpResultModal__actions vpResultModal__actions--single">
+                      <button
+                        type="button"
+                        className="vpResultModal__btn vpResultModal__btn--primary"
+                        onClick={
+                          cerrarResultadoModal
+                        }
+                      >
+                        Entendido
+                      </button>
+                    </div>
+                  </>
+                )}
+
+              {/* =============================================
+          YA ENVIADO
+      ============================================= */}
+
+              {resultadoModalStatus ===
+                "alreadySent" && (
+                  <>
+                    <div className="vpResultModal__icon vpResultModal__icon--warning">
+                      !
+                    </div>
+
+                    <span className="vpResultModal__eyebrow">
+                      RESULTADO EXISTENTE
+                    </span>
+
+                    <h2>
+                      Resultado ya enviado
+                    </h2>
+
+                    <p className="vpResultModal__lead">
+                      {resultadoModalMessage}
+                    </p>
+
+                    {resultadoModalFecha && (
+                      <div className="vpResultModal__date">
+                        <span>
+                          Último envío
+                        </span>
+
+                        <strong>
+                          {
+                            resultadoModalFecha
+                          }
+                        </strong>
+                      </div>
+                    )}
+
+                    <div className="vpResultModal__actions vpResultModal__actions--single">
+                      <button
+                        type="button"
+                        className="vpResultModal__btn vpResultModal__btn--primary"
+                        onClick={
+                          cerrarResultadoModal
+                        }
+                      >
+                        Entendido
+                      </button>
+                    </div>
+                  </>
+                )}
+
+              {/* =============================================
+          ERROR
+      ============================================= */}
+
+              {resultadoModalStatus ===
+                "error" && (
+                  <>
+                    <div className="vpResultModal__icon vpResultModal__icon--error">
+                      !
+                    </div>
+
+                    <span className="vpResultModal__eyebrow vpResultModal__eyebrow--error">
+                      NO FUE POSIBLE COMPLETAR EL PROCESO
+                    </span>
+
+                    <h2>
+                      Error al generar resultado
+                    </h2>
+
+                    <p className="vpResultModal__lead">
+                      {resultadoModalMessage}
+                    </p>
+
+                    <div className="vpResultModal__actions vpResultModal__actions--single">
+                      <button
+                        type="button"
+                        className="vpResultModal__btn vpResultModal__btn--primary"
+                        onClick={
+                          cerrarResultadoModal
+                        }
+                      >
+                        Cerrar
+                      </button>
+                    </div>
+                  </>
+                )}
+            </article>
+          </div>
+        )}
         <button
           ref={hamburgerRef}
-          className={`secHamburger ${
-            menuOpen
-              ? "is-open"
-              : ""
-          }`}
+          className={`secHamburger ${menuOpen
+            ? "is-open"
+            : ""
+            }`}
           onClick={() =>
             setMenuOpen(
               !menuOpen,
@@ -3342,11 +3959,10 @@ const ValidacionPago = () => {
         </button>
 
         <nav
-          className={`secMenu ${
-            menuOpen
-              ? "open"
-              : ""
-          }`}
+          className={`secMenu ${menuOpen
+            ? "open"
+            : ""
+            }`}
           ref={menuRef}
         >
           <div className="secMenuHeader">
@@ -3362,12 +3978,11 @@ const ValidacionPago = () => {
           </div>
 
           <button
-            className={`secMenuBtn ${
-              activeSection ===
+            className={`secMenuBtn ${activeSection ===
               "resumen"
-                ? "active"
-                : ""
-            }`}
+              ? "active"
+              : ""
+              }`}
             onClick={() =>
               setActiveSection(
                 "resumen",
@@ -3379,12 +3994,11 @@ const ValidacionPago = () => {
           </button>
 
           <button
-            className={`secMenuBtn ${
-              activeSection ===
+            className={`secMenuBtn ${activeSection ===
               "validarPagos"
-                ? "active"
-                : ""
-            }`}
+              ? "active"
+              : ""
+              }`}
             onClick={() =>
               setActiveSection(
                 "validarPagos",
@@ -3396,12 +4010,11 @@ const ValidacionPago = () => {
           </button>
 
           <button
-            className={`secMenuBtn ${
-              activeSection ===
+            className={`secMenuBtn ${activeSection ===
               "registrarEntregas"
-                ? "active"
-                : ""
-            }`}
+              ? "active"
+              : ""
+              }`}
             onClick={() =>
               setActiveSection(
                 "registrarEntregas",
@@ -3413,12 +4026,11 @@ const ValidacionPago = () => {
           </button>
 
           <button
-            className={`secMenuBtn ${
-              activeSection ===
+            className={`secMenuBtn ${activeSection ===
               "listaPagos"
-                ? "active"
-                : ""
-            }`}
+              ? "active"
+              : ""
+              }`}
             onClick={() =>
               setActiveSection(
                 "listaPagos",
@@ -3430,12 +4042,11 @@ const ValidacionPago = () => {
           </button>
 
           <button
-            className={`secMenuBtn ${
-              activeSection ===
+            className={`secMenuBtn ${activeSection ===
               "listaInscritos"
-                ? "active"
-                : ""
-            }`}
+              ? "active"
+              : ""
+              }`}
             onClick={() =>
               setActiveSection(
                 "listaInscritos",

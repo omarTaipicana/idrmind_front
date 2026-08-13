@@ -29,10 +29,8 @@
   padding: 2rem 4% 3rem;
 
   background:
-    linear-gradient(
-      rgba(245, 247, 251, 0.98),
-      rgba(245, 247, 251, 0.98)
-    ),
+    linear-gradient(rgba(245, 247, 251, 0.98),
+      rgba(245, 247, 251, 0.98)),
     url("/images/fondo.jpg");
 
   background-size: cover;
@@ -65,11 +63,9 @@
 
   border-radius: 1.3rem;
 
-  background: linear-gradient(
-    135deg,
-    var(--ppt-blue-dark),
-    var(--ppt-blue)
-  );
+  background: linear-gradient(135deg,
+      var(--ppt-blue-dark),
+      var(--ppt-blue));
 
   color: #ffffff;
 
@@ -93,15 +89,13 @@
 
   border-radius: 50%;
 
-  background: rgba(
-    255,
-    255,
-    255,
-    0.1
-  );
+  background: rgba(255,
+      255,
+      255,
+      0.1);
 }
 
-.psychometric-test__brand > div {
+.psychometric-test__brand>div {
   min-width: 0;
 }
 
@@ -122,11 +116,9 @@
 
   color: #ffffff;
 
-  font-size: clamp(
-    1.3rem,
-    3vw,
-    2rem
-  );
+  font-size: clamp(1.3rem,
+      3vw,
+      2rem);
 
   line-height: 1.2;
   word-break: break-word;
@@ -143,12 +135,10 @@
 }
 
 .psychometric-test__user small {
-  color: rgba(
-    255,
-    255,
-    255,
-    0.68
-  );
+  color: rgba(255,
+      255,
+      255,
+      0.68);
 }
 
 .psychometric-test__user strong {
@@ -246,11 +236,9 @@
 
   border-radius: inherit;
 
-  background: linear-gradient(
-    90deg,
-    var(--ppt-cyan),
-    var(--ppt-blue)
-  );
+  background: linear-gradient(90deg,
+      var(--ppt-cyan),
+      var(--ppt-blue));
 
   transition:
     width 0.25s ease;
@@ -327,8 +315,7 @@
   gap: 0.8rem;
   align-items: center;
 
-  border: 1px solid
-    var(--ppt-border);
+  border: 1px solid var(--ppt-border);
 
   border-radius: 0.9rem;
 
@@ -350,7 +337,7 @@
   transform: translateX(2px);
 }
 
-.psychometric-test__section-item > span {
+.psychometric-test__section-item>span {
   width: 34px;
   height: 34px;
   flex-shrink: 0;
@@ -398,8 +385,7 @@
     0 8px 20px rgba(40, 167, 232, 0.12);
 }
 
-.psychometric-test__section-item--active
-  > span {
+.psychometric-test__section-item--active>span {
   background: var(--ppt-blue);
   color: #ffffff;
 }
@@ -421,8 +407,7 @@
     0 14px 32px rgba(16, 24, 40, 0.08);
 }
 
-.psychometric-test__section-header
-  > span {
+.psychometric-test__section-header>span {
   color: var(--ppt-cyan);
 
   font-size: 0.78rem;
@@ -436,11 +421,9 @@
 
   color: var(--ppt-blue-dark);
 
-  font-size: clamp(
-    1.4rem,
-    3vw,
-    2rem
-  );
+  font-size: clamp(1.4rem,
+      3vw,
+      2rem);
 
   line-height: 1.25;
 }
@@ -458,8 +441,7 @@
   padding: 1rem;
 
   border-radius: 0.9rem;
-  border-left: 5px solid
-    var(--ppt-cyan);
+  border-left: 5px solid var(--ppt-cyan);
 
   background: #eef6ff;
 
@@ -482,8 +464,7 @@
 .psychometric-question {
   padding: 1.4rem;
 
-  border: 1px solid
-    var(--ppt-border);
+  border: 1px solid var(--ppt-border);
 
   border-radius: 1.1rem;
 
@@ -500,19 +481,16 @@
     rgba(40, 167, 232, 0.65);
 
   box-shadow:
-    0 12px 28px
-    rgba(16, 24, 40, 0.07);
+    0 12px 28px rgba(16, 24, 40, 0.07);
 }
 
 .psychometric-question--answered {
   border-color:
     rgba(18, 183, 106, 0.55);
 
-  background: linear-gradient(
-    135deg,
-    #ffffff,
-    #f3fff8
-  );
+  background: linear-gradient(135deg,
+      #ffffff,
+      #f3fff8);
 }
 
 .psychometric-question__header {
@@ -541,7 +519,7 @@
   font-weight: 900;
 }
 
-.psychometric-question__header > div {
+.psychometric-question__header>div {
   min-width: 0;
 }
 
@@ -626,8 +604,7 @@
   color: var(--ppt-blue-dark);
 
   box-shadow:
-    0 8px 18px
-    rgba(23, 58, 138, 0.1);
+    0 8px 18px rgba(23, 58, 138, 0.1);
 }
 
 .psychometric-question__option input {
@@ -739,14 +716,11 @@
   background: var(--ppt-blue);
 
   box-shadow:
-    0 10px 24px
-    rgba(23, 58, 138, 0.22);
+    0 10px 24px rgba(23, 58, 138, 0.22);
 }
 
-.psychometric-question__numeric-option--selected
-  strong,
-.psychometric-question__numeric-option--selected
-  small {
+.psychometric-question__numeric-option--selected strong,
+.psychometric-question__numeric-option--selected small {
   color: #ffffff;
 }
 
@@ -757,9 +731,7 @@
 .psychometric-question__scale {
   display: grid;
   grid-template-columns:
-    minmax(100px, 1fr)
-    auto
-    minmax(100px, 1fr);
+    minmax(100px, 1fr) auto minmax(100px, 1fr);
 
   gap: 1rem;
   align-items: center;
@@ -829,12 +801,10 @@
   background: var(--ppt-blue);
 
   box-shadow:
-    0 8px 18px
-    rgba(23, 58, 138, 0.22);
+    0 8px 18px rgba(23, 58, 138, 0.22);
 }
 
-.psychometric-question__scale-option--selected
-  strong {
+.psychometric-question__scale-option--selected strong {
   color: #ffffff;
 }
 
@@ -859,8 +829,7 @@
   margin-top: 1.5rem;
   padding: 1.4rem;
 
-  border: 2px dashed
-    var(--ppt-border);
+  border: 2px dashed var(--ppt-border);
 
   border-radius: 1rem;
 
@@ -892,8 +861,7 @@
   justify-content: space-between;
   gap: 1rem;
 
-  border-top: 1px solid
-    var(--ppt-border);
+  border-top: 1px solid var(--ppt-border);
 }
 
 .psychometric-test__button {
@@ -905,11 +873,9 @@
 
   border-radius: 0.9rem;
 
-  background: linear-gradient(
-    135deg,
-    var(--ppt-blue),
-    var(--ppt-blue-dark)
-  );
+  background: linear-gradient(135deg,
+      var(--ppt-blue),
+      var(--ppt-blue-dark));
 
   color: #ffffff;
 
@@ -918,8 +884,7 @@
   cursor: pointer;
 
   box-shadow:
-    0 10px 22px
-    rgba(23, 58, 138, 0.2);
+    0 10px 22px rgba(23, 58, 138, 0.2);
 
   transition:
     transform 0.2s ease,
@@ -931,8 +896,7 @@
   transform: translateY(-2px);
 
   box-shadow:
-    0 14px 28px
-    rgba(23, 58, 138, 0.28);
+    0 14px 28px rgba(23, 58, 138, 0.28);
 }
 
 .psychometric-test__button--secondary {
@@ -975,11 +939,9 @@
 
   padding: 1.5rem;
 
-  background: linear-gradient(
-    135deg,
-    var(--ppt-blue-dark),
-    var(--ppt-blue)
-  );
+  background: linear-gradient(135deg,
+      var(--ppt-blue-dark),
+      var(--ppt-blue));
 
   box-sizing: border-box;
 }
@@ -1002,8 +964,7 @@
   text-align: center;
 
   box-shadow:
-    0 25px 65px
-    rgba(0, 0, 0, 0.28);
+    0 25px 65px rgba(0, 0, 0, 0.28);
 }
 
 .psychometric-test-error__card img {
@@ -1228,9 +1189,7 @@
 .psychometric-question__bipolar {
   display: grid;
   grid-template-columns:
-    minmax(190px, 1fr)
-    auto
-    minmax(190px, 1fr);
+    minmax(190px, 1fr) auto minmax(190px, 1fr);
   gap: 1.2rem;
   align-items: center;
 }
@@ -1246,14 +1205,12 @@
 
 .psychometric-question__bipolar-label--left {
   text-align: right;
-  border-right: 4px solid
-    var(--ppt-cyan);
+  border-right: 4px solid var(--ppt-cyan);
 }
 
 .psychometric-question__bipolar-label--right {
   text-align: left;
-  border-left: 4px solid
-    var(--ppt-blue);
+  border-left: 4px solid var(--ppt-blue);
 }
 
 /* =========================================
@@ -1299,8 +1256,7 @@
   margin-top: 1.5rem;
   padding: 1rem 1.2rem;
   border-radius: 0.9rem;
-  border-left: 5px solid
-    var(--ppt-danger);
+  border-left: 5px solid var(--ppt-danger);
   background: #fef3f2;
   color: #912018;
 }
@@ -1342,8 +1298,7 @@
 
   .psychometric-question__bipolar-label--left {
     border-right: 0;
-    border-left: 4px solid
-      var(--ppt-cyan);
+    border-left: 4px solid var(--ppt-cyan);
   }
 }
 
@@ -1356,32 +1311,823 @@
   background: #ecfdf3;
 }
 
-.psychometric-test__section-item--completed
-  > span {
+.psychometric-test__section-item--completed>span {
   background: #12b76a;
   color: #ffffff;
 }
 
-.psychometric-test__section-item--completed
-  strong {
+.psychometric-test__section-item--completed strong {
   color: #05603a;
 }
 
-.psychometric-test__section-item--completed
-  small {
+.psychometric-test__section-item--completed small {
   color: #087443;
 }
 
 .psychometric-test__section-item--active {
   border-color: var(--ppt-cyan);
   box-shadow:
-    0 0 0 3px
-    rgba(40, 167, 232, 0.14);
+    0 0 0 3px rgba(40, 167, 232, 0.14);
 }
 
 .psychometric-question--pending {
   border-color: #f04438;
   box-shadow:
-    0 0 0 3px
-    rgba(240, 68, 56, 0.1);
+    0 0 0 3px rgba(240, 68, 56, 0.1);
+}
+
+/* =========================================================
+   MODAL PROYECTO PENSAR
+========================================================= */
+
+.psychometric-modal {
+  position: fixed;
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem;
+}
+
+/* =========================================================
+   BACKDROP
+========================================================= */
+
+.psychometric-modal__backdrop {
+  position: absolute;
+  inset: 0;
+
+  background:
+    rgba(6, 18, 42, 0.72);
+
+  backdrop-filter:
+    blur(8px);
+
+  -webkit-backdrop-filter:
+    blur(8px);
+
+  animation:
+    psychometricModalBackdrop 0.22s ease both;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.psychometric-modal__card {
+  position: relative;
+  z-index: 1;
+
+  width: min(560px,
+      100%);
+
+  max-height:
+    calc(100vh - 3rem);
+
+  overflow-y: auto;
+
+  padding:
+    2.25rem;
+
+  border-radius:
+    24px;
+
+  background:
+    #ffffff;
+
+  border:
+    1px solid rgba(255,
+      255,
+      255,
+      0.7);
+
+  box-shadow:
+    0 30px 90px rgba(4,
+      20,
+      48,
+      0.32);
+
+  text-align: center;
+
+  animation:
+    psychometricModalCard 0.28s cubic-bezier(0.22,
+      1,
+      0.36,
+      1) both;
+}
+
+/* =========================================================
+   SUCCESS CARD
+========================================================= */
+
+.psychometric-modal__card--success {
+  width: min(600px,
+      100%);
+
+  padding-top:
+    1.8rem;
+}
+
+/* =========================================================
+   CERRAR
+========================================================= */
+
+.psychometric-modal__close {
+  position: absolute;
+
+  top: 1rem;
+  right: 1rem;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background:
+    #f2f4f7;
+
+  color:
+    #475467;
+
+  font-size: 1.4rem;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.psychometric-modal__close:hover {
+  background:
+    #e4e7ec;
+
+  transform:
+    rotate(4deg);
+}
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.psychometric-modal__brand {
+  height: 58px;
+
+  margin:
+    0 auto 1.25rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.psychometric-modal__brand img {
+  display: block;
+
+  max-width: 210px;
+  max-height: 58px;
+
+  object-fit: contain;
+}
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.psychometric-modal__icon {
+  width: 70px;
+  height: 70px;
+
+  margin:
+    0 auto 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.psychometric-modal__icon--question {
+  color:
+    #173a8a;
+
+  background:
+    linear-gradient(145deg,
+      #eef4ff,
+      #e2edff);
+
+  border:
+    1px solid #cbdcff;
+}
+
+/* =========================================================
+   EYEBROW / TITLES
+========================================================= */
+
+.psychometric-modal__eyebrow {
+  display: block;
+
+  margin-bottom:
+    0.45rem;
+
+  color:
+    #287fbc;
+
+  font-size:
+    0.72rem;
+
+  font-weight: 900;
+
+  letter-spacing:
+    0.13em;
+}
+
+.psychometric-modal__card h2 {
+  margin:
+    0;
+
+  color:
+    #071b3f;
+
+  font-size:
+    clamp(1.5rem,
+      4vw,
+      2rem);
+
+  line-height: 1.15;
+
+  letter-spacing:
+    -0.03em;
+}
+
+.psychometric-modal__card>p {
+  max-width: 450px;
+
+  margin:
+    0.8rem auto 0;
+
+  color:
+    #667085;
+
+  font-size:
+    0.94rem;
+
+  line-height: 1.6;
+}
+
+.psychometric-modal__lead {
+  max-width:
+    470px !important;
+}
+
+/* =========================================================
+   WARNING / NOTICE
+========================================================= */
+
+.psychometric-modal__notice {
+  margin-top:
+    1.4rem;
+
+  padding:
+    1rem;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap:
+    0.8rem;
+
+  text-align: left;
+
+  border-radius:
+    14px;
+
+  background:
+    #fffaf0;
+
+  border:
+    1px solid #f7dca3;
+}
+
+.psychometric-modal__notice-icon {
+  flex:
+    0 0 auto;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius:
+    50%;
+
+  background:
+    #f79009;
+
+  color:
+    white;
+
+  font-size:
+    0.85rem;
+
+  font-weight: 900;
+}
+
+.psychometric-modal__notice strong {
+  display: block;
+
+  color:
+    #7a2e0e;
+
+  font-size:
+    0.85rem;
+}
+
+.psychometric-modal__notice p {
+  margin:
+    0.2rem 0 0;
+
+  color:
+    #8a4c20;
+
+  font-size:
+    0.78rem;
+
+  line-height: 1.5;
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.psychometric-modal__summary,
+.psychometric-modal__completed-info {
+  margin-top:
+    1.25rem;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3,
+      minmax(0,
+        1fr));
+
+  overflow: hidden;
+
+  border:
+    1px solid #e4e7ec;
+
+  border-radius:
+    14px;
+
+  background:
+    #f8fafc;
+}
+
+.psychometric-modal__summary>div,
+.psychometric-modal__completed-info>div {
+  min-width: 0;
+
+  padding:
+    0.85rem;
+
+  border-right:
+    1px solid #e4e7ec;
+}
+
+.psychometric-modal__summary>div:last-child,
+.psychometric-modal__completed-info>div:last-child {
+  border-right: 0;
+}
+
+.psychometric-modal__summary span,
+.psychometric-modal__completed-info span {
+  display: block;
+
+  margin-bottom:
+    0.25rem;
+
+  color:
+    #98a2b3;
+
+  font-size:
+    0.67rem;
+
+  font-weight: 700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.05em;
+}
+
+.psychometric-modal__summary strong,
+.psychometric-modal__completed-info strong {
+  color:
+    #173a8a;
+
+  font-size:
+    0.92rem;
+}
+
+/* =========================================================
+   SUCCESS ANIMATION
+========================================================= */
+
+.psychometric-modal__success-animation {
+  position: relative;
+
+  width: 86px;
+  height: 86px;
+
+  margin:
+    0 auto 1rem;
+}
+
+.psychometric-modal__success-ring {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  background:
+    #ecfdf3;
+
+  border:
+    1px solid #abefc6;
+
+  animation:
+    psychometricSuccessPulse 1.7s ease infinite;
+}
+
+.psychometric-modal__success-check {
+  position: absolute;
+
+  inset: 11px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(145deg,
+      #12b76a,
+      #087443);
+
+  color: #ffffff;
+
+  font-size:
+    2rem;
+
+  font-weight: 900;
+
+  box-shadow:
+    0 8px 20px rgba(18,
+      183,
+      106,
+      0.25);
+}
+
+/* =========================================================
+   EMAIL PANEL
+========================================================= */
+
+.psychometric-modal__success-panel {
+  margin-top:
+    1.5rem;
+
+  padding:
+    1.1rem;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap:
+    0.9rem;
+
+  text-align: left;
+
+  border-radius:
+    15px;
+
+  background:
+    #f4f8ff;
+
+  border:
+    1px solid #d5e3fa;
+}
+
+.psychometric-modal__mail-icon {
+  flex:
+    0 0 auto;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius:
+    12px;
+
+  background:
+    #173a8a;
+
+  color:
+    white;
+
+  font-size:
+    1.25rem;
+}
+
+.psychometric-modal__success-panel strong {
+  display: block;
+
+  margin-bottom:
+    0.25rem;
+
+  color:
+    #071b3f;
+
+  font-size:
+    0.9rem;
+}
+
+.psychometric-modal__success-panel p {
+  margin: 0;
+
+  color:
+    #667085;
+
+  font-size:
+    0.8rem;
+
+  line-height: 1.5;
+}
+
+.psychometric-modal__success-panel span {
+  display: inline-block;
+
+  margin-top:
+    0.45rem;
+
+  color:
+    #173a8a;
+
+  font-size:
+    0.8rem;
+
+  font-weight: 800;
+
+  word-break:
+    break-word;
+}
+
+/* =========================================================
+   COMPLETED INFO
+========================================================= */
+
+.psychometric-modal__completed-info {
+  grid-template-columns:
+    repeat(2,
+      minmax(0,
+        1fr));
+
+  background:
+    white;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.psychometric-modal__actions {
+  margin-top:
+    1.5rem;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,
+      minmax(0,
+        1fr));
+
+  gap:
+    0.75rem;
+}
+
+.psychometric-modal__button {
+  min-height: 48px;
+
+  padding:
+    0.75rem 1rem;
+
+  border: 0;
+
+  border-radius:
+    11px;
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.86rem;
+
+  font-weight:
+    900;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.psychometric-modal__button:hover:not(:disabled) {
+  transform:
+    translateY(-1px);
+}
+
+.psychometric-modal__button:disabled {
+  opacity:
+    0.55;
+
+  cursor:
+    not-allowed;
+}
+
+.psychometric-modal__button--primary {
+  color:
+    #ffffff;
+
+  background:
+    linear-gradient(135deg,
+      #173a8a,
+      #2457b4);
+
+  box-shadow:
+    0 8px 22px rgba(23,
+      58,
+      138,
+      0.23);
+}
+
+.psychometric-modal__button--secondary {
+  color:
+    #344054;
+
+  background:
+    #f2f4f7;
+
+  border:
+    1px solid #e4e7ec;
+}
+
+.psychometric-modal__button--full {
+  width: 100%;
+
+  margin-top:
+    1.4rem;
+}
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+.psychometric-modal__security {
+  display: block;
+
+  margin-top:
+    0.9rem;
+
+  color:
+    #98a2b3;
+
+  font-size:
+    0.7rem;
+}
+
+/* =========================================================
+   ANIMACIONES
+========================================================= */
+
+@keyframes psychometricModalBackdrop {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes psychometricModalCard {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(16px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0) scale(1);
+  }
+}
+
+@keyframes psychometricSuccessPulse {
+
+  0%,
+  100% {
+    transform:
+      scale(1);
+
+    opacity:
+      1;
+  }
+
+  50% {
+    transform:
+      scale(1.09);
+
+    opacity:
+      0.65;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+  .psychometric-modal {
+    padding:
+      0.75rem;
+  }
+
+  .psychometric-modal__card {
+    padding:
+      1.6rem 1.1rem;
+
+    border-radius:
+      18px;
+  }
+
+  .psychometric-modal__brand img {
+    max-width:
+      175px;
+  }
+
+  .psychometric-modal__summary {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psychometric-modal__summary>div {
+    border-right:
+      0;
+
+    border-bottom:
+      1px solid #e4e7ec;
+  }
+
+  .psychometric-modal__summary>div:last-child {
+    border-bottom:
+      0;
+  }
+
+  .psychometric-modal__actions {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psychometric-modal__completed-info {
+    grid-template-columns:
+      repeat(2,
+        minmax(0,
+          1fr));
+  }
 }
