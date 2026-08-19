@@ -82,6 +82,7 @@ import ProyectoPensarTest from "./pages/ProyectoPensarTest";
 import ProyectoPensarPago from "./pages/ProyectoPensarPago";
 import ProyectoPensarResultado from "./pages/ProyectoPensarResultado";
 import ProyectoPensarResultadoAdmin from "./pages/ProyectoPensarResultadoAdmin";
+import ProyectoPensarPdfPreview from "./pages/ProyectoPensarPdfPreview";
 
 /* =========================================================
    APP
@@ -362,6 +363,13 @@ const App = () => {
             path="/resultado-psicometrico-admin/:evaluationId"
             element={
               <ProyectoPensarResultadoAdmin />
+            }
+          />
+
+          <Route
+            path="/resultado-psicometrico-pdf-preview/:evaluationId"
+            element={
+              <ProyectoPensarPdfPreview />
             }
           />
 

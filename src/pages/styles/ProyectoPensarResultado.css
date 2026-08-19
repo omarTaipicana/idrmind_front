@@ -38,11 +38,9 @@
   padding: 2rem;
 
   background:
-    radial-gradient(
-      circle at 90% 0%,
+    radial-gradient(circle at 90% 0%,
       rgba(40, 167, 232, 0.09),
-      transparent 26rem
-    ),
+      transparent 26rem),
     #f4f7fb;
 
   color: var(--ppr-text);
@@ -74,24 +72,20 @@
   display: grid;
 
   grid-template-columns:
-    minmax(0, 1.35fr)
-    minmax(300px, 0.65fr);
+    minmax(0, 1.35fr) minmax(300px, 0.65fr);
 
   overflow: hidden;
 
   border-radius: 24px;
 
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       #071b3f 0%,
       #102e69 60%,
-      #173a8a 100%
-    );
+      #173a8a 100%);
 
   box-shadow:
-    0 22px 55px
-    rgba(7, 27, 63, 0.18);
+    0 22px 55px rgba(7, 27, 63, 0.18);
 }
 
 /* =========================================================
@@ -126,11 +120,9 @@
   max-width: 680px;
 
   font-size:
-    clamp(
-      2rem,
+    clamp(2rem,
       4vw,
-      3.25rem
-    );
+      3.25rem);
 
   line-height: 1.05;
 
@@ -143,12 +135,10 @@
   max-width: 680px;
 
   color:
-    rgba(
+    rgba(255,
       255,
       255,
-      255,
-      0.76
-    );
+      0.76);
 
   font-size: 1rem;
 
@@ -165,15 +155,13 @@
   display: grid;
 
   grid-template-columns:
-    repeat(
-      3,
-      minmax(0, 1fr)
-    );
+    repeat(3,
+      minmax(0, 1fr));
 
   gap: 0.75rem;
 }
 
-.ppr-person > div {
+.ppr-person>div {
   min-width: 0;
 
   padding: 0.85rem 1rem;
@@ -181,21 +169,16 @@
   border-radius: 12px;
 
   background:
-    rgba(
+    rgba(255,
       255,
       255,
-      255,
-      0.07
-    );
+      0.07);
 
   border:
-    1px solid
-    rgba(
+    1px solid rgba(255,
       255,
       255,
-      255,
-      0.1
-    );
+      0.1);
 }
 
 .ppr-person span {
@@ -204,12 +187,10 @@
   margin-bottom: 0.3rem;
 
   color:
-    rgba(
+    rgba(255,
       255,
       255,
-      255,
-      0.6
-    );
+      0.6);
 
   font-size: 0.72rem;
 
@@ -223,15 +204,20 @@
 .ppr-person strong {
   display: block;
 
-  overflow: hidden;
-
   color: white;
-
   font-size: 0.9rem;
+  line-height: 1.25rem;
 
-  text-overflow: ellipsis;
+  /* Permite varias líneas */
+  white-space: normal;
 
-  white-space: nowrap;
+  /* Permite cortar nombres muy largos si fuera necesario */
+  overflow-wrap: break-word;
+  word-break: normal;
+
+  /* Ya no necesitamos los puntos suspensivos */
+  overflow: visible;
+  text-overflow: unset;
 }
 
 .ppr-hero__actions {
@@ -259,12 +245,10 @@
   justify-content: center;
 
   background:
-    rgba(
+    rgba(0,
       0,
       0,
-      0,
-      0.08
-    );
+      0.08);
 }
 
 .ppr-personality-card {
@@ -297,13 +281,10 @@
   border-radius: 20px;
 
   box-shadow:
-    0 20px 50px
-    rgba(
+    0 20px 50px rgba(0,
       0,
       0,
-      0,
-      0.2
-    );
+      0.2);
 }
 
 .ppr-personality-card__label {
@@ -396,17 +377,13 @@
     var(--ppr-white);
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 
   box-shadow:
-    0 10px 28px
-    rgba(
-      15,
+    0 10px 28px rgba(15,
       23,
       42,
-      0.045
-    );
+      0.045);
 }
 
 /* =========================================================
@@ -465,8 +442,7 @@
     #eef4ff;
 
   border:
-    1px solid
-    #d7e4fb;
+    1px solid #d7e4fb;
 
   color:
     var(--ppr-blue);
@@ -484,8 +460,7 @@
 
 .ppr-diagnostic {
   border-top:
-    4px solid
-    var(--ppr-blue);
+    4px solid var(--ppr-blue);
 }
 
 .ppr-status-badge {
@@ -506,10 +481,8 @@
   display: grid;
 
   grid-template-columns:
-    repeat(
-      3,
-      minmax(0, 1fr)
-    );
+    repeat(3,
+      minmax(0, 1fr));
 
   gap: 0.85rem;
 }
@@ -530,11 +503,10 @@
   background: #f8fafc;
 
   border:
-    1px solid
-    #e6eaf0;
+    1px solid #e6eaf0;
 }
 
-.ppr-diagnostic-item > span {
+.ppr-diagnostic-item>span {
   margin-bottom: 0.55rem;
 
   color:
@@ -547,7 +519,7 @@
   letter-spacing: 0.08em;
 }
 
-.ppr-diagnostic-item > strong {
+.ppr-diagnostic-item>strong {
   color:
     var(--ppr-navy);
 
@@ -576,8 +548,7 @@
     1fr 1fr 1.35fr;
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 
   border-radius: 14px;
 
@@ -602,8 +573,7 @@
   background: #ffffff;
 
   border-right:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 }
 
 .ppr-excel-metric:last-child {
@@ -646,8 +616,7 @@
   display: grid;
 
   grid-template-columns:
-    minmax(0, 1fr)
-    minmax(280px, 0.65fr);
+    minmax(0, 1fr) minmax(280px, 0.65fr);
 
   gap: 2rem;
 
@@ -657,21 +626,47 @@
 /* =========================================================
    BARRAS
 ========================================================= */
+/* =========================================================
+   BARRAS
+========================================================= */
 
 .ppr-bars {
   display: flex;
-
   flex-direction: column;
-
-  gap: 1.1rem;
+  gap: 1rem;
 }
+
+/* Tarjeta individual */
+
+.ppr-bar {
+  padding: 0.9rem 1rem;
+
+  border: 1px solid #e4e7ec;
+  border-radius: 13px;
+
+  background: #ffffff;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ppr-bar:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+/* CABECERA */
 
 .ppr-bar__head,
 .ppr-score__head {
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.65rem;
 
   display: flex;
-
+  align-items: center;
   justify-content: space-between;
 
   gap: 1rem;
@@ -679,30 +674,61 @@
   font-size: 0.85rem;
 }
 
-.ppr-bar__head span,
+.ppr-bar__label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.ppr-bar__label>span:last-child,
 .ppr-score__head span {
-  color:
-    var(--ppr-text-soft);
+  color: var(--ppr-text-soft);
 
   font-weight: 800;
 }
 
+/* Indicador circular */
+
+.ppr-bar__dot {
+  width: 11px;
+  height: 11px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: currentColor;
+
+  box-shadow:
+    0 0 0 4px rgba(0, 0, 0, 0.04);
+}
+
+/* PORCENTAJE */
+
 .ppr-bar__head strong,
 .ppr-score__head strong {
-  color:
-    var(--ppr-blue);
+  font-size: 0.9rem;
+  font-weight: 900;
 }
+
+/* TRACK */
 
 .ppr-bar__track,
 .ppr-score__track {
-  height: 8px;
+  width: 100%;
+  height: 11px;
 
   overflow: hidden;
 
   border-radius: 999px;
 
-  background: #e8edf4;
+  background: #edf1f5;
+
+  box-shadow:
+    inset 0 1px 2px rgba(16, 24, 40, 0.08);
 }
+
+/* BARRA */
 
 .ppr-bar__fill,
 .ppr-score__fill {
@@ -712,12 +738,124 @@
 
   border-radius: 999px;
 
+  transition:
+    width 0.65s ease;
+}
+
+/* =========================================================
+   COLORES DE COMUNICACIÓN
+========================================================= */
+
+/* AMARILLO */
+
+.ppr-bar--amarillo {
+  color: #d49a00;
+}
+
+.ppr-bar--amarillo:hover {
+  border-color: #f2cc57;
+}
+
+.ppr-bar--amarillo .ppr-bar__fill {
   background:
-    linear-gradient(
-      90deg,
+    linear-gradient(90deg,
+      #f0b800,
+      #ffd84d);
+
+  box-shadow:
+    0 0 10px rgba(240, 184, 0, 0.25);
+}
+
+.ppr-bar--amarillo .ppr-bar__head strong {
+  color: #b78100;
+}
+
+
+/* ROJO */
+
+.ppr-bar--rojo {
+  color: #d92d20;
+}
+
+.ppr-bar--rojo:hover {
+  border-color: #f4aaa4;
+}
+
+.ppr-bar--rojo .ppr-bar__fill {
+  background:
+    linear-gradient(90deg,
+      #c92118,
+      #ef4b42);
+
+  box-shadow:
+    0 0 10px rgba(217, 45, 32, 0.22);
+}
+
+.ppr-bar--rojo .ppr-bar__head strong {
+  color: #b42318;
+}
+
+
+/* AZUL */
+
+.ppr-bar--azul {
+  color: #175cd3;
+}
+
+.ppr-bar--azul:hover {
+  border-color: #9cc2ff;
+}
+
+.ppr-bar--azul .ppr-bar__fill {
+  background:
+    linear-gradient(90deg,
       #173a8a,
-      #28a7e8
-    );
+      #28a7e8);
+
+  box-shadow:
+    0 0 10px rgba(40, 167, 232, 0.25);
+}
+
+.ppr-bar--azul .ppr-bar__head strong {
+  color: #175cd3;
+}
+
+
+/* VERDE */
+
+.ppr-bar--verde {
+  color: #079455;
+}
+
+.ppr-bar--verde:hover {
+  border-color: #86d5ae;
+}
+
+.ppr-bar--verde .ppr-bar__fill {
+  background:
+    linear-gradient(90deg,
+      #087443,
+      #20b26b);
+
+  box-shadow:
+    0 0 10px rgba(8, 148, 85, 0.22);
+}
+
+.ppr-bar--verde .ppr-bar__head strong {
+  color: #087443;
+}
+
+
+/* =========================================================
+   SCORE NORMAL
+   Conserva las otras barras del sistema
+========================================================= */
+
+.ppr-score__fill {
+  background:
+    linear-gradient(90deg,
+      #173a8a,
+      #28a7e8);
 }
 
 /* =========================================================
@@ -739,8 +877,7 @@
     #f6f8fb;
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 }
 
 .ppr-result-panel span {
@@ -780,31 +917,278 @@
    CEREBRO
 ========================================================= */
 
+/* =========================================================
+   CEREBRO
+========================================================= */
+
 .ppr-brain-grid,
 .ppr-vak-grid {
   display: grid;
 
   grid-template-columns:
-    repeat(
-      3,
-      minmax(0, 1fr)
-    );
+    repeat(3, minmax(0, 1fr));
 
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
-.ppr-brain-card,
+/* =========================================================
+   TARJETAS CEREBRO
+========================================================= */
+
+.ppr-brain-card {
+  position: relative;
+
+  min-height: 165px;
+
+  padding: 1.5rem 1.2rem 1.25rem;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  text-align: center;
+
+  border: 1px solid transparent;
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+/* Franja superior */
+
+.ppr-brain-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 5px;
+}
+
+/* =========================================================
+   IZQUIERDO - AMARILLO
+========================================================= */
+
+.ppr-brain-card--izquierdo {
+  background:
+    linear-gradient(145deg,
+      #fffdf4 0%,
+      #fff8d8 100%);
+
+  border-color: #f3df8b;
+}
+
+.ppr-brain-card--izquierdo::before {
+  background:
+    linear-gradient(90deg,
+      #e4a900,
+      #ffd84d);
+}
+
+.ppr-brain-card--izquierdo .ppr-brain-card__title {
+  color: #9a6b00;
+}
+
+.ppr-brain-card--izquierdo strong {
+  color: #b57c00;
+}
+
+
+/* =========================================================
+   CENTRAL - ROJO
+========================================================= */
+
+.ppr-brain-card--central {
+  background:
+    linear-gradient(145deg,
+      #fff8f7 0%,
+      #ffe9e7 100%);
+
+  border-color: #f4bbb6;
+}
+
+.ppr-brain-card--central::before {
+  background:
+    linear-gradient(90deg,
+      #b42318,
+      #ef4b42);
+}
+
+.ppr-brain-card--central .ppr-brain-card__title {
+  color: #b42318;
+}
+
+.ppr-brain-card--central strong {
+  color: #c43228;
+}
+
+
+/* =========================================================
+   DERECHO - AZUL
+========================================================= */
+
+.ppr-brain-card--derecho {
+  background:
+    linear-gradient(145deg,
+      #f6f9ff 0%,
+      #e8f2ff 100%);
+
+  border-color: #b8d3f6;
+}
+
+.ppr-brain-card--derecho::before {
+  background:
+    linear-gradient(90deg,
+      #173a8a,
+      #28a7e8);
+}
+
+.ppr-brain-card--derecho .ppr-brain-card__title {
+  color: #175cd3;
+}
+
+.ppr-brain-card--derecho strong {
+  color: #173a8a;
+}
+
+
+/* =========================================================
+   TEXTOS
+========================================================= */
+
+.ppr-brain-card__title {
+  font-size: 0.74rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.1em;
+}
+
+.ppr-brain-card strong {
+  margin-top: 0.5rem;
+
+  font-size: 2.35rem;
+
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+.ppr-brain-card small {
+  margin-top: 0.65rem;
+
+  color: #667085;
+
+  font-size: 0.8rem;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   DOMINANTE
+========================================================= */
+
+.ppr-brain-card--active {
+  transform:
+    translateY(-4px) scale(1.015);
+
+  z-index: 2;
+}
+
+/* IZQUIERDO ACTIVO */
+
+.ppr-brain-card--izquierdo.ppr-brain-card--active {
+  border-color: #e4b51a;
+
+  box-shadow:
+    0 12px 28px rgba(212, 154, 0, 0.18);
+}
+
+/* CENTRAL ACTIVO */
+
+.ppr-brain-card--central.ppr-brain-card--active {
+  border-color: #d92d20;
+
+  box-shadow:
+    0 12px 28px rgba(217, 45, 32, 0.16);
+}
+
+/* DERECHO ACTIVO */
+
+.ppr-brain-card--derecho.ppr-brain-card--active {
+  border-color: #2e6fd0;
+
+  box-shadow:
+    0 12px 28px rgba(23, 92, 211, 0.17);
+}
+
+
+/* =========================================================
+   ETIQUETA DOMINANTE
+========================================================= */
+
+.ppr-brain-card__dominant {
+  position: absolute;
+
+  top: 14px;
+  right: 12px;
+
+  padding:
+    0.3rem 0.55rem;
+
+  border-radius: 999px;
+
+  background: #ffffff;
+
+  font-size: 0.58rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.08em;
+
+  box-shadow:
+    0 3px 10px rgba(15, 23, 42, 0.08);
+}
+
+.ppr-brain-card--izquierdo .ppr-brain-card__dominant {
+  color: #a36e00;
+}
+
+.ppr-brain-card--central .ppr-brain-card__dominant {
+  color: #b42318;
+}
+
+.ppr-brain-card--derecho .ppr-brain-card__dominant {
+  color: #175cd3;
+}
+
+
+/* =========================================================
+   VAK
+   Conservamos el diseño que ya tenías
+========================================================= */
+
 .ppr-vak-card {
   min-height: 145px;
 
   padding: 1.2rem;
 
   display: flex;
-
   flex-direction: column;
 
   align-items: center;
-
   justify-content: center;
 
   border-radius: 14px;
@@ -814,8 +1198,7 @@
   background: #f8fafc;
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 
   transition:
     transform 0.2s ease,
@@ -823,51 +1206,31 @@
     box-shadow 0.2s ease;
 }
 
-.ppr-brain-card--active,
 .ppr-vak-card--active {
-  transform:
-    translateY(-2px);
+  transform: translateY(-2px);
 
   background: #f3f7fd;
 
-  border-color:
-    #9bb8e9;
+  border-color: #9bb8e9;
 
   box-shadow:
-    0 8px 20px
-    rgba(
-      23,
-      58,
-      138,
-      0.08
-    );
+    0 8px 20px rgba(23, 58, 138, 0.08);
 }
 
-.ppr-brain-card span,
 .ppr-vak-card span {
-  color:
-    var(--ppr-muted);
+  color: var(--ppr-muted);
 
   font-size: 0.72rem;
 
   font-weight: 900;
 }
 
-.ppr-brain-card strong,
 .ppr-vak-card strong {
   margin-top: 0.45rem;
 
-  color:
-    var(--ppr-navy);
+  color: var(--ppr-navy);
 
   font-size: 2rem;
-}
-
-.ppr-brain-card small {
-  margin-top: 0.4rem;
-
-  color:
-    var(--ppr-muted);
 }
 
 /* =========================================================
@@ -893,11 +1256,10 @@
     #f3f7fd;
 
   border:
-    1px solid
-    #dce6f6;
+    1px solid #dce6f6;
 }
 
-.ppr-result-strip > span {
+.ppr-result-strip>span {
   color:
     var(--ppr-muted);
 
@@ -906,7 +1268,7 @@
   font-weight: 900;
 }
 
-.ppr-result-strip > strong {
+.ppr-result-strip>strong {
   color:
     var(--ppr-navy);
 
@@ -928,8 +1290,7 @@
   display: grid;
 
   grid-template-columns:
-    minmax(180px, 0.3fr)
-    1fr;
+    minmax(180px, 0.3fr) 1fr;
 
   gap: 1rem;
 }
@@ -985,11 +1346,10 @@
   background: #f8fafc;
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 }
 
-.ppr-negotiation-result > span {
+.ppr-negotiation-result>span {
   color:
     var(--ppr-muted);
 
@@ -1056,15 +1416,13 @@
   display: grid;
 
   grid-template-columns:
-    repeat(
-      4,
-      minmax(0, 1fr)
-    );
+    repeat(4,
+      minmax(0, 1fr));
 
   gap: 0.75rem;
 }
 
-.ppr-persistence-grid > div {
+.ppr-persistence-grid>div {
   min-height: 100px;
 
   padding: 1rem;
@@ -1082,8 +1440,7 @@
   background: #f8fafc;
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 }
 
 .ppr-persistence-grid span {
@@ -1112,10 +1469,8 @@
   display: grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
+    repeat(1,
+      minmax(0, 1fr));
 
   gap: 1rem;
 }
@@ -1130,8 +1485,7 @@
   background: #f8fafc;
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 }
 
 .ppr-text-block h3 {
@@ -1163,10 +1517,8 @@
   display: grid;
 
   grid-template-columns:
-    repeat(
-      3,
-      minmax(0, 1fr)
-    );
+    repeat(2,
+      minmax(0, 1fr));
 
   gap: 1rem;
 
@@ -1176,11 +1528,10 @@
   background: #ecfdf3;
 
   border:
-    1px solid
-    #abefc6;
+    1px solid #abefc6;
 }
 
-.ppr-validation > div {
+.ppr-validation>div {
   display: flex;
 
   flex-direction: column;
@@ -1249,22 +1600,17 @@
 
 .ppr-btn--primary {
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       #28a7e8,
-      #1688c8
-    );
+      #1688c8);
 
   color: white;
 
   box-shadow:
-    0 8px 20px
-    rgba(
-      40,
+    0 8px 20px rgba(40,
       167,
       232,
-      0.22
-    );
+      0.22);
 }
 
 .ppr-btn--secondary {
@@ -1327,17 +1673,13 @@
   background: white;
 
   border:
-    1px solid
-    var(--ppr-border);
+    1px solid var(--ppr-border);
 
   box-shadow:
-    0 18px 45px
-    rgba(
-      15,
+    0 18px 45px rgba(15,
       23,
       42,
-      0.08
-    );
+      0.08);
 }
 
 .ppr-state h2 {
@@ -1367,8 +1709,7 @@
   margin: 0 auto;
 
   border:
-    4px solid
-    #d8e4ef;
+    4px solid #d8e4ef;
 
   border-top-color:
     var(--ppr-blue);
@@ -1376,8 +1717,7 @@
   border-radius: 50%;
 
   animation:
-    pprSpin 0.8s
-    linear infinite;
+    pprSpin 0.8s linear infinite;
 }
 
 @keyframes pprSpin {
@@ -1385,6 +1725,453 @@
     transform:
       rotate(360deg);
   }
+}
+
+
+/* =========================================================
+   ÍNDICE DE PRODUCTIVIDAD PERSONAL
+========================================================= */
+
+.ppr-productivity {
+  position: relative;
+
+  overflow: hidden;
+
+  border-top:
+    5px solid var(--ppr-blue);
+
+  background:
+    radial-gradient(circle at 100% 0%,
+      rgba(40, 167, 232, 0.08),
+      transparent 22rem),
+    #ffffff;
+}
+
+/* =========================================================
+   CLASIFICACIÓN A - F
+========================================================= */
+
+.ppr-productivity-grade {
+  width: 70px;
+  height: 70px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  font-size: 2rem;
+  font-weight: 950;
+
+  box-shadow:
+    0 12px 26px rgba(15, 23, 42, 0.1);
+}
+
+.ppr-productivity-grade--a {
+  color: #05603a;
+  background: #ecfdf3;
+  border: 1px solid #75d6a7;
+}
+
+.ppr-productivity-grade--b {
+  color: #087443;
+  background: #f0fdf7;
+  border: 1px solid #9ee2be;
+}
+
+.ppr-productivity-grade--c {
+  color: #175cd3;
+  background: #eef4ff;
+  border: 1px solid #a7c8ff;
+}
+
+.ppr-productivity-grade--d {
+  color: #b54708;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+}
+
+.ppr-productivity-grade--e {
+  color: #b42318;
+  background: #fff3f2;
+  border: 1px solid #f4aaa4;
+}
+
+.ppr-productivity-grade--f {
+  color: #912018;
+  background: #feeceb;
+  border: 1px solid #f39a94;
+}
+
+/* =========================================================
+   BLOQUE PRINCIPAL
+========================================================= */
+
+.ppr-productivity-main {
+  display: grid;
+
+  grid-template-columns:
+    minmax(220px, 0.38fr) minmax(0, 1fr);
+
+  gap: 1rem;
+}
+
+/* =========================================================
+   PORCENTAJE GRANDE
+========================================================= */
+
+.ppr-productivity-score {
+  min-height: 220px;
+
+  padding: 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  text-align: center;
+
+  background:
+    linear-gradient(145deg,
+      #071b3f,
+      #173a8a);
+
+  color: #ffffff;
+
+  box-shadow:
+    0 16px 32px rgba(7, 27, 63, 0.16);
+}
+
+.ppr-productivity-score__label {
+  color:
+    rgba(255, 255, 255, 0.62);
+
+  font-size: 0.7rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.12em;
+}
+
+.ppr-productivity-score>strong {
+  margin-top: 0.65rem;
+
+  font-size:
+    clamp(3rem,
+      6vw,
+      4.6rem);
+
+  line-height: 1;
+
+  letter-spacing: -0.05em;
+}
+
+.ppr-productivity-score small {
+  margin-top: 0.75rem;
+
+  color:
+    rgba(255, 255, 255, 0.72);
+
+  font-size: 0.82rem;
+}
+
+.ppr-productivity-score small b {
+  color: white;
+}
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.ppr-productivity-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 0.85rem;
+}
+
+.ppr-productivity-summary>div {
+  min-height: 145px;
+
+  padding: 1.2rem;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+
+  text-align: center;
+
+  background: #f8fafc;
+
+  border:
+    1px solid var(--ppr-border);
+}
+
+.ppr-productivity-summary span {
+  color: var(--ppr-muted);
+
+  font-size: 0.67rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.08em;
+}
+
+.ppr-productivity-summary strong {
+  margin-top: 0.55rem;
+
+  color: var(--ppr-navy);
+
+  font-size: 1.65rem;
+}
+
+/* =========================================================
+   BARRA PRINCIPAL
+========================================================= */
+
+.ppr-productivity-progress {
+  margin-top: 1.35rem;
+
+  padding: 1rem 1.15rem;
+
+  border-radius: 14px;
+
+  background: #f8fafc;
+
+  border:
+    1px solid var(--ppr-border);
+}
+
+.ppr-productivity-progress__head {
+  margin-bottom: 0.7rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+}
+
+.ppr-productivity-progress__head span {
+  color: var(--ppr-text-soft);
+
+  font-size: 0.82rem;
+
+  font-weight: 800;
+}
+
+.ppr-productivity-progress__head strong {
+  color: var(--ppr-navy);
+
+  font-size: 0.95rem;
+
+  font-weight: 900;
+}
+
+.ppr-productivity-progress__track {
+  height: 14px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #e8edf3;
+
+  box-shadow:
+    inset 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.ppr-productivity-progress__fill {
+  display: block;
+
+  height: 100%;
+
+  border-radius: 999px;
+
+  transition:
+    width 0.7s ease;
+}
+
+.ppr-productivity-progress__fill--a {
+  background:
+    linear-gradient(90deg,
+      #087443,
+      #20b26b);
+}
+
+.ppr-productivity-progress__fill--b {
+  background:
+    linear-gradient(90deg,
+      #079455,
+      #47cd89);
+}
+
+.ppr-productivity-progress__fill--c {
+  background:
+    linear-gradient(90deg,
+      #175cd3,
+      #28a7e8);
+}
+
+.ppr-productivity-progress__fill--d {
+  background:
+    linear-gradient(90deg,
+      #d97706,
+      #f2b134);
+}
+
+.ppr-productivity-progress__fill--e,
+.ppr-productivity-progress__fill--f {
+  background:
+    linear-gradient(90deg,
+      #b42318,
+      #ef4b42);
+}
+
+/* =========================================================
+   DETALLE DE LOS 6 COMPONENTES
+========================================================= */
+
+.ppr-productivity-detail {
+  margin-top: 1.2rem;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 0.8rem;
+}
+
+.ppr-productivity-detail__item {
+  min-height: 120px;
+
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  border:
+    1px solid var(--ppr-border);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.ppr-productivity-detail__item:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 9px 22px rgba(15, 23, 42, 0.07);
+}
+
+.ppr-productivity-detail__item>span {
+  color: var(--ppr-muted);
+
+  font-size: 0.67rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.07em;
+
+  text-transform: uppercase;
+}
+
+.ppr-productivity-detail__item>strong {
+  margin-top: 0.45rem;
+
+  color: var(--ppr-navy);
+
+  font-size: 1rem;
+
+  line-height: 1.3;
+}
+
+.ppr-productivity-detail__item small {
+  margin-top: 0.5rem;
+
+  color: var(--ppr-muted);
+
+  font-size: 0.74rem;
+}
+
+.ppr-productivity-detail__item small b {
+  color: var(--ppr-blue);
+}
+
+/* =========================================================
+   NOTA FINAL
+========================================================= */
+
+.ppr-productivity-note {
+  margin-top: 1.2rem;
+
+  padding: 1rem 1.15rem;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 1rem;
+
+  border-radius: 14px;
+
+  background:
+    #eef4ff;
+
+  border:
+    1px solid #d7e4fb;
+}
+
+.ppr-productivity-note>span {
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background:
+    var(--ppr-blue);
+
+  color: white;
+
+  font-size: 0.72rem;
+
+  font-weight: 950;
+}
+
+.ppr-productivity-note p {
+  margin: 0;
+
+  color: var(--ppr-text-soft);
+
+  font-size: 0.84rem;
+
+  line-height: 1.65;
 }
 
 /* =========================================================
@@ -1406,10 +2193,8 @@
 
   .ppr-diagnostic-grid {
     grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+      repeat(2,
+        minmax(0, 1fr));
   }
 
   .ppr-two-cols {
@@ -1419,10 +2204,8 @@
 
   .ppr-persistence-grid {
     grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+      repeat(2,
+        minmax(0, 1fr));
   }
 }
 
@@ -1499,8 +2282,7 @@
     border-right: 0;
 
     border-bottom:
-      1px solid
-      var(--ppr-border);
+      1px solid var(--ppr-border);
   }
 
   .ppr-excel-metric:last-child {
@@ -1524,10 +2306,8 @@
 
   .ppr-persistence-grid {
     grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+      repeat(2,
+        minmax(0, 1fr));
   }
 
   .ppr-validation {
@@ -1539,9 +2319,30 @@
     padding:
       1.7rem 1rem;
   }
+
+  .ppr-productivity-summary,
+  .ppr-productivity-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .ppr-productivity-score {
+    min-height: 190px;
+  }
+
+  .ppr-productivity-grade {
+    width: 58px;
+    height: 58px;
+
+    font-size: 1.6rem;
+  }
+
+  .ppr-productivity-note {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 430px) {
+
   .ppr-diagnostic-grid,
   .ppr-persistence-grid {
     grid-template-columns:

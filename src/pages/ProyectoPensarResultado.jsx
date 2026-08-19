@@ -90,7 +90,7 @@ const ProyectoPensarResultado = () => {
           console.error(
             "Error cargando resultado psicométrico:",
             err?.response?.data ||
-              err,
+            err,
           );
 
           const backend =
@@ -102,7 +102,7 @@ const ProyectoPensarResultado = () => {
           ) {
             setError(
               backend?.message ||
-                "El enlace del resultado ha expirado.",
+              "El enlace del resultado ha expirado.",
             );
           } else if (
             err?.response
@@ -110,7 +110,7 @@ const ProyectoPensarResultado = () => {
           ) {
             setError(
               backend?.message ||
-                "El resultado todavía no está disponible.",
+              "El resultado todavía no está disponible.",
             );
           } else if (
             err?.response
@@ -118,12 +118,12 @@ const ProyectoPensarResultado = () => {
           ) {
             setError(
               backend?.message ||
-                "No se encontró el resultado solicitado.",
+              "No se encontró el resultado solicitado.",
             );
           } else {
             setError(
               backend?.message ||
-                "No fue posible cargar el resultado psicométrico.",
+              "No fue posible cargar el resultado psicométrico.",
             );
           }
         } finally {
@@ -187,9 +187,46 @@ const ProyectoPensarResultado = () => {
   const persistence =
     result?.persistence || {};
 
+
+  const productivityIndex =
+    result?.productivityIndex || {};
+
   /* =========================================================
      NOMBRE
   ========================================================= */
+
+  const firstName =
+    useMemo(
+      () =>
+        [
+
+          user?.firstName,
+
+        ]
+          .filter(Boolean)
+          .join(" "),
+      [
+
+        user?.firstName,
+
+      ],
+    );
+
+  const lastName =
+    useMemo(
+      () =>
+        [
+
+          user?.lastName,
+        ]
+          .filter(Boolean)
+          .join(" "),
+      [
+
+        user?.lastName,
+      ],
+    );
+
 
   const fullName =
     useMemo(
@@ -210,9 +247,7 @@ const ProyectoPensarResultado = () => {
      FECHA
   ========================================================= */
 
-  const formatDate = (
-    value,
-  ) => {
+  const formatDate = (value) => {
     if (!value) {
       return "-";
     }
@@ -221,16 +256,19 @@ const ProyectoPensarResultado = () => {
       return new Intl.DateTimeFormat(
         "es-EC",
         {
-          timeZone:
-            "America/Guayaquil",
+          timeZone: "America/Guayaquil",
 
           year: "numeric",
           month: "long",
           day: "2-digit",
-        },
-      ).format(
-        new Date(value),
-      );
+
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+
+          hour12: false,
+        }
+      ).format(new Date(value));
     } catch {
       return "-";
     }
@@ -364,29 +402,30 @@ const ProyectoPensarResultado = () => {
   const PercentageBar = ({
     label,
     value,
-    valueLabel,
+    color = "azul",
   }) => {
-    const normalized =
-      Math.max(
-        0,
-        Math.min(
-          100,
-          Number(value) || 0,
-        ),
+    const safeValue =
+      Math.min(
+        100,
+        Math.max(
+          0,
+          Number(value) || 0
+        )
       );
 
     return (
-      <div className="ppr-bar">
+      <div
+        className={`ppr-bar ppr-bar--${color}`}
+      >
         <div className="ppr-bar__head">
-          <span>
-            {label}
-          </span>
+          <div className="ppr-bar__label">
+            <span className="ppr-bar__dot" />
+
+            <span>{label}</span>
+          </div>
 
           <strong>
-            {valueLabel ??
-              formatPercent(
-                normalized,
-              )}
+            {safeValue.toFixed(2)}%
           </strong>
         </div>
 
@@ -394,15 +433,13 @@ const ProyectoPensarResultado = () => {
           <span
             className="ppr-bar__fill"
             style={{
-              width:
-                `${normalized}%`,
+              width: `${safeValue}%`,
             }}
           />
         </div>
       </div>
     );
   };
-
   /* =========================================================
      BARRA DE PUNTAJE
   ========================================================= */
@@ -424,7 +461,7 @@ const ProyectoPensarResultado = () => {
         Math.min(
           100,
           (score / maximum) *
-            100,
+          100,
         ),
       );
 
@@ -527,11 +564,11 @@ const ProyectoPensarResultado = () => {
         <section className="ppr-hero">
           <div className="ppr-hero__content">
             <span className="ppr-eyebrow">
-              PROYECTO PENSAR
+              RESULTADO DE LA EVALUACIÓN
             </span>
 
             <h1>
-              Informe de resultados
+              Índice de Productividad Personal (IPP)
             </h1>
 
             <p className="ppr-hero__subtitle">
@@ -546,7 +583,11 @@ const ProyectoPensarResultado = () => {
                 </span>
 
                 <strong>
-                  {fullName ||
+                  {firstName ||
+                    "Participante"}
+                </strong>
+                <strong>
+                  {lastName ||
                     "Participante"}
                 </strong>
               </div>
@@ -658,7 +699,7 @@ const ProyectoPensarResultado = () => {
             </div>
 
             <span className="ppr-status-badge">
-              Resultado liberado
+              Vista General
             </span>
           </div>
 
@@ -673,7 +714,7 @@ const ProyectoPensarResultado = () => {
                 {animodoResult}
               </strong>
 
-              <small>
+              {/* <small>
                 Sentir / Pensar:{" "}
                 <b>
                   {animodo?.axes
@@ -687,7 +728,7 @@ const ProyectoPensarResultado = () => {
                     ?.actuarObservar ??
                     "-"}
                 </b>
-              </small>
+              </small> */}
             </article>
 
             <article className="ppr-diagnostic-item">
@@ -756,7 +797,7 @@ const ProyectoPensarResultado = () => {
               </strong>
 
               <small>
-                Canal predominante
+                Canal de aprendizaje
               </small>
             </article>
 
@@ -786,7 +827,7 @@ const ProyectoPensarResultado = () => {
             ANIMODO
         =================================================== */}
 
-        <section className="ppr-card">
+        {/* <section className="ppr-card">
           <div className="ppr-section-heading">
             <div>
               <span className="ppr-section-kicker">
@@ -838,6 +879,76 @@ const ProyectoPensarResultado = () => {
               </strong>
             </div>
           </div>
+        </section> */}
+
+
+
+        {/* ===================================================
+            PERFIL INTEGRAL
+        =================================================== */}
+
+        <section className="ppr-card ppr-profile-detail">
+          <div className="ppr-section-heading">
+            <div>
+              <span className="ppr-section-kicker">
+                PERFIL INTEGRAL
+              </span>
+
+              <h2>
+                {personality?.nombre ||
+                  personalityAnimal}
+              </h2>
+            </div>
+
+            {personality?.codigo && (
+              <span className="ppr-code">
+                {
+                  personality.codigo
+                }
+              </span>
+            )}
+          </div>
+
+          {personality?.descripcion && (
+            <div className="ppr-text-block">
+              <h3>
+                Descripción
+              </h3>
+
+              <p>
+                {
+                  personality
+                    .descripcion
+                }
+              </p>
+            </div>
+          )}
+
+          <div className="ppr-profile-text-grid">
+            <div className="ppr-text-block">
+              <h3>
+                Forma de pensar
+              </h3>
+
+              <p>
+                {personality
+                  ?.formaPensar ||
+                  "Sin información disponible."}
+              </p>
+            </div>
+            {/* 
+            <div className="ppr-text-block">
+              <h3>
+                Forma de aprender
+              </h3>
+
+              <p>
+                {personality
+                  ?.formaAprender ||
+                  "Sin información disponible."}
+              </p>
+            </div> */}
+          </div>
         </section>
 
         {/* ===================================================
@@ -862,41 +973,29 @@ const ProyectoPensarResultado = () => {
           </div>
 
           <div className="ppr-two-cols">
-            <div className="ppr-bars">
+            <div className="ppr-bars ppr-bars--communication">
               <PercentageBar
                 label="Amarillo"
-                value={
-                  communication
-                    ?.percentages
-                    ?.AMARILLO
-                }
+                value={communication?.percentages?.AMARILLO}
+                color="amarillo"
               />
 
               <PercentageBar
                 label="Rojo"
-                value={
-                  communication
-                    ?.percentages
-                    ?.ROJO
-                }
+                value={communication?.percentages?.ROJO}
+                color="rojo"
               />
 
               <PercentageBar
                 label="Azul"
-                value={
-                  communication
-                    ?.percentages
-                    ?.AZUL
-                }
+                value={communication?.percentages?.AZUL}
+                color="azul"
               />
 
               <PercentageBar
                 label="Verde"
-                value={
-                  communication
-                    ?.percentages
-                    ?.VERDE
-                }
+                value={communication?.percentages?.VERDE}
+                color="verde"
               />
             </div>
 
@@ -923,19 +1022,19 @@ const ProyectoPensarResultado = () => {
 
           {personality
             ?.descripcionComunicacion && (
-            <div className="ppr-text-block">
-              <h3>
-                Interpretación
-              </h3>
+              <div className="ppr-text-block">
+                <h3>
+                  Interpretación
+                </h3>
 
-              <p>
-                {
-                  personality
-                    .descripcionComunicacion
-                }
-              </p>
-            </div>
-          )}
+                <p>
+                  {
+                    personality
+                      .descripcionComunicacion
+                  }
+                </p>
+              </div>
+            )}
         </section>
 
         {/* ===================================================
@@ -954,28 +1053,33 @@ const ProyectoPensarResultado = () => {
               </h2>
             </div>
 
-            <div className="ppr-result-chip">
+            <div
+              className={`ppr-result-chip ppr-result-chip--${brainCategory?.toLowerCase()}`}
+            >
               {brainCategory}
             </div>
           </div>
 
           <div className="ppr-brain-grid">
+            {/* IZQUIERDO */}
             <article
-              className={
-                brainCategory ===
-                "IZQUIERDO"
-                  ? "ppr-brain-card ppr-brain-card--active"
-                  : "ppr-brain-card"
-              }
+              className={`ppr-brain-card ppr-brain-card--izquierdo ${brainCategory === "IZQUIERDO"
+                ? "ppr-brain-card--active"
+                : ""
+                }`}
             >
-              <span>
+              {brainCategory === "IZQUIERDO" && (
+                <span className="ppr-brain-card__dominant">
+                  DOMINANTE
+                </span>
+              )}
+
+              <span className="ppr-brain-card__title">
                 IZQUIERDO
               </span>
 
               <strong>
-                {brain?.scores
-                  ?.IZQUIERDO ??
-                  0}
+                {brain?.scores?.IZQUIERDO ?? 0}
               </strong>
 
               <small>
@@ -983,22 +1087,25 @@ const ProyectoPensarResultado = () => {
               </small>
             </article>
 
+            {/* CENTRAL */}
             <article
-              className={
-                brainCategory ===
-                "CENTRAL"
-                  ? "ppr-brain-card ppr-brain-card--active"
-                  : "ppr-brain-card"
-              }
+              className={`ppr-brain-card ppr-brain-card--central ${brainCategory === "CENTRAL"
+                ? "ppr-brain-card--active"
+                : ""
+                }`}
             >
-              <span>
+              {brainCategory === "CENTRAL" && (
+                <span className="ppr-brain-card__dominant">
+                  DOMINANTE
+                </span>
+              )}
+
+              <span className="ppr-brain-card__title">
                 CENTRAL
               </span>
 
               <strong>
-                {brain?.scores
-                  ?.CENTRAL ??
-                  0}
+                {brain?.scores?.CENTRAL ?? 0}
               </strong>
 
               <small>
@@ -1006,22 +1113,25 @@ const ProyectoPensarResultado = () => {
               </small>
             </article>
 
+            {/* DERECHO */}
             <article
-              className={
-                brainCategory ===
-                "DERECHO"
-                  ? "ppr-brain-card ppr-brain-card--active"
-                  : "ppr-brain-card"
-              }
+              className={`ppr-brain-card ppr-brain-card--derecho ${brainCategory === "DERECHO"
+                ? "ppr-brain-card--active"
+                : ""
+                }`}
             >
-              <span>
+              {brainCategory === "DERECHO" && (
+                <span className="ppr-brain-card__dominant">
+                  DOMINANTE
+                </span>
+              )}
+
+              <span className="ppr-brain-card__title">
                 DERECHO
               </span>
 
               <strong>
-                {brain?.scores
-                  ?.DERECHO ??
-                  0}
+                {brain?.scores?.DERECHO ?? 0}
               </strong>
 
               <small>
@@ -1101,13 +1211,13 @@ const ProyectoPensarResultado = () => {
 
               {negotiation
                 ?.quality && (
-                <p>
-                  {
-                    negotiation
-                      .quality
-                  }
-                </p>
-              )}
+                  <p>
+                    {
+                      negotiation
+                        .quality
+                    }
+                  </p>
+                )}
             </div>
           </div>
         </section>
@@ -1138,7 +1248,7 @@ const ProyectoPensarResultado = () => {
             <article
               className={
                 vak?.dominantStyle ===
-                "VISUAL"
+                  "VISUAL"
                   ? "ppr-vak-card ppr-vak-card--active"
                   : "ppr-vak-card"
               }
@@ -1157,7 +1267,7 @@ const ProyectoPensarResultado = () => {
             <article
               className={
                 vak?.dominantStyle ===
-                "AUDITIVO"
+                  "AUDITIVO"
                   ? "ppr-vak-card ppr-vak-card--active"
                   : "ppr-vak-card"
               }
@@ -1176,7 +1286,7 @@ const ProyectoPensarResultado = () => {
             <article
               className={
                 vak?.dominantStyle ===
-                "KINESTESICO"
+                  "KINESTESICO"
                   ? "ppr-vak-card ppr-vak-card--active"
                   : "ppr-vak-card"
               }
@@ -1225,7 +1335,7 @@ const ProyectoPensarResultado = () => {
             <div
               className={`ppr-persistence-badge ppr-persistence-badge--${String(
                 persistence?.level ||
-                  "",
+                "",
               ).toLowerCase()}`}
             >
               {persistence?.level ||
@@ -1308,73 +1418,304 @@ const ProyectoPensarResultado = () => {
           </div>
         </section>
 
-        {/* ===================================================
-            PERFIL INTEGRAL
-        =================================================== */}
 
-        <section className="ppr-card ppr-profile-detail">
+        {/* ===================================================
+    ÍNDICE DE PRODUCTIVIDAD PERSONAL
+=================================================== */}
+
+        <section className="ppr-card ppr-productivity">
           <div className="ppr-section-heading">
             <div>
               <span className="ppr-section-kicker">
-                PERFIL INTEGRAL
+                ÍNDICE DE PRODUCTIVIDAD PERSONAL
               </span>
 
               <h2>
-                {personality?.nombre ||
-                  personalityAnimal}
+                Resultado integral de productividad
               </h2>
             </div>
 
-            {personality?.codigo && (
-              <span className="ppr-code">
-                {
-                  personality.codigo
-                }
-              </span>
-            )}
+            <div
+              className={`ppr-productivity-grade ppr-productivity-grade--${String(
+                productivityIndex?.classification || "f"
+              ).toLowerCase()}`}
+            >
+              {productivityIndex?.classification || "-"}
+            </div>
           </div>
 
-          {personality?.descripcion && (
-            <div className="ppr-text-block">
-              <h3>
-                Descripción
-              </h3>
+          <div className="ppr-productivity-main">
 
-              <p>
-                {
-                  personality
-                    .descripcion
-                }
-              </p>
+            {/* ============================
+        PORCENTAJE PRINCIPAL
+    ============================ */}
+
+            <div className="ppr-productivity-score">
+              <span className="ppr-productivity-score__label">
+                ÍNDICE FINAL
+              </span>
+
+              <strong>
+                {Math.round(
+                  Number(productivityIndex?.percentage || 0)
+                )}
+                %
+              </strong>
+
+              <small>
+                Factor{" "}
+                <b>
+                  {Number(
+                    productivityIndex?.factor || 0
+                  ).toFixed(3)}
+                </b>
+              </small>
             </div>
-          )}
 
-          <div className="ppr-profile-text-grid">
-            <div className="ppr-text-block">
-              <h3>
-                Forma de pensar
-              </h3>
+            {/* ============================
+        INFORMACIÓN
+    ============================ */}
 
-              <p>
-                {personality
-                  ?.formaPensar ||
-                  "Sin información disponible."}
-              </p>
+            <div className="ppr-productivity-summary">
+              <div>
+                <span>
+                  PUNTAJE
+                </span>
+
+                <strong>
+                  {productivityIndex?.score ?? "-"}
+                  {" / "}
+                  {productivityIndex?.maxScore ?? 6}
+                </strong>
+              </div>
+
+              <div>
+                <span>
+                  CLASIFICACIÓN
+                </span>
+
+                <strong>
+                  {productivityIndex?.classification || "-"}
+                </strong>
+              </div>
+
+              <div>
+                <span>
+                  FACTOR
+                </span>
+
+                <strong>
+                  {Number(
+                    productivityIndex?.factor || 0
+                  ).toFixed(3)}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          {/* =================================================
+      BARRA GENERAL
+  ================================================= */}
+
+          <div className="ppr-productivity-progress">
+            <div className="ppr-productivity-progress__head">
+              <span>
+                Nivel de productividad personal
+              </span>
+
+              <strong>
+                {Number(
+                  productivityIndex?.percentage || 0
+                ).toFixed(1)}
+                %
+              </strong>
             </div>
 
-            <div className="ppr-text-block">
-              <h3>
-                Forma de aprender
-              </h3>
-
-              <p>
-                {personality
-                  ?.formaAprender ||
-                  "Sin información disponible."}
-              </p>
+            <div className="ppr-productivity-progress__track">
+              <span
+                className={`ppr-productivity-progress__fill ppr-productivity-progress__fill--${String(
+                  productivityIndex?.classification || "f"
+                ).toLowerCase()}`}
+                style={{
+                  width: `${Math.min(
+                    100,
+                    Math.max(
+                      0,
+                      Number(
+                        productivityIndex?.percentage || 0
+                      )
+                    )
+                  )}%`,
+                }}
+              />
             </div>
+          </div>
+
+          {/* =================================================
+      COMPONENTES
+  ================================================= */}
+{/* 
+          <div className="ppr-productivity-detail">
+
+            <div className="ppr-productivity-detail__item">
+              <span>
+                Persistencia
+              </span>
+
+              <strong>
+                {productivityIndex
+                  ?.detail
+                  ?.persistence
+                  ?.result || "-"}
+              </strong>
+
+              <small>
+                Valor:{" "}
+                <b>
+                  {productivityIndex
+                    ?.detail
+                    ?.persistence
+                    ?.value ?? "-"}
+                </b>
+              </small>
+            </div>
+
+            <div className="ppr-productivity-detail__item">
+              <span>
+                Comunicación
+              </span>
+
+              <strong>
+                {productivityIndex
+                  ?.detail
+                  ?.communication
+                  ?.result || "-"}
+              </strong>
+
+              <small>
+                Valor:{" "}
+                <b>
+                  {productivityIndex
+                    ?.detail
+                    ?.communication
+                    ?.value ?? "-"}
+                </b>
+              </small>
+            </div>
+
+            <div className="ppr-productivity-detail__item">
+              <span>
+                Animodo
+              </span>
+
+              <strong>
+                {prettyText(
+                  productivityIndex
+                    ?.detail
+                    ?.animodo
+                    ?.result
+                )}
+              </strong>
+
+              <small>
+                Valor:{" "}
+                <b>
+                  {productivityIndex
+                    ?.detail
+                    ?.animodo
+                    ?.value ?? "-"}
+                </b>
+              </small>
+            </div>
+
+            <div className="ppr-productivity-detail__item">
+              <span>
+                Cerebro
+              </span>
+
+              <strong>
+                {productivityIndex
+                  ?.detail
+                  ?.brain
+                  ?.result || "-"}
+              </strong>
+
+              <small>
+                Valor:{" "}
+                <b>
+                  {productivityIndex
+                    ?.detail
+                    ?.brain
+                    ?.value ?? "-"}
+                </b>
+              </small>
+            </div>
+
+            <div className="ppr-productivity-detail__item">
+              <span>
+                Negociación
+              </span>
+
+              <strong>
+                {productivityIndex
+                  ?.detail
+                  ?.negotiation
+                  ?.result || "-"}
+              </strong>
+
+              <small>
+                Valor:{" "}
+                <b>
+                  {productivityIndex
+                    ?.detail
+                    ?.negotiation
+                    ?.value ?? "-"}
+                </b>
+              </small>
+            </div>
+
+            <div className="ppr-productivity-detail__item">
+              <span>
+                Sistema VAK
+              </span>
+
+              <strong>
+                {prettyText(
+                  productivityIndex
+                    ?.detail
+                    ?.vak
+                    ?.result
+                )}
+              </strong>
+
+              <small>
+                Valor:{" "}
+                <b>
+                  {productivityIndex
+                    ?.detail
+                    ?.vak
+                    ?.value ?? "-"}
+                </b>
+              </small>
+            </div>
+          </div> */}
+
+          <div className="ppr-productivity-note">
+            <span>
+              IPP
+            </span>
+
+            <p>
+              El Índice de Productividad Personal integra los
+              principales resultados de la evaluación y permite
+              observar de forma global cómo interactúan la
+              persistencia, comunicación, preferencia conductual,
+              dominancia cerebral, negociación y sistema
+              representacional.
+            </p>
           </div>
         </section>
+
 
         {/* ===================================================
             INFORMACIÓN DE VALIDACIÓN
@@ -1404,12 +1745,12 @@ const ProyectoPensarResultado = () => {
             </strong>
           </div>
 
-          {payment
+          {/* {payment
             ?.valorDepositado !==
             undefined &&
             payment
               ?.valorDepositado !==
-              null && (
+            null && (
               <div>
                 <span>
                   Pago registrado
@@ -1420,11 +1761,11 @@ const ProyectoPensarResultado = () => {
                   {Number(
                     payment
                       .valorDepositado ||
-                      0,
+                    0,
                   ).toFixed(2)}
                 </strong>
               </div>
-            )}
+            )} */}
         </section>
 
         {/* ===================================================
