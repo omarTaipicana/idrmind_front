@@ -1554,7 +1554,7 @@ const ProyectoPensarResultado = () => {
           {/* =================================================
       COMPONENTES
   ================================================= */}
-{/* 
+          {/* 
           <div className="ppr-productivity-detail">
 
             <div className="ppr-productivity-detail__item">
@@ -1715,6 +1715,226 @@ const ProyectoPensarResultado = () => {
             </p>
           </div>
         </section>
+
+
+        {/* ===================================================
+    CONCLUSIÓN FINAL DE PERSONALIDAD
+=================================================== */}
+
+        <section className="ppr-card ppr-personality-conclusion">
+          <div className="ppr-section-heading">
+            <div>
+              <span className="ppr-section-kicker">
+                CONCLUSIÓN DE PERSONALIDAD
+              </span>
+
+              <h2>
+                Perfil integral de {firstName || "la persona evaluada"}
+              </h2>
+            </div>
+
+            <div className="ppr-result-chip">
+              {personality?.animal || "-"}
+            </div>
+          </div>
+
+          {/* =================================================
+      PRESENTACIÓN DEL PERFIL
+  ================================================= */}
+
+          <div className="ppr-conclusion-profile">
+            <div className="ppr-conclusion-profile__image">
+              {personality?.imagenUrl ? (
+                <img
+                  src={personality.imagenUrl}
+                  alt={personality?.nombre || personality?.animal || "Personalidad"}
+                />
+              ) : (
+                <div className="ppr-conclusion-profile__placeholder">
+                  🧠
+                </div>
+              )}
+            </div>
+
+            <div className="ppr-conclusion-profile__content">
+              <span className="ppr-conclusion-profile__eyebrow">
+                TU PERFIL DE PERSONALIDAD
+              </span>
+
+              <h3>
+                {personality?.nombre || personality?.animal || "-"}
+              </h3>
+
+              <div className="ppr-conclusion-profile__meta">
+                <span>
+                  <small>ANIMAL</small>
+                  <strong>
+                    {personality?.animal || "-"}
+                  </strong>
+                </span>
+
+                <span>
+                  <small>TIPO DE CEREBRO</small>
+                  <strong>
+                    {personality?.tipoCerebro || brainType || "-"}
+                  </strong>
+                </span>
+
+                <span>
+                  <small>COMUNICACIÓN</small>
+                  <strong>
+                    {personality?.tipoComunicacion || communicationType || "-"}
+                  </strong>
+                </span>
+              </div>
+
+              <div className="ppr-conclusion-colors">
+                <div>
+                  <span
+                    className={`ppr-conclusion-color ppr-conclusion-color--${String(
+                      personality?.colorCabeza || headColor || ""
+                    ).toLowerCase()}`}
+                  />
+
+                  <p>
+                    <small>Color de pensamiento</small>
+                    <strong>
+                      {personality?.colorCabeza || headColor || "-"}
+                    </strong>
+                  </p>
+                </div>
+
+                <div>
+                  <span
+                    className={`ppr-conclusion-color ppr-conclusion-color--${String(
+                      personality?.colorPecho || chestColor || ""
+                    ).toLowerCase()}`}
+                  />
+
+                  <p>
+                    <small>Color de comunicación</small>
+                    <strong>
+                      {personality?.colorPecho || chestColor || "-"}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* =================================================
+                  CONCLUSIÓN GENERAL
+             ================================================= */}
+
+         
+
+          {/* =================================================
+                     RASGOS
+              ================================================= */}
+
+          {personality?.rasgos && (
+            <div className="ppr-conclusion-feature ppr-conclusion-feature--traits">
+              <div className="ppr-conclusion-feature__icon">
+                🧩
+              </div>
+
+              <div>
+                <span>
+                  RASGOS CARACTERÍSTICOS
+                </span>
+
+                <div className="ppr-conclusion-feature__text">
+                  {personality.rasgos}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =================================================
+      FORTALEZAS Y DEBILIDADES
+  ================================================= */}
+
+          <div className="ppr-conclusion-grid">
+            {personality?.fortalezas && (
+              <article className="ppr-conclusion-box ppr-conclusion-box--strength">
+                <div className="ppr-conclusion-box__head">
+                  <span className="ppr-conclusion-box__icon">
+                    ✓
+                  </span>
+
+                  <div>
+                    <small>
+                      RECURSOS PERSONALES
+                    </small>
+
+                    <h3>
+                      Fortalezas
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="ppr-conclusion-box__text">
+                  {personality.fortalezas}
+                </div>
+              </article>
+            )}
+
+            {personality?.debilidades && (
+              <article className="ppr-conclusion-box ppr-conclusion-box--weakness">
+                <div className="ppr-conclusion-box__head">
+                  <span className="ppr-conclusion-box__icon">
+                    !
+                  </span>
+
+                  <div>
+                    <small>
+                      ASPECTOS A OBSERVAR
+                    </small>
+
+                    <h3>
+                      Oportunidades de mejora
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="ppr-conclusion-box__text">
+                  {personality.debilidades}
+                </div>
+              </article>
+            )}
+          </div>
+
+          {/* =================================================
+      RECOMENDACIONES
+  ================================================= */}
+
+          {personality?.sugerencias && (
+            <div className="ppr-conclusion-recommendations">
+              <div className="ppr-conclusion-recommendations__head">
+                <span className="ppr-conclusion-recommendations__icon">
+                  ✦
+                </span>
+
+                <div>
+                  <small>
+                    DESARROLLO PERSONAL Y PROFESIONAL
+                  </small>
+
+                  <h3>
+                    Recomendaciones
+                  </h3>
+                </div>
+              </div>
+
+              <div className="ppr-conclusion-recommendations__text">
+                {personality.sugerencias}
+              </div>
+            </div>
+          )}
+
+      
+        </section>
+
 
 
         {/* ===================================================

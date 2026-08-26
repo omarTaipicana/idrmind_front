@@ -2174,6 +2174,553 @@
   line-height: 1.65;
 }
 
+
+/* =========================================================
+   CONCLUSIÓN FINAL DE PERSONALIDAD
+========================================================= */
+
+.ppr-personality-conclusion {
+  position: relative;
+  overflow: hidden;
+}
+
+.ppr-personality-conclusion::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    #173a8a,
+    #2957b8,
+    #071b3f
+  );
+}
+
+/* =========================================================
+   PERFIL PRINCIPAL
+========================================================= */
+
+.ppr-conclusion-profile {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+
+  margin-top: 25px;
+  padding: 28px;
+
+  border: 1px solid #e3e9f3;
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(23, 58, 138, 0.06),
+      rgba(255, 255, 255, 0.9)
+    );
+}
+
+.ppr-conclusion-profile__image {
+  width: 190px;
+  height: 190px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 22px;
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #e0e7f0;
+
+  box-shadow:
+    0 12px 30px rgba(7, 27, 63, 0.08);
+}
+
+.ppr-conclusion-profile__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ppr-conclusion-profile__placeholder {
+  font-size: 4.5rem;
+}
+
+.ppr-conclusion-profile__eyebrow {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.ppr-conclusion-profile__content h3 {
+  margin: 0 0 20px;
+
+  color: #071b3f;
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* =========================================================
+   METADATOS
+========================================================= */
+
+.ppr-conclusion-profile__meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+
+  margin-bottom: 20px;
+}
+
+.ppr-conclusion-profile__meta > span {
+  padding: 13px 15px;
+
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e6ebf2;
+}
+
+.ppr-conclusion-profile__meta small {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #8491a3;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.ppr-conclusion-profile__meta strong {
+  color: #172033;
+  font-size: 0.86rem;
+}
+
+/* =========================================================
+   COLORES
+========================================================= */
+
+.ppr-conclusion-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.ppr-conclusion-colors > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ppr-conclusion-colors p {
+  margin: 0;
+}
+
+.ppr-conclusion-colors small {
+  display: block;
+
+  color: #7c8798;
+  font-size: 0.68rem;
+}
+
+.ppr-conclusion-colors strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #172033;
+  font-size: 0.82rem;
+}
+
+.ppr-conclusion-color {
+  width: 18px;
+  height: 18px;
+
+  flex: 0 0 18px;
+
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.ppr-conclusion-color--amarillo {
+  background: #f6c445;
+}
+
+.ppr-conclusion-color--azul {
+  background: #2d67c8;
+}
+
+.ppr-conclusion-color--rojo {
+  background: #d94747;
+}
+
+.ppr-conclusion-color--verde {
+  background: #42a66b;
+}
+
+/* =========================================================
+   INTERPRETACIÓN GENERAL
+========================================================= */
+
+.ppr-conclusion-summary {
+  margin-top: 24px;
+  padding: 25px 28px;
+
+  border-radius: 16px;
+
+  background: #f8fafc;
+  border-left: 5px solid #173a8a;
+}
+
+.ppr-conclusion-summary__label {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #173a8a;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.ppr-conclusion-summary p {
+  margin: 0;
+
+  color: #435066;
+  font-size: 0.96rem;
+  line-height: 1.8;
+
+  white-space: pre-line;
+}
+
+/* =========================================================
+   RASGOS
+========================================================= */
+
+.ppr-conclusion-feature {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 15px;
+
+  margin-top: 20px;
+  padding: 22px;
+
+  border: 1px solid #e4e9f0;
+  border-radius: 16px;
+
+  background: #ffffff;
+}
+
+.ppr-conclusion-feature__icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: #edf3ff;
+
+  font-size: 1.5rem;
+}
+
+.ppr-conclusion-feature span {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #173a8a;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.ppr-conclusion-feature__text {
+  color: #435066;
+  font-size: 0.94rem;
+  line-height: 1.75;
+
+  white-space: pre-line;
+}
+
+/* =========================================================
+   FORTALEZAS / DEBILIDADES
+========================================================= */
+
+.ppr-conclusion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+
+  margin-top: 20px;
+}
+
+.ppr-conclusion-box {
+  min-width: 0;
+
+  padding: 24px;
+
+  border-radius: 17px;
+  border: 1px solid #e4e9f0;
+}
+
+.ppr-conclusion-box--strength {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(34, 160, 107, 0.08),
+      #ffffff 60%
+    );
+}
+
+.ppr-conclusion-box--weakness {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(221, 156, 52, 0.09),
+      #ffffff 60%
+    );
+}
+
+.ppr-conclusion-box__head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  margin-bottom: 16px;
+}
+
+.ppr-conclusion-box__icon {
+  width: 39px;
+  height: 39px;
+
+  flex: 0 0 39px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.ppr-conclusion-box--strength
+  .ppr-conclusion-box__icon {
+  color: #16825a;
+  background: #ddf5eb;
+}
+
+.ppr-conclusion-box--weakness
+  .ppr-conclusion-box__icon {
+  color: #9b6716;
+  background: #fff1d6;
+}
+
+.ppr-conclusion-box__head small {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #8792a3;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.ppr-conclusion-box__head h3 {
+  margin: 0;
+
+  color: #172033;
+  font-size: 1.1rem;
+}
+
+.ppr-conclusion-box__text {
+  color: #465368;
+  font-size: 0.92rem;
+  line-height: 1.75;
+
+  white-space: pre-line;
+}
+
+/* =========================================================
+   RECOMENDACIONES
+========================================================= */
+
+.ppr-conclusion-recommendations {
+  margin-top: 20px;
+  padding: 26px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #071b3f,
+      #173a8a
+    );
+
+  color: #ffffff;
+}
+
+.ppr-conclusion-recommendations__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+.ppr-conclusion-recommendations__icon {
+  width: 43px;
+  height: 43px;
+
+  flex: 0 0 43px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.13);
+
+  font-size: 1.2rem;
+}
+
+.ppr-conclusion-recommendations__head small {
+  display: block;
+
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.ppr-conclusion-recommendations__head h3 {
+  margin: 2px 0 0;
+
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.ppr-conclusion-recommendations__text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.94rem;
+  line-height: 1.8;
+
+  white-space: pre-line;
+}
+
+/* =========================================================
+   CIERRE
+========================================================= */
+
+.ppr-conclusion-final {
+  margin-top: 22px;
+  padding: 25px 28px;
+
+  text-align: center;
+
+  border-radius: 16px;
+
+  background: #f4f7fb;
+  border: 1px solid #e0e6ef;
+}
+
+.ppr-conclusion-final > span {
+  display: block;
+  margin-bottom: 9px;
+
+  color: #173a8a;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.ppr-conclusion-final p {
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  color: #4b586d;
+  font-size: 0.94rem;
+  line-height: 1.75;
+}
+
+.ppr-conclusion-final strong {
+  color: #172033;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .ppr-conclusion-profile {
+    grid-template-columns: 150px 1fr;
+  }
+
+  .ppr-conclusion-profile__image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .ppr-conclusion-profile__meta {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .ppr-conclusion-profile {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .ppr-conclusion-profile__image {
+    margin: 0 auto;
+  }
+
+  .ppr-conclusion-profile__meta {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .ppr-conclusion-colors {
+    justify-content: center;
+  }
+
+  .ppr-conclusion-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ppr-conclusion-feature {
+    grid-template-columns: 1fr;
+  }
+
+  .ppr-conclusion-feature__icon {
+    margin: 0 auto;
+  }
+
+  .ppr-conclusion-feature {
+    text-align: center;
+  }
+}
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */

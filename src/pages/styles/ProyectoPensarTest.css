@@ -2131,3 +2131,907 @@
           1fr));
   }
 }
+
+
+/* =========================================================
+   VERIFICACIÓN DE IDENTIDAD - PROYECTO PENSAR
+   Se integra sin modificar la funcionalidad actual del test
+========================================================= */
+
+.psychometric-identity {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem 1rem;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  background:
+    linear-gradient(
+      rgba(245, 247, 251, 0.98),
+      rgba(245, 247, 251, 0.98)
+    ),
+    url("/images/fondo.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
+  color: var(--ppt-text);
+
+  box-sizing: border-box;
+}
+
+.psychometric-identity *,
+.psychometric-identity *::before,
+.psychometric-identity *::after {
+  box-sizing: border-box;
+}
+
+.psychometric-identity__background {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.psychometric-identity__shape {
+  position: absolute;
+
+  display: block;
+
+  border-radius: 50%;
+}
+
+.psychometric-identity__shape--one {
+  width: 420px;
+  height: 420px;
+
+  top: -180px;
+  right: -120px;
+
+  background:
+    rgba(23, 58, 138, 0.08);
+}
+
+.psychometric-identity__shape--two {
+  width: 340px;
+  height: 340px;
+
+  bottom: -150px;
+  left: -120px;
+
+  background:
+    rgba(40, 167, 232, 0.09);
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.psychometric-identity__card {
+  position: relative;
+  z-index: 2;
+
+  width: min(780px, 100%);
+
+  margin: auto;
+
+  padding: 2rem;
+
+  border:
+    1px solid
+    rgba(7, 27, 63, 0.08);
+
+  border-radius: 1.5rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 24px 70px
+    rgba(7, 27, 63, 0.14);
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.psychometric-identity__header {
+  display: flex;
+  align-items: center;
+
+  gap: 1.2rem;
+
+  padding-bottom: 1.35rem;
+
+  border-bottom:
+    1px solid #e8edf4;
+}
+
+.psychometric-identity__header img {
+  width: 105px;
+  max-height: 65px;
+
+  object-fit: contain;
+}
+
+.psychometric-identity__header > div {
+  min-width: 0;
+}
+
+.psychometric-identity__header span {
+  display: block;
+
+  margin-bottom: 0.3rem;
+
+  color: var(--ppt-cyan);
+
+  font-size: 0.7rem;
+  font-weight: 900;
+
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.psychometric-identity__header h1 {
+  margin: 0;
+
+  color: var(--ppt-blue-dark);
+
+  font-size:
+    clamp(1.4rem, 3vw, 1.9rem);
+
+  line-height: 1.2;
+}
+
+/* =========================================================
+   PARTICIPANTE
+========================================================= */
+
+.psychometric-identity__participant {
+  display: flex;
+  align-items: center;
+
+  gap: 0.85rem;
+
+  margin-top: 1.25rem;
+  padding: 0.9rem 1rem;
+
+  border:
+    1px solid #e7ebf1;
+
+  border-radius: 1rem;
+
+  background: #f7f9fc;
+}
+
+.psychometric-identity__participant-avatar {
+  width: 48px;
+  height: 48px;
+
+  flex: 0 0 48px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--ppt-blue),
+      var(--ppt-blue-dark)
+    );
+
+  color: #ffffff;
+
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.psychometric-identity__participant > div:last-child {
+  min-width: 0;
+}
+
+.psychometric-identity__participant span {
+  display: block;
+
+  color: #7a8699;
+
+  font-size: 0.7rem;
+}
+
+.psychometric-identity__participant strong {
+  display: block;
+
+  margin-top: 0.12rem;
+
+  overflow: hidden;
+
+  color: var(--ppt-blue-dark);
+
+  font-size: 0.95rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.psychometric-identity__participant small {
+  display: block;
+
+  margin-top: 0.2rem;
+
+  color: var(--ppt-muted);
+}
+
+/* =========================================================
+   INTRODUCCIÓN
+========================================================= */
+
+.psychometric-identity__intro {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+
+  gap: 1rem;
+
+  margin-top: 1.55rem;
+}
+
+.psychometric-identity__security-icon {
+  width: 58px;
+  height: 58px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 1rem;
+
+  background: #ecfdf3;
+
+  border:
+    1px solid #abefc6;
+}
+
+.psychometric-identity__security-icon span {
+  width: 30px;
+  height: 30px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--ppt-success);
+
+  color: #ffffff;
+
+  font-weight: 900;
+}
+
+.psychometric-identity__intro h2 {
+  margin: 0.1rem 0 0.45rem;
+
+  color: var(--ppt-blue-dark);
+
+  font-size: 1.18rem;
+}
+
+.psychometric-identity__intro p {
+  margin: 0;
+
+  color: #596579;
+
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   PASOS
+========================================================= */
+
+.psychometric-identity__information {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 0.8rem;
+
+  margin-top: 1.4rem;
+}
+
+.psychometric-identity__information > div {
+  padding: 1rem;
+
+  border:
+    1px solid #e8edf3;
+
+  border-radius: 0.9rem;
+
+  background: #fbfcfe;
+}
+
+.psychometric-identity__information-icon {
+  width: 28px;
+  height: 28px;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 0.65rem;
+
+  border-radius: 50%;
+
+  background: #eaf1ff;
+
+  color: var(--ppt-blue);
+
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.psychometric-identity__information p {
+  margin: 0;
+
+  color: #596579;
+
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   PRIVACIDAD
+========================================================= */
+
+.psychometric-identity__privacy {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+
+  gap: 0.75rem;
+
+  margin-top: 1rem;
+  padding: 1rem;
+
+  border:
+    1px solid #dbe7fb;
+
+  border-radius: 0.9rem;
+
+  background: #eef4ff;
+}
+
+.psychometric-identity__privacy > span {
+  font-size: 1.15rem;
+}
+
+.psychometric-identity__privacy strong {
+  display: block;
+
+  margin-bottom: 0.2rem;
+
+  color: var(--ppt-blue);
+
+  font-size: 0.82rem;
+}
+
+.psychometric-identity__privacy p {
+  margin: 0;
+
+  color: #56657b;
+
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   CONSENTIMIENTO
+========================================================= */
+
+.psychometric-identity__consent {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.75rem;
+
+  margin-top: 1rem;
+  padding: 1rem;
+
+  border:
+    1px solid #dde4ed;
+
+  border-radius: 0.9rem;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.psychometric-identity__consent:hover {
+  border-color: var(--ppt-cyan);
+
+  background: #fbfdff;
+}
+
+.psychometric-identity__consent input {
+  width: 19px;
+  height: 19px;
+
+  flex: 0 0 19px;
+
+  margin-top: 0.1rem;
+
+  accent-color: var(--ppt-blue);
+}
+
+.psychometric-identity__consent span {
+  color: #48566b;
+
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   CÁMARA / PREVIEW
+========================================================= */
+
+.psychometric-identity__camera-section,
+.psychometric-identity__preview-section {
+  margin-top: 1.5rem;
+}
+
+.psychometric-identity__camera-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 0.9rem;
+}
+
+.psychometric-identity__camera-title span {
+  display: block;
+
+  margin-bottom: 0.2rem;
+
+  color: var(--ppt-cyan);
+
+  font-size: 0.65rem;
+  font-weight: 900;
+
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.psychometric-identity__camera-title h2 {
+  margin: 0;
+
+  color: var(--ppt-blue-dark);
+
+  font-size: 1.25rem;
+}
+
+.psychometric-identity__live {
+  display: flex !important;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  margin: 0 !important;
+  padding: 0.45rem 0.65rem;
+
+  border-radius: 999px;
+
+  background: #fef3f2;
+
+  color: #b42318 !important;
+
+  font-size: 0.65rem !important;
+}
+
+.psychometric-identity__live i {
+  width: 7px;
+  height: 7px;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: var(--ppt-danger);
+
+  animation:
+    psychometricIdentityLivePulse
+    1.2s ease infinite;
+}
+
+.psychometric-identity__camera,
+.psychometric-identity__preview {
+  position: relative;
+
+  width: min(570px, 100%);
+
+  margin: 0 auto 1rem;
+
+  overflow: hidden;
+
+  border-radius: 1.25rem;
+
+  background: var(--ppt-blue-dark);
+
+  box-shadow:
+    0 14px 34px
+    rgba(7, 27, 63, 0.18);
+}
+
+.psychometric-identity__camera {
+  aspect-ratio: 4 / 3;
+}
+
+.psychometric-identity__camera video {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transform: scaleX(-1);
+}
+
+.psychometric-identity__preview img {
+  width: 100%;
+  max-height: 480px;
+
+  display: block;
+
+  object-fit: contain;
+
+  background: var(--ppt-blue-dark);
+}
+
+/* =========================================================
+   GUÍA DE ROSTRO
+========================================================= */
+
+.psychometric-identity__face-guide {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.psychometric-identity__face-guide span {
+  width: 44%;
+  height: 68%;
+
+  border:
+    3px solid
+    rgba(255, 255, 255, 0.84);
+
+  border-radius: 46%;
+
+  box-shadow:
+    0 0 0 999px
+    rgba(7, 27, 63, 0.11);
+}
+
+.psychometric-identity__camera-help {
+  position: absolute;
+
+  left: 50%;
+  bottom: 1rem;
+
+  transform:
+    translateX(-50%);
+
+  padding:
+    0.45rem 0.8rem;
+
+  border-radius: 999px;
+
+  background:
+    rgba(7, 27, 63, 0.78);
+
+  color: #ffffff;
+
+  font-size: 0.72rem;
+
+  white-space: nowrap;
+}
+
+.psychometric-identity__preview-help {
+  margin: 0 0 0.85rem;
+
+  color: var(--ppt-muted);
+
+  font-size: 0.85rem;
+}
+
+.psychometric-identity__preview-actions {
+  display: flex;
+  justify-content: center;
+
+  gap: 0.75rem;
+
+  flex-wrap: wrap;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.psychometric-identity__button {
+  min-height: 48px;
+
+  padding: 0.8rem 1.25rem;
+
+  border: 0;
+
+  border-radius: 0.85rem;
+
+  font-family: inherit;
+  font-size: 0.87rem;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.psychometric-identity__button:hover:not(:disabled) {
+  transform:
+    translateY(-1px);
+}
+
+.psychometric-identity__button--primary {
+  background:
+    linear-gradient(
+      135deg,
+      var(--ppt-blue),
+      var(--ppt-blue-dark)
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 9px 22px
+    rgba(23, 58, 138, 0.22);
+}
+
+.psychometric-identity__button--secondary {
+  border:
+    1px solid #dae4f5;
+
+  background: #eef3fc;
+
+  color: var(--ppt-blue);
+}
+
+.psychometric-identity__button--full {
+  width: 100%;
+
+  margin-top: 1rem;
+}
+
+.psychometric-identity__button:disabled {
+  opacity: 0.48;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.psychometric-identity__error {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+
+  gap: 0.7rem;
+
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+
+  border:
+    1px solid #f5cac6;
+
+  border-radius: 0.85rem;
+
+  background: #fef3f2;
+}
+
+.psychometric-identity__error > span {
+  width: 28px;
+  height: 28px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--ppt-danger);
+
+  color: #ffffff;
+
+  font-weight: 900;
+}
+
+.psychometric-identity__error strong {
+  display: block;
+
+  color: #b42318;
+
+  font-size: 0.8rem;
+}
+
+.psychometric-identity__error p {
+  margin: 0.25rem 0 0;
+
+  color: #7a271a;
+
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   CANVAS / FOOTER
+========================================================= */
+
+.psychometric-identity__canvas {
+  display: none;
+}
+
+.psychometric-identity__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+
+  border-top:
+    1px solid #edf0f4;
+
+  color: #8893a3;
+}
+
+.psychometric-identity__footer p {
+  margin: 0;
+
+  font-size: 0.7rem;
+}
+
+/* =========================================================
+   ANIMACIÓN CÁMARA
+========================================================= */
+
+@keyframes psychometricIdentityLivePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE VERIFICACIÓN
+========================================================= */
+
+@media (max-width: 700px) {
+  .psychometric-identity {
+    padding:
+      0.75rem;
+  }
+
+  .psychometric-identity__card {
+    padding:
+      1.35rem 1rem;
+
+    border-radius:
+      1.1rem;
+  }
+
+  .psychometric-identity__header {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .psychometric-identity__header img {
+    width: 90px;
+  }
+
+  .psychometric-identity__information {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psychometric-identity__intro {
+    grid-template-columns:
+      48px 1fr;
+  }
+
+  .psychometric-identity__security-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .psychometric-identity__camera-title {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .psychometric-identity__preview-actions {
+    flex-direction:
+      column;
+  }
+
+  .psychometric-identity__preview-actions
+    .psychometric-identity__button {
+    width: 100%;
+  }
+
+  .psychometric-identity__camera-help {
+    max-width:
+      calc(100% - 2rem);
+
+    overflow: hidden;
+
+    text-overflow:
+      ellipsis;
+  }
+}
+
+@media (max-width: 420px) {
+  .psychometric-identity__participant strong {
+    white-space: normal;
+  }
+
+  .psychometric-identity__intro {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psychometric-identity__security-icon {
+    margin: 0 auto;
+  }
+
+  .psychometric-identity__intro > div:last-child {
+    text-align: center;
+  }
+}
