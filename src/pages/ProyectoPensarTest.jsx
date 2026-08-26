@@ -1,7 +1,6 @@
 import {
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 
@@ -13,6 +12,9 @@ import {
 import axios from "axios";
 
 import IsLoading from "../components/shared/isLoading";
+
+import PsychometricIdentityVerification
+  from "../components/PsychometricIdentityVerification";
 
 import "./styles/ProyectoPensarTest.css";
 
@@ -97,54 +99,6 @@ const ProyectoPensarTest = () => {
     completedData,
     setCompletedData,
   ] = useState(null);
-
-  /* =======================================================
-     VERIFICACIÓN DE IDENTIDAD
-  ======================================================= */
-
-  const videoRef =
-    useRef(null);
-
-  const canvasRef =
-    useRef(null);
-
-  const cameraStreamRef =
-    useRef(null);
-
-  const [
-    identityConsentAccepted,
-    setIdentityConsentAccepted,
-  ] = useState(false);
-
-  const [
-    identityCameraStarted,
-    setIdentityCameraStarted,
-  ] = useState(false);
-
-  const [
-    identityCapturedBlob,
-    setIdentityCapturedBlob,
-  ] = useState(null);
-
-  const [
-    identityPreviewUrl,
-    setIdentityPreviewUrl,
-  ] = useState("");
-
-  const [
-    identityCameraError,
-    setIdentityCameraError,
-  ] = useState("");
-
-  const [
-    identityUploadError,
-    setIdentityUploadError,
-  ] = useState("");
-
-  const [
-    isUploadingIdentity,
-    setIsUploadingIdentity,
-  ] = useState(false);
 
   /* =======================================================
      CARGAR TEST POR TOKEN
@@ -239,446 +193,78 @@ const ProyectoPensarTest = () => {
     );
 
   /* =======================================================
-     HELPERS VERIFICACIÓN DE IDENTIDAD
+     VERIFICACIÓN INICIAL COMPLETADA
   ======================================================= */
 
-  const stopIdentityCamera = () => {
-    const stream =
-      cameraStreamRef.current;
-
-    if (stream) {
-      stream
-        .getTracks()
-        .forEach((track) => {
-          track.stop();
-        });
-    }
-
-    cameraStreamRef.current =
-      null;
-
-    if (videoRef.current) {
-      videoRef.current.srcObject =
-        null;
-    }
-
-    setIdentityCameraStarted(false);
-  };
-
-  const clearIdentityPreview = () => {
-    setIdentityCapturedBlob(null);
-
-    setIdentityPreviewUrl(
-      (previous) => {
-        if (previous) {
-          URL.revokeObjectURL(
-            previous
-          );
-        }
-
-        return "";
-      }
-    );
-  };
-
-  const getCameraErrorMessage = (
-    error
+  const handleInitialIdentityVerified = (
+    response
   ) => {
-    switch (error?.name) {
-      case "NotAllowedError":
-      case "PermissionDeniedError":
-        return "El permiso de cámara fue rechazado. Habilita el acceso a la cámara desde la configuración de tu navegador e inténtalo nuevamente.";
-
-      case "NotFoundError":
-      case "DevicesNotFoundError":
-        return "No se encontró una cámara disponible en este dispositivo.";
-
-      case "NotReadableError":
-      case "TrackStartError":
-        return "La cámara está siendo utilizada por otra aplicación o no puede iniciarse en este momento.";
-
-      case "OverconstrainedError":
-        return "La cámara disponible no cumple con la configuración requerida.";
-
-      case "SecurityError":
-        return "El navegador bloqueó el acceso a la cámara por motivos de seguridad.";
-
-      default:
-        return "No fue posible habilitar la cámara. Verifica los permisos del navegador e inténtalo nuevamente.";
-    }
-  };
-
-  const startIdentityCamera =
-    async () => {
-      setIdentityCameraError("");
-      setIdentityUploadError("");
-
-      if (
-        !identityConsentAccepted
-      ) {
-        setIdentityCameraError(
-          "Debes aceptar la autorización antes de habilitar la cámara."
-        );
-
-        return;
+    setTestAccess((previous) => {
+      if (!previous) {
+        return previous;
       }
 
-      if (
-        !navigator.mediaDevices ||
-        !navigator.mediaDevices
-          .getUserMedia
-      ) {
-        setIdentityCameraError(
-          "Este navegador no permite utilizar la cámara. Utiliza una versión actualizada de Chrome, Edge, Safari o Firefox."
-        );
+      return {
+        ...previous,
 
-        return;
-      }
+        evaluation: {
+          ...previous.evaluation,
 
-      try {
-        stopIdentityCamera();
-        clearIdentityPreview();
+          estado:
+            response?.evaluation?.estado ||
+            previous?.evaluation?.estado,
 
-        const stream =
-          await navigator
-            .mediaDevices
-            .getUserMedia({
-              video: {
-                facingMode:
-                  "user",
-
-                width: {
-                  ideal: 1280,
-                },
-
-                height: {
-                  ideal: 720,
-                },
-              },
-
-              audio: false,
-            });
-
-        cameraStreamRef.current =
-          stream;
-
-        if (
-          videoRef.current
-        ) {
-          videoRef.current.srcObject =
-            stream;
-
-          await videoRef.current
-            .play();
-        }
-
-        setIdentityCameraStarted(
-          true
-        );
-      } catch (error) {
-        console.error(
-          "Error habilitando cámara:",
-          error
-        );
-
-        setIdentityCameraError(
-          getCameraErrorMessage(
-            error
-          )
-        );
-      }
-    };
-
-  const captureIdentityPhoto =
-    () => {
-      setIdentityCameraError("");
-      setIdentityUploadError("");
-
-      const video =
-        videoRef.current;
-
-      const canvas =
-        canvasRef.current;
-
-      if (
-        !video ||
-        !canvas
-      ) {
-        setIdentityCameraError(
-          "No fue posible acceder a la cámara."
-        );
-
-        return;
-      }
-
-      if (
-        !video.videoWidth ||
-        !video.videoHeight
-      ) {
-        setIdentityCameraError(
-          "La cámara todavía se está iniciando. Espera un momento e inténtalo nuevamente."
-        );
-
-        return;
-      }
-
-      const maxDimension =
-        1280;
-
-      let width =
-        video.videoWidth;
-
-      let height =
-        video.videoHeight;
-
-      const scale =
-        Math.min(
-          1,
-          maxDimension /
-            Math.max(
-              width,
-              height
-            )
-        );
-
-      width =
-        Math.round(
-          width * scale
-        );
-
-      height =
-        Math.round(
-          height * scale
-        );
-
-      canvas.width =
-        width;
-
-      canvas.height =
-        height;
-
-      const context =
-        canvas.getContext(
-          "2d"
-        );
-
-      if (!context) {
-        setIdentityCameraError(
-          "No fue posible procesar la fotografía."
-        );
-
-        return;
-      }
-
-      context.drawImage(
-        video,
-        0,
-        0,
-        width,
-        height
-      );
-
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) {
-            setIdentityCameraError(
-              "No fue posible generar la fotografía."
-            );
-
-            return;
-          }
-
-          clearIdentityPreview();
-
-          const url =
-            URL.createObjectURL(
-              blob
-            );
-
-          setIdentityCapturedBlob(
-            blob
-          );
-
-          setIdentityPreviewUrl(
-            url
-          );
-
-          stopIdentityCamera();
+          fechaInicio:
+            response?.evaluation?.fechaInicio ||
+            previous?.evaluation?.fechaInicio,
         },
 
-        "image/jpeg",
+        identityVerification: {
+          ...previous.identityVerification,
 
-        0.82
-      );
-    };
+          required: true,
 
-  const retryIdentityPhoto =
-    async () => {
-      clearIdentityPreview();
+          initial: {
+            ...previous
+              ?.identityVerification
+              ?.initial,
 
-      await startIdentityCamera();
-    };
+            completed: true,
 
-  const submitInitialIdentity =
-    async () => {
-      if (
-        !identityCapturedBlob
-      ) {
-        setIdentityUploadError(
-          "Debes tomar una fotografía antes de continuar."
-        );
+            id:
+              response
+                ?.identityVerification
+                ?.id ||
+              previous
+                ?.identityVerification
+                ?.initial
+                ?.id ||
+              null,
 
-        return;
-      }
+            status:
+              response
+                ?.identityVerification
+                ?.status ||
+              "captured",
 
-      if (
-        !identityConsentAccepted
-      ) {
-        setIdentityUploadError(
-          "Debes aceptar la autorización para registrar la fotografía."
-        );
+            capturedAt:
+              response
+                ?.identityVerification
+                ?.capturedAt ||
+              new Date().toISOString(),
 
-        return;
-      }
+            consentAccepted: true,
 
-      setIsUploadingIdentity(true);
-      setIdentityUploadError("");
-
-      try {
-        const formData =
-          new FormData();
-
-        formData.append(
-          "photo",
-          identityCapturedBlob,
-          "identity.jpg"
-        );
-
-        formData.append(
-          "consentAccepted",
-          "true"
-        );
-
-        const response =
-          await axios.post(
-            `${API_URL}/psychometric/access/${encodeURIComponent(
-              token
-            )}/identity`,
-            formData
-          );
-
-        clearIdentityPreview();
-        stopIdentityCamera();
-
-        setTestAccess(
-          (previous) => {
-            if (!previous) {
-              return previous;
-            }
-
-            return {
-              ...previous,
-
-              evaluation: {
-                ...previous
-                  .evaluation,
-
-                estado:
-                  response.data
-                    ?.evaluation
-                    ?.estado ||
-                  previous
-                    ?.evaluation
-                    ?.estado,
-
-                fechaInicio:
-                  response.data
-                    ?.evaluation
-                    ?.fechaInicio ||
-                  previous
-                    ?.evaluation
-                    ?.fechaInicio,
-              },
-
-              identityVerification: {
-                ...previous
-                  .identityVerification,
-
-                required: true,
-
-                initial: {
-                  ...previous
-                    ?.identityVerification
-                    ?.initial,
-
-                  completed:
-                    true,
-
-                  id:
-                    response.data
-                      ?.identityVerification
-                      ?.id ||
-                    null,
-
-                  status:
-                    response.data
-                      ?.identityVerification
-                      ?.status ||
-                    "captured",
-
-                  capturedAt:
-                    response.data
-                      ?.identityVerification
-                      ?.capturedAt ||
-                    new Date()
-                      .toISOString(),
-
-                  consentAccepted:
-                    true,
-
-                  consentVersion:
-                    response.data
-                      ?.identityVerification
-                      ?.consentVersion ||
-                    null,
-                },
-              },
-            };
-          }
-        );
-      } catch (error) {
-        console.error(
-          "Error registrando fotografía de identidad:",
-          error.response?.data ||
-          error
-        );
-
-        setIdentityUploadError(
-          error.response?.data
-            ?.message ||
-          "No fue posible registrar la fotografía. Inténtalo nuevamente."
-        );
-      } finally {
-        setIsUploadingIdentity(
-          false
-        );
-      }
-    };
-
-  useEffect(() => {
-    return () => {
-      const stream =
-        cameraStreamRef.current;
-
-      if (stream) {
-        stream
-          .getTracks()
-          .forEach((track) => {
-            track.stop();
-          });
-      }
-    };
-  }, []);
+            consentVersion:
+              response
+                ?.identityVerification
+                ?.consentVersion ||
+              null,
+          },
+        },
+      };
+    });
+  };
 
   /* =======================================================
      RESTAURAR RESPUESTAS GUARDADAS
@@ -2093,353 +1679,15 @@ const ProyectoPensarTest = () => {
       ?.required &&
     !initialIdentityCompleted
   ) {
-    const participantName =
-      [
-        user?.firstName,
-        user?.lastName,
-      ]
-        .filter(Boolean)
-        .join(" ") ||
-      "Participante";
-
     return (
-      <main className="psychometric-identity">
-        <div className="psychometric-identity__background">
-          <span className="psychometric-identity__shape psychometric-identity__shape--one" />
-          <span className="psychometric-identity__shape psychometric-identity__shape--two" />
-        </div>
-
-        <section className="psychometric-identity__card">
-          <header className="psychometric-identity__header">
-            <img
-              src="/images/test_logo.png"
-              alt="Proyecto Pensar"
-            />
-
-            <div>
-              <span>
-                PROYECTO PENSAR
-              </span>
-
-              <h1>
-                Verificación de identidad
-              </h1>
-            </div>
-          </header>
-
-          <div className="psychometric-identity__participant">
-            <div className="psychometric-identity__participant-avatar">
-              {user?.firstName
-                ?.charAt(0)
-                ?.toUpperCase() ||
-                "P"}
-            </div>
-
-            <div>
-              <span>
-                Participante
-              </span>
-
-              <strong>
-                {participantName}
-              </strong>
-
-              <small>
-                Evaluación #
-                {evaluation
-                  ?.numeroEvaluacion ||
-                  1}
-              </small>
-            </div>
-          </div>
-
-          <div className="psychometric-identity__intro">
-            <div className="psychometric-identity__security-icon">
-              <span>
-                ✓
-              </span>
-            </div>
-
-            <div>
-              <h2>
-                Antes de iniciar
-              </h2>
-
-              <p>
-                Para respaldar la identidad
-                de la persona que realiza
-                esta evaluación y preservar
-                la integridad del proceso,
-                necesitamos registrar una
-                fotografía del participante.
-              </p>
-            </div>
-          </div>
-
-          {!identityCameraStarted &&
-            !identityPreviewUrl && (
-              <>
-                <div className="psychometric-identity__information">
-                  <div>
-                    <span className="psychometric-identity__information-icon">
-                      1
-                    </span>
-
-                    <p>
-                      Permite el acceso
-                      temporal a la cámara
-                      de tu dispositivo.
-                    </p>
-                  </div>
-
-                  <div>
-                    <span className="psychometric-identity__information-icon">
-                      2
-                    </span>
-
-                    <p>
-                      Ubica tu rostro de
-                      frente y procura tener
-                      buena iluminación.
-                    </p>
-                  </div>
-
-                  <div>
-                    <span className="psychometric-identity__information-icon">
-                      3
-                    </span>
-
-                    <p>
-                      Revisa la fotografía
-                      antes de confirmar e
-                      iniciar el test.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="psychometric-identity__privacy">
-                  <span>
-                    🔒
-                  </span>
-
-                  <div>
-                    <strong>
-                      Uso de la fotografía
-                    </strong>
-
-                    <p>
-                      La fotografía será
-                      asociada únicamente a
-                      esta evaluación y
-                      almacenada como evidencia
-                      privada del proceso. No
-                      se publicará ni se
-                      mostrará dentro del test.
-                    </p>
-                  </div>
-                </div>
-
-                <label className="psychometric-identity__consent">
-                  <input
-                    type="checkbox"
-                    checked={
-                      identityConsentAccepted
-                    }
-                    onChange={(
-                      event
-                    ) => {
-                      setIdentityConsentAccepted(
-                        event.target
-                          .checked
-                      );
-
-                      setIdentityCameraError(
-                        ""
-                      );
-                    }}
-                  />
-
-                  <span>
-                    He leído y autorizo la
-                    captura de mi fotografía
-                    para respaldar la identidad
-                    asociada a esta evaluación.
-                  </span>
-                </label>
-              </>
-            )}
-
-          {identityCameraStarted && (
-            <div className="psychometric-identity__camera-section">
-              <div className="psychometric-identity__camera-title">
-                <div>
-                  <span>
-                    CÁMARA ACTIVA
-                  </span>
-
-                  <h2>
-                    Centra tu rostro
-                  </h2>
-                </div>
-
-                <span className="psychometric-identity__live">
-                  <i />
-                  EN VIVO
-                </span>
-              </div>
-
-              <div className="psychometric-identity__camera">
-                <video
-                  ref={
-                    videoRef
-                  }
-                  autoPlay
-                  playsInline
-                  muted
-                />
-
-                <div className="psychometric-identity__face-guide">
-                  <span />
-                </div>
-
-                <div className="psychometric-identity__camera-help">
-                  Mira directamente a la cámara
-                </div>
-              </div>
-
-              <button
-                type="button"
-                className="psychometric-identity__button psychometric-identity__button--primary psychometric-identity__button--full"
-                onClick={
-                  captureIdentityPhoto
-                }
-              >
-                📷 Tomar fotografía
-              </button>
-            </div>
-          )}
-
-          {identityPreviewUrl && (
-            <div className="psychometric-identity__preview-section">
-              <div className="psychometric-identity__camera-title">
-                <div>
-                  <span>
-                    FOTOGRAFÍA CAPTURADA
-                  </span>
-
-                  <h2>
-                    Revisa tu fotografía
-                  </h2>
-                </div>
-              </div>
-
-              <p className="psychometric-identity__preview-help">
-                Verifica que tu rostro sea
-                claramente visible antes de
-                continuar.
-              </p>
-
-              <div className="psychometric-identity__preview">
-                <img
-                  src={
-                    identityPreviewUrl
-                  }
-                  alt="Fotografía de verificación"
-                />
-              </div>
-
-              <div className="psychometric-identity__preview-actions">
-                <button
-                  type="button"
-                  className="psychometric-identity__button psychometric-identity__button--secondary"
-                  onClick={
-                    retryIdentityPhoto
-                  }
-                  disabled={
-                    isUploadingIdentity
-                  }
-                >
-                  ↻ Repetir fotografía
-                </button>
-
-                <button
-                  type="button"
-                  className="psychometric-identity__button psychometric-identity__button--primary"
-                  onClick={
-                    submitInitialIdentity
-                  }
-                  disabled={
-                    isUploadingIdentity
-                  }
-                >
-                  {isUploadingIdentity
-                    ? "Registrando..."
-                    : "Confirmar e iniciar evaluación →"}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {(identityCameraError ||
-            identityUploadError) && (
-              <div
-                className="psychometric-identity__error"
-                role="alert"
-              >
-                <span>
-                  !
-                </span>
-
-                <div>
-                  <strong>
-                    No fue posible continuar
-                  </strong>
-
-                  <p>
-                    {identityCameraError ||
-                      identityUploadError}
-                  </p>
-                </div>
-              </div>
-            )}
-
-          {!identityCameraStarted &&
-            !identityPreviewUrl && (
-              <button
-                type="button"
-                className="psychometric-identity__button psychometric-identity__button--primary psychometric-identity__button--full"
-                onClick={
-                  startIdentityCamera
-                }
-                disabled={
-                  !identityConsentAccepted ||
-                  isUploadingIdentity
-                }
-              >
-                📷 Habilitar cámara
-              </button>
-            )}
-
-          <canvas
-            ref={
-              canvasRef
-            }
-            className="psychometric-identity__canvas"
-          />
-
-          <footer className="psychometric-identity__footer">
-            <span>
-              🔒
-            </span>
-
-            <p>
-              Tu fotografía se procesa
-              únicamente para respaldar
-              esta evaluación.
-            </p>
-          </footer>
-        </section>
-      </main>
+      <PsychometricIdentityVerification
+        token={token}
+        user={user}
+        evaluation={evaluation}
+        onVerified={
+          handleInitialIdentityVerified
+        }
+      />
     );
   }
 

@@ -6,10 +6,17 @@ import {
 
 import axios from "axios";
 
+import {
+  Html5Qrcode,
+} from "html5-qrcode";
+
 import "./styles/PsychometricIdentityVerification.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL;
+
+const CAMERA_ELEMENT_ID =
+  "psychometric-identity-camera-reader";
 
 const PsychometricIdentityVerification = ({
   token,
@@ -17,14 +24,29 @@ const PsychometricIdentityVerification = ({
   evaluation,
   onVerified,
 }) => {
-  const videoRef =
+  /* =======================================================
+     REFS
+  ======================================================= */
+
+  const scannerRef =
     useRef(null);
 
   const canvasRef =
     useRef(null);
 
-  const streamRef =
+  const cameraContainerRef =
     useRef(null);
+
+  /*
+   * Evita que callbacks de una sesión vieja
+   * afecten una sesión nueva.
+   */
+  const cameraNonceRef =
+    useRef(0);
+
+  /* =======================================================
+     ESTADOS
+  ======================================================= */
 
   const [
     consentAccepted,
@@ -32,8 +54,13 @@ const PsychometricIdentityVerification = ({
   ] = useState(false);
 
   const [
-    cameraStarted,
-    setCameraStarted,
+    cameraOn,
+    setCameraOn,
+  ] = useState(false);
+
+  const [
+    cameraReady,
+    setCameraReady,
   ] = useState(false);
 
   const [
@@ -52,42 +79,25 @@ const PsychometricIdentityVerification = ({
   ] = useState("");
 
   const [
-    isUploading,
-    setIsUploading,
-  ] = useState(false);
-
-  const [
     uploadError,
     setUploadError,
   ] = useState("");
 
+  const [
+    isUploading,
+    setIsUploading,
+  ] = useState(false);
+
   /* =======================================================
-     DETENER CÁMARA
+     NOMBRE DEL PARTICIPANTE
   ======================================================= */
 
-  const stopCamera = () => {
-    const stream =
-      streamRef.current;
-
-    if (stream) {
-      stream
-        .getTracks()
-        .forEach(
-          (track) =>
-            track.stop()
-        );
-    }
-
-    streamRef.current =
-      null;
-
-    if (videoRef.current) {
-      videoRef.current.srcObject =
-        null;
-    }
-
-    setCameraStarted(false);
-  };
+  const fullName = [
+    user?.firstName,
+    user?.lastName,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   /* =======================================================
      LIMPIAR PREVIEW
@@ -95,9 +105,13 @@ const PsychometricIdentityVerification = ({
 
   const clearPreview = () => {
     if (previewUrl) {
-      URL.revokeObjectURL(
-        previewUrl
-      );
+      try {
+        URL.revokeObjectURL(
+          previewUrl
+        );
+      } catch {
+        // Sin acción.
+      }
     }
 
     setPreviewUrl("");
@@ -105,146 +119,506 @@ const PsychometricIdentityVerification = ({
   };
 
   /* =======================================================
-     CLEANUP
+     DETENER CÁMARA
+
+     Misma lógica del scanner que ya tienes funcionando.
   ======================================================= */
 
-  useEffect(() => {
-    return () => {
-      const stream =
-        streamRef.current;
-
-      if (stream) {
-        stream
-          .getTracks()
-          .forEach(
-            (track) =>
-              track.stop()
-          );
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(
-          previewUrl
-        );
-      }
-    };
-  }, [previewUrl]);
-
-  /* =======================================================
-     MENSAJE DE ERROR DE CÁMARA
-  ======================================================= */
-
-  const getCameraErrorMessage = (
-    error
-  ) => {
-    switch (error?.name) {
-      case "NotAllowedError":
-      case "PermissionDeniedError":
-        return "El permiso de cámara fue rechazado. Habilita el acceso a la cámara desde la configuración de tu navegador e inténtalo nuevamente.";
-
-      case "NotFoundError":
-      case "DevicesNotFoundError":
-        return "No se encontró una cámara disponible en este dispositivo.";
-
-      case "NotReadableError":
-      case "TrackStartError":
-        return "La cámara está siendo utilizada por otra aplicación o no puede iniciarse en este momento.";
-
-      case "OverconstrainedError":
-        return "La cámara disponible no cumple con la configuración requerida.";
-
-      case "SecurityError":
-        return "El navegador bloqueó el acceso a la cámara por motivos de seguridad.";
-
-      default:
-        return "No fue posible habilitar la cámara. Verifica los permisos del navegador e inténtalo nuevamente.";
-    }
-  };
-
-  /* =======================================================
-     HABILITAR CÁMARA
-  ======================================================= */
-
-  const startCamera =
+  const stopCamera =
     async () => {
-      setCameraError("");
-      setUploadError("");
+      /*
+       * Invalida callbacks de la sesión anterior.
+       */
+      cameraNonceRef.current +=
+        1;
 
-      if (!consentAccepted) {
-        setCameraError(
-          "Debes aceptar la autorización antes de habilitar la cámara."
-        );
+      const scanner =
+        scannerRef.current;
 
-        return;
-      }
-
-      if (
-        !navigator.mediaDevices ||
-        !navigator.mediaDevices
-          .getUserMedia
-      ) {
-        setCameraError(
-          "Este navegador no permite utilizar la cámara. Intenta utilizar una versión actualizada de Chrome, Edge, Safari o Firefox."
-        );
+      if (!scanner) {
+        setCameraReady(false);
 
         return;
       }
 
       try {
-        stopCamera();
-        clearPreview();
-
-        const stream =
-          await navigator
-            .mediaDevices
-            .getUserMedia({
-              video: {
-                facingMode:
-                  "user",
-
-                width: {
-                  ideal: 1280,
-                },
-
-                height: {
-                  ideal: 720,
-                },
-              },
-
-              audio: false,
-            });
-
-        streamRef.current =
-          stream;
-
         if (
-          videoRef.current
+          scanner.isScanning
         ) {
-          videoRef.current.srcObject =
-            stream;
-
-          await videoRef.current
-            .play();
+          await scanner.stop();
         }
-
-        setCameraStarted(true);
       } catch (error) {
-        console.error(
-          "Error habilitando cámara:",
+        console.warn(
+          "No fue posible detener la cámara:",
           error
         );
+      }
 
-        setCameraError(
-          getCameraErrorMessage(
-            error
-          )
+      try {
+        await scanner.clear();
+      } catch (error) {
+        console.warn(
+          "No fue posible limpiar la cámara:",
+          error
         );
       }
+
+      scannerRef.current =
+        null;
+
+      setCameraReady(false);
     };
+
+  /* =======================================================
+     MENSAJES DE ERROR
+  ======================================================= */
+
+  const getCameraErrorMessage = (
+    error
+  ) => {
+    const name =
+      error?.name || "";
+
+    const message =
+      String(
+        error?.message ||
+          error ||
+          ""
+      ).toLowerCase();
+
+    if (
+      name ===
+        "NotAllowedError" ||
+      name ===
+        "PermissionDeniedError" ||
+      message.includes(
+        "permission"
+      )
+    ) {
+      return "El permiso de cámara fue rechazado. Habilita el acceso a la cámara desde la configuración del navegador e inténtalo nuevamente.";
+    }
+
+    if (
+      name ===
+        "NotFoundError" ||
+      name ===
+        "DevicesNotFoundError"
+    ) {
+      return "No se encontró una cámara disponible en este dispositivo.";
+    }
+
+    if (
+      name ===
+        "NotReadableError" ||
+      name ===
+        "TrackStartError"
+    ) {
+      return "La cámara está siendo utilizada por otra aplicación o no se encuentra disponible en este momento.";
+    }
+
+    if (
+      message.includes(
+        "https"
+      )
+    ) {
+      return "El navegador requiere una conexión HTTPS segura para utilizar la cámara.";
+    }
+
+    return "No fue posible abrir la cámara. Verifica los permisos del navegador e inténtalo nuevamente.";
+  };
+
+  /* =======================================================
+     INICIAR CÁMARA
+
+     Solo cambiamos estado.
+     El useEffect se encarga de iniciar Html5Qrcode
+     una vez que el DIV ya existe en el DOM.
+  ======================================================= */
+
+  const startCamera = () => {
+    setCameraError("");
+    setUploadError("");
+
+    if (
+      !consentAccepted
+    ) {
+      setCameraError(
+        "Debes aceptar la autorización antes de habilitar la cámara."
+      );
+
+      return;
+    }
+
+    clearPreview();
+
+    setCameraReady(false);
+    setCameraOn(true);
+  };
+
+  /* =======================================================
+     CONTROL DE CÁMARA
+
+     Este patrón replica el componente StaffScanner
+     que ya funciona correctamente en tu aplicación.
+  ======================================================= */
+
+  useEffect(() => {
+    let cancelled =
+      false;
+
+    const start =
+      async () => {
+        if (!cameraOn) {
+          return;
+        }
+
+        /*
+         * Cada encendido genera una sesión nueva.
+         */
+        const myNonce =
+          ++cameraNonceRef.current;
+
+        setCameraReady(false);
+        setCameraError("");
+
+        /*
+         * Esperamos un ciclo para garantizar
+         * que React ya montó el contenedor.
+         */
+        await new Promise(
+          (resolve) => {
+            window.requestAnimationFrame(
+              resolve
+            );
+          }
+        );
+
+        if (
+          cancelled ||
+          myNonce !==
+            cameraNonceRef.current
+        ) {
+          return;
+        }
+
+        const element =
+          document.getElementById(
+            CAMERA_ELEMENT_ID
+          );
+
+        if (!element) {
+          setCameraError(
+            "No fue posible preparar el visor de la cámara."
+          );
+
+          setCameraOn(false);
+
+          return;
+        }
+
+        /*
+         * Limpiamos una instancia previa,
+         * por seguridad.
+         */
+        if (
+          scannerRef.current
+        ) {
+          try {
+            if (
+              scannerRef
+                .current
+                .isScanning
+            ) {
+              await scannerRef
+                .current
+                .stop();
+            }
+          } catch {
+            // Sin acción.
+          }
+
+          try {
+            await scannerRef
+              .current
+              .clear();
+          } catch {
+            // Sin acción.
+          }
+
+          scannerRef.current =
+            null;
+        }
+
+        const scanner =
+          new Html5Qrcode(
+            CAMERA_ELEMENT_ID
+          );
+
+        scannerRef.current =
+          scanner;
+
+        try {
+          /*
+           * Cámara frontal.
+           *
+           * Es el equivalente a:
+           * facingMode: "environment"
+           * que utilizas en StaffScanner,
+           * pero aquí necesitamos selfie.
+           */
+          await scanner.start(
+            {
+              facingMode:
+                "user",
+            },
+
+            {
+              fps: 10,
+
+              /*
+               * Sin qrbox.
+               *
+               * Queremos utilizar toda
+               * el área de la cámara.
+               */
+              aspectRatio:
+                4 / 3,
+
+              disableFlip:
+                true,
+            },
+
+            /*
+             * Html5Qrcode necesita callback
+             * de lectura correcta.
+             *
+             * Aquí no estamos leyendo QR,
+             * así que simplemente ignoramos.
+             */
+            () => {},
+
+            /*
+             * También ignoramos errores
+             * de lectura de QR.
+             *
+             * Que no encuentre QR es normal.
+             */
+            () => {}
+          );
+
+          if (
+            cancelled ||
+            myNonce !==
+              cameraNonceRef.current
+          ) {
+            return;
+          }
+
+          /* ===============================================
+             ESPERAR AL VIDEO REAL GENERADO POR LA LIBRERÍA
+          =============================================== */
+
+          let attempts = 0;
+
+          let video = null;
+
+          while (
+            attempts < 30
+          ) {
+            video =
+              cameraContainerRef
+                .current
+                ?.querySelector(
+                  "video"
+                ) ||
+              document.querySelector(
+                `#${CAMERA_ELEMENT_ID} video`
+              );
+
+            if (
+              video &&
+              video.videoWidth >
+                0 &&
+              video.videoHeight >
+                0
+            ) {
+              break;
+            }
+
+            await new Promise(
+              (resolve) =>
+                window.setTimeout(
+                  resolve,
+                  100
+                )
+            );
+
+            attempts += 1;
+          }
+
+          if (
+            !video
+          ) {
+            throw new Error(
+              "No se encontró el visor de la cámara."
+            );
+          }
+
+          /*
+           * Intentamos reproducir explícitamente.
+           */
+          try {
+            video.muted =
+              true;
+
+            video.playsInline =
+              true;
+
+            await video.play();
+          } catch (
+            playError
+          ) {
+            console.warn(
+              "El video ya puede estar reproduciéndose:",
+              playError
+            );
+          }
+
+          console.log(
+            "✅ Cámara de identidad lista:",
+            {
+              videoWidth:
+                video.videoWidth,
+
+              videoHeight:
+                video.videoHeight,
+
+              readyState:
+                video.readyState,
+
+              paused:
+                video.paused,
+            }
+          );
+
+          if (
+            video.videoWidth >
+              0 &&
+            video.videoHeight >
+              0
+          ) {
+            setCameraReady(
+              true
+            );
+          } else {
+            throw new Error(
+              "La cámara no entregó una imagen válida."
+            );
+          }
+        } catch (error) {
+          console.error(
+            "Error iniciando cámara de identidad:",
+            error
+          );
+
+          if (
+            scannerRef.current ===
+            scanner
+          ) {
+            try {
+              if (
+                scanner
+                  .isScanning
+              ) {
+                await scanner.stop();
+              }
+            } catch {
+              // Sin acción.
+            }
+
+            try {
+              await scanner.clear();
+            } catch {
+              // Sin acción.
+            }
+
+            scannerRef.current =
+              null;
+          }
+
+          if (
+            !cancelled
+          ) {
+            setCameraReady(
+              false
+            );
+
+            setCameraError(
+              getCameraErrorMessage(
+                error
+              )
+            );
+
+            setCameraOn(
+              false
+            );
+          }
+        }
+      };
+
+    const stop =
+      async () => {
+        await stopCamera();
+      };
+
+    if (cameraOn) {
+      start();
+    } else {
+      stop();
+    }
+
+    return () => {
+      cancelled =
+        true;
+
+      stop();
+    };
+  }, [cameraOn]);
+
+  /* =======================================================
+     CLEANUP TOTAL
+  ======================================================= */
+
+  useEffect(() => {
+    return () => {
+      cameraNonceRef.current +=
+        1;
+
+      const scanner =
+        scannerRef.current;
+
+      if (scanner) {
+        if (
+          scanner.isScanning
+        ) {
+          scanner
+            .stop()
+            .catch(
+              () => {}
+            );
+        }
+
+        scanner
+          .clear()
+          .catch(
+            () => {}
+          );
+      }
+
+      scannerRef.current =
+        null;
+    };
+  }, []);
 
   /* =======================================================
      TOMAR FOTOGRAFÍA
@@ -255,8 +629,25 @@ const PsychometricIdentityVerification = ({
       setCameraError("");
       setUploadError("");
 
+      if (
+        !cameraReady
+      ) {
+        setCameraError(
+          "La cámara todavía se está preparando. Espera un momento."
+        );
+
+        return;
+      }
+
       const video =
-        videoRef.current;
+        cameraContainerRef
+          .current
+          ?.querySelector(
+            "video"
+          ) ||
+        document.querySelector(
+          `#${CAMERA_ELEMENT_ID} video`
+        );
 
       const canvas =
         canvasRef.current;
@@ -266,28 +657,29 @@ const PsychometricIdentityVerification = ({
         !canvas
       ) {
         setCameraError(
-          "No fue posible acceder a la cámara."
+          "No fue posible obtener la imagen de la cámara."
         );
 
         return;
       }
 
       if (
-        !video.videoWidth ||
-        !video.videoHeight
+        video.videoWidth <=
+          0 ||
+        video.videoHeight <=
+          0
       ) {
         setCameraError(
-          "La cámara todavía se está iniciando. Espera un momento e inténtalo nuevamente."
+          "La cámara todavía no está entregando una imagen válida."
         );
 
         return;
       }
 
       /* ===============================================
-         REDIMENSIONAR
+         TAMAÑO DE FOTO
 
-         Evitamos subir fotografías gigantes.
-         Máximo 1280 px en cualquiera de los lados.
+         Máximo 1280px.
       =============================================== */
 
       const maxDimension =
@@ -302,6 +694,7 @@ const PsychometricIdentityVerification = ({
       const scale =
         Math.min(
           1,
+
           maxDimension /
             Math.max(
               width,
@@ -311,12 +704,14 @@ const PsychometricIdentityVerification = ({
 
       width =
         Math.round(
-          width * scale
+          width *
+            scale
         );
 
       height =
         Math.round(
-          height * scale
+          height *
+            scale
         );
 
       canvas.width =
@@ -327,7 +722,11 @@ const PsychometricIdentityVerification = ({
 
       const context =
         canvas.getContext(
-          "2d"
+          "2d",
+          {
+            alpha:
+              false,
+          }
         );
 
       if (!context) {
@@ -338,11 +737,39 @@ const PsychometricIdentityVerification = ({
         return;
       }
 
-      /*
-       * La vista se muestra como espejo,
-       * pero la fotografía se guarda
-       * en orientación normal.
-       */
+      /* ===============================================
+         FONDO
+      =============================================== */
+
+      context.fillStyle =
+        "#ffffff";
+
+      context.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      /* ===============================================
+         FOTOGRAFÍA
+
+         Espejamos la captura para que coincida
+         con la forma natural de una selfie.
+      =============================================== */
+
+      context.save();
+
+      context.translate(
+        width,
+        0
+      );
+
+      context.scale(
+        -1,
+        1
+      );
+
       context.drawImage(
         video,
         0,
@@ -351,8 +778,16 @@ const PsychometricIdentityVerification = ({
         height
       );
 
+      context.restore();
+
+      /* ===============================================
+         CONVERTIR A JPEG
+      =============================================== */
+
       canvas.toBlob(
-        (blob) => {
+        async (
+          blob
+        ) => {
           if (!blob) {
             setCameraError(
               "No fue posible generar la fotografía."
@@ -361,7 +796,17 @@ const PsychometricIdentityVerification = ({
             return;
           }
 
-          clearPreview();
+          if (
+            previewUrl
+          ) {
+            try {
+              URL.revokeObjectURL(
+                previewUrl
+              );
+            } catch {
+              // Sin acción.
+            }
+          }
 
           const url =
             URL.createObjectURL(
@@ -377,27 +822,55 @@ const PsychometricIdentityVerification = ({
           );
 
           /*
-           * Una vez capturada,
-           * apagamos la cámara.
+           * Apagamos físicamente
+           * la cámara después de capturar.
            */
-          stopCamera();
+          await stopCamera();
+
+          setCameraOn(
+            false
+          );
         },
 
         "image/jpeg",
 
-        0.82
+        0.84
       );
     };
 
   /* =======================================================
-     REPETIR FOTO
+     REPETIR FOTOGRAFÍA
   ======================================================= */
 
   const retryPhoto =
     async () => {
       clearPreview();
 
-      await startCamera();
+      setCameraError("");
+      setUploadError("");
+
+      /*
+       * Si por alguna razón sigue encendida,
+       * primero la detenemos.
+       */
+      await stopCamera();
+
+      setCameraOn(
+        false
+      );
+
+      /*
+       * Pequeña pausa para que Html5Qrcode
+       * termine de liberar la cámara.
+       */
+      window.setTimeout(
+        () => {
+          setCameraOn(
+            true
+          );
+        },
+        150
+      );
     };
 
   /* =======================================================
@@ -426,8 +899,13 @@ const PsychometricIdentityVerification = ({
         return;
       }
 
-      setIsUploading(true);
-      setUploadError("");
+      setIsUploading(
+        true
+      );
+
+      setUploadError(
+        ""
+      );
 
       try {
         const formData =
@@ -449,21 +927,21 @@ const PsychometricIdentityVerification = ({
             `${API_URL}/psychometric/access/${encodeURIComponent(
               token
             )}/identity`,
+
             formData
           );
 
-        /*
-         * No ponemos manualmente
-         * Content-Type.
-         *
-         * El navegador agrega el boundary
-         * correcto de multipart/form-data.
-         */
-
         clearPreview();
-        stopCamera();
 
-        if (onVerified) {
+        await stopCamera();
+
+        setCameraOn(
+          false
+        );
+
+        if (
+          onVerified
+        ) {
           onVerified(
             response.data
           );
@@ -471,30 +949,23 @@ const PsychometricIdentityVerification = ({
       } catch (error) {
         console.error(
           "Error registrando fotografía:",
-          error.response?.data ||
+          error.response
+            ?.data ||
             error
         );
 
         setUploadError(
-          error.response?.data
+          error.response
+            ?.data
             ?.message ||
             "No fue posible registrar la fotografía. Inténtalo nuevamente."
         );
       } finally {
-        setIsUploading(false);
+        setIsUploading(
+          false
+        );
       }
     };
-
-  /* =======================================================
-     NOMBRE
-  ======================================================= */
-
-  const fullName = [
-    user?.firstName,
-    user?.lastName,
-  ]
-    .filter(Boolean)
-    .join(" ");
 
   /* =======================================================
      RENDER
@@ -504,13 +975,14 @@ const PsychometricIdentityVerification = ({
     <main className="psychometric-identity">
       <div className="psychometric-identity__background">
         <span className="psychometric-identity__shape psychometric-identity__shape--one" />
+
         <span className="psychometric-identity__shape psychometric-identity__shape--two" />
       </div>
 
       <section className="psychometric-identity__card">
-        {/* =============================================
-            MARCA
-        ============================================= */}
+        {/* =================================================
+            HEADER
+        ================================================= */}
 
         <header className="psychometric-identity__header">
           <img
@@ -529,13 +1001,14 @@ const PsychometricIdentityVerification = ({
           </div>
         </header>
 
-        {/* =============================================
+        {/* =================================================
             PARTICIPANTE
-        ============================================= */}
+        ================================================= */}
 
         <div className="psychometric-identity__participant">
           <div className="psychometric-identity__participant-avatar">
-            {user?.firstName
+            {user
+              ?.firstName
               ?.charAt(0)
               ?.toUpperCase() ||
               "P"}
@@ -560,9 +1033,9 @@ const PsychometricIdentityVerification = ({
           </div>
         </div>
 
-        {/* =============================================
-            INTRODUCCIÓN
-        ============================================= */}
+        {/* =================================================
+            INTRO
+        ================================================= */}
 
         <div className="psychometric-identity__intro">
           <div className="psychometric-identity__security-icon">
@@ -589,11 +1062,11 @@ const PsychometricIdentityVerification = ({
           </div>
         </div>
 
-        {/* =============================================
+        {/* =================================================
             INFORMACIÓN
-        ============================================= */}
+        ================================================= */}
 
-        {!cameraStarted &&
+        {!cameraOn &&
           !previewUrl && (
             <>
               <div className="psychometric-identity__information">
@@ -669,11 +1142,16 @@ const PsychometricIdentityVerification = ({
                     event
                   ) => {
                     setConsentAccepted(
-                      event.target
+                      event
+                        .target
                         .checked
                     );
 
                     setCameraError(
+                      ""
+                    );
+
+                    setUploadError(
                       ""
                     );
                   }}
@@ -688,67 +1166,111 @@ const PsychometricIdentityVerification = ({
                   evaluación.
                 </span>
               </label>
+
+              <button
+                type="button"
+                className="psychometric-identity__button psychometric-identity__button--primary psychometric-identity__button--full"
+                onClick={
+                  startCamera
+                }
+                disabled={
+                  !consentAccepted
+                }
+              >
+                📷 Habilitar cámara
+              </button>
             </>
           )}
 
-        {/* =============================================
+        {/* =================================================
             CÁMARA
-        ============================================= */}
 
-        {cameraStarted && (
-          <div className="psychometric-identity__camera-section">
-            <div className="psychometric-identity__camera-title">
-              <div>
-                <span>
-                  CÁMARA ACTIVA
+            Igual que tu StaffScanner:
+            el contenedor se monta primero y el useEffect
+            inicia Html5Qrcode después.
+        ================================================= */}
+
+        {cameraOn &&
+          !previewUrl && (
+            <div className="psychometric-identity__camera-section">
+              <div className="psychometric-identity__camera-title">
+                <div>
+                  <span>
+                    CÁMARA ACTIVA
+                  </span>
+
+                  <h2>
+                    Centra tu rostro
+                  </h2>
+                </div>
+
+                <span className="psychometric-identity__live">
+                  <i />
+
+                  EN VIVO
                 </span>
-
-                <h2>
-                  Centra tu rostro
-                </h2>
               </div>
 
-              <span className="psychometric-identity__live">
-                <i />
-                EN VIVO
-              </span>
-            </div>
-
-            <div className="psychometric-identity__camera">
-              <video
+              <div
+                className="psychometric-identity__camera-frame"
                 ref={
-                  videoRef
+                  cameraContainerRef
                 }
-                autoPlay
-                playsInline
-                muted
-              />
+              >
+                <div
+                  id={
+                    CAMERA_ELEMENT_ID
+                  }
+                  className="psychometric-identity__camera-reader"
+                />
 
-              <div className="psychometric-identity__face-guide">
-                <span />
+                <div className="psychometric-identity__face-guide">
+                  <span />
+                </div>
+
+                <div className="psychometric-identity__camera-help">
+                  {cameraReady
+                    ? "Mira directamente a la cámara"
+                    : "Iniciando cámara..."}
+                </div>
               </div>
 
-              <div className="psychometric-identity__camera-help">
-                Mira directamente a
-                la cámara
-              </div>
+              <button
+                type="button"
+                className="psychometric-identity__button psychometric-identity__button--primary psychometric-identity__button--full"
+                onClick={
+                  capturePhoto
+                }
+                disabled={
+                  !cameraReady
+                }
+              >
+                {cameraReady
+                  ? "📷 Tomar fotografía"
+                  : "Iniciando cámara..."}
+              </button>
+
+              <button
+                type="button"
+                className="psychometric-identity__camera-cancel"
+                onClick={
+                  async () => {
+                    await stopCamera();
+
+                    setCameraOn(
+                      false
+                    );
+                  }
+                }
+              >
+                Cancelar cámara
+              </button>
             </div>
+          )}
 
-            <button
-              type="button"
-              className="psychometric-identity__button psychometric-identity__button--primary"
-              onClick={
-                capturePhoto
-              }
-            >
-              📷 Tomar fotografía
-            </button>
-          </div>
-        )}
-
-        {/* =============================================
+        {/* =================================================
             PREVIEW
-        ============================================= */}
+        ================================================= */}
 
         {previewUrl && (
           <div className="psychometric-identity__preview-section">
@@ -811,9 +1333,9 @@ const PsychometricIdentityVerification = ({
           </div>
         )}
 
-        {/* =============================================
+        {/* =================================================
             ERROR
-        ============================================= */}
+        ================================================= */}
 
         {(cameraError ||
           uploadError) && (
@@ -838,25 +1360,9 @@ const PsychometricIdentityVerification = ({
           </div>
         )}
 
-        {/* =============================================
-            BOTÓN INICIAL
-        ============================================= */}
-
-        {!cameraStarted &&
-          !previewUrl && (
-            <button
-              type="button"
-              className="psychometric-identity__button psychometric-identity__button--primary psychometric-identity__button--full"
-              onClick={
-                startCamera
-              }
-              disabled={
-                !consentAccepted
-              }
-            >
-              📷 Habilitar cámara
-            </button>
-          )}
+        {/* =================================================
+            CANVAS
+        ================================================= */}
 
         <canvas
           ref={
@@ -864,6 +1370,10 @@ const PsychometricIdentityVerification = ({
           }
           className="psychometric-identity__canvas"
         />
+
+        {/* =================================================
+            FOOTER
+        ================================================= */}
 
         <footer className="psychometric-identity__footer">
           <span>
