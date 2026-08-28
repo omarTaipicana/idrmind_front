@@ -17,6 +17,7 @@ import {
 import "./styles/Dashboard.css";
 import useCrud from "../hooks/useCrud";
 import CustomLabel from "../components/Home/CustomLabel";
+import PsychometricDashboard from "../components/PsychometricDashboard";
 
 const Dashboard = () => {
   const [courses, getCourses] = useCrud();
@@ -36,6 +37,7 @@ const Dashboard = () => {
 
   const [activeSection, setActiveSection] = useState("resumen");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuCollapsed, setMenuCollapsed] = useState(false);
 
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
@@ -673,14 +675,7 @@ const Dashboard = () => {
       }
 
       case "progreso":
-        return (
-          <section className="secCard dashCard">
-            <div className="secCardHeader">
-              <h2 className="secTitle">📈 Progreso</h2>
-            </div>
-            <p className="secMuted">Próximamente podrás ver tu progreso académico.</p>
-          </section>
-        );
+        return <PsychometricDashboard />;
 
       default:
         return null;
@@ -700,7 +695,7 @@ const Dashboard = () => {
         aria-hidden={!menuOpen}
       />
 
-      <div className="dashboard_container secShell dashShell">
+      <div className={`dashLayout ${menuCollapsed ? "dashLayout--collapsed" : ""}`}>
         <button
           ref={hamburgerRef}
           className={`secretaria_hamburger secHamburger ${menuOpen ? "is-open" : ""
@@ -715,71 +710,88 @@ const Dashboard = () => {
         </button>
 
         <nav
-          className={`dashboard_menu secMenu ${menuOpen ? "open" : ""}`}
+          className={`dashSidebar ${menuOpen ? "open" : ""} ${menuCollapsed ? "dashSidebar--collapsed" : ""}`}
           ref={menuRef}
         >
-          <div className="secMenuHeader">
-            <img src="/images/idrmind_sf.png" alt="iDr.Mind." className="secMenuLogo" />
-            <p className="secMenuSubtitle">Dashboard</p>
+          <div className="dashSidebarHeader">
+            <img src="/images/idrmind_sf.png" alt="iDr.Mind." className="dashSidebarLogo" />
+            <p className="dashSidebarSubtitle">Dashboard</p>
+
+
           </div>
 
           <button
-            className={`menu-btn secMenuBtn ${activeSection === "resumen" ? "active" : ""
+            className={`menu-btn dashSidebarBtn ${activeSection === "resumen" ? "active" : ""
               }`}
             onClick={() => {
               setActiveSection("resumen");
               setMenuOpen(false);
             }}
           >
-            📋 Resumen General
+            <span className="dashSidebarIcon">📋</span>
+            <span className="dashSidebarText">Resumen General</span>
           </button>
 
           <button
-            className={`menu-btn secMenuBtn ${activeSection === "inscripciones" ? "active" : ""
+            className={`menu-btn dashSidebarBtn ${activeSection === "inscripciones" ? "active" : ""
               }`}
             onClick={() => {
               setActiveSection("inscripciones");
               setMenuOpen(false);
             }}
           >
-            🧾 Inscripciones
+            <span className="dashSidebarIcon">🧾</span>
+            <span className="dashSidebarText">Inscripciones</span>
           </button>
 
           <button
-            className={`menu-btn secMenuBtn ${activeSection === "pagos" ? "active" : ""
+            className={`menu-btn dashSidebarBtn ${activeSection === "pagos" ? "active" : ""
               }`}
             onClick={() => {
               setActiveSection("pagos");
               setMenuOpen(false);
             }}
           >
-            💳 Pagos
+            <span className="dashSidebarIcon">💳</span>
+            <span className="dashSidebarText">Pagos</span>
           </button>
 
           <button
-            className={`menu-btn secMenuBtn ${activeSection === "calificaciones" ? "active" : ""
+            className={`menu-btn dashSidebarBtn ${activeSection === "calificaciones" ? "active" : ""
               }`}
             onClick={() => {
               setActiveSection("calificaciones");
               setMenuOpen(false);
             }}
           >
-            📝 Llamadas
+            <span className="dashSidebarIcon">📝</span>
+            <span className="dashSidebarText">Llamadas</span>
           </button>
 
           <button
-            className={`menu-btn secMenuBtn ${activeSection === "progreso" ? "active" : ""
+            className={`menu-btn dashSidebarBtn ${activeSection === "progreso" ? "active" : ""
               }`}
             onClick={() => {
               setActiveSection("progreso");
               setMenuOpen(false);
             }}
           >
-            📈 Progreso
+            <span className="dashSidebarIcon">📈</span>
+            <span className="dashSidebarText">Psicométrico</span>
           </button>
         </nav>
 
-        <main className="secretaria_content secContent dashContent">
+        <button
+          type="button"
+          className={`dashSidebarToggle ${menuCollapsed ? "is-collapsed" : ""}`}
+          onClick={() => setMenuCollapsed((prev) => !prev)}
+          aria-label={menuCollapsed ? "Mostrar menú lateral" : "Ocultar menú lateral"}
+          title={menuCollapsed ? "Mostrar menú lateral" : "Ocultar menú lateral"}
+        >
+          {menuCollapsed ? "→" : "←"}
+        </button>
+
+        <main className="dashMain">
           {renderContent()}
         </main>
       </div>

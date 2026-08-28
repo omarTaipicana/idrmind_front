@@ -1,0 +1,2066 @@
+.psyDash {
+  --psy-blue: #173a8a;
+  --psy-blue-2: #245fd3;
+  --psy-navy: #0b244f;
+  --psy-text: #1e2b43;
+  --psy-muted: #6e7a91;
+  --psy-line: #e2e8f1;
+  --psy-bg: #f7f9fc;
+  --psy-success: #079455;
+  --psy-warning: #f79009;
+  --psy-danger: #d92d20;
+
+  width: 100%;
+  min-width: 0;
+  color: var(--psy-text);
+}
+
+.psyDash *,
+.psyDash *::before,
+.psyDash *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.psyDashHero {
+  min-height: 174px;
+  border-radius: 20px;
+  padding: 28px;
+
+  background:
+    radial-gradient(
+      circle at 90% 15%,
+      rgba(61, 140, 255, 0.24),
+      transparent 26%
+    ),
+    linear-gradient(
+      135deg,
+      #071b3f 0%,
+      #173a8a 100%
+    );
+
+  color: #fff;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+
+  box-shadow:
+    0 18px 45px
+    rgba(12, 42, 91, 0.18);
+}
+
+.psyDashHero__eyebrow,
+.psyDashEyebrow {
+  display: block;
+  margin-bottom: 6px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.psyDashHero__eyebrow {
+  color: rgba(
+    255,
+    255,
+    255,
+    0.7
+  );
+}
+
+.psyDashHero h1 {
+  margin: 0 0 8px;
+
+  font-size:
+    clamp(
+      1.7rem,
+      3vw,
+      2.45rem
+    );
+}
+
+.psyDashHero p {
+  max-width: 760px;
+  margin: 0;
+
+  color: rgba(
+    255,
+    255,
+    255,
+    0.78
+  );
+
+  line-height: 1.6;
+}
+
+.psyDashHero__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.psyDashBtn {
+  border: 0;
+  border-radius: 11px;
+
+  min-height: 42px;
+  padding: 10px 15px;
+
+  background: var(--psy-blue);
+  color: #fff;
+
+  text-decoration: none;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.psyDashBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 16px
+    rgba(23, 58, 138, 0.18);
+}
+
+.psyDashHero .psyDashBtn {
+  background: #fff;
+  color: var(--psy-blue);
+}
+
+.psyDashBtn--ghost {
+  background:
+    transparent !important;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.32
+    );
+
+  color: #fff !important;
+}
+
+.psyDashBtn--small {
+  min-height: 36px;
+
+  padding:
+    8px 12px;
+
+  font-size:
+    0.82rem;
+}
+
+.psyDashBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   VISTAS
+========================================================= */
+
+.psyDashViews {
+  margin: 18px 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  border-bottom:
+    1px solid
+    var(--psy-line);
+}
+
+.psyDashViews button {
+  border: 0;
+  border-bottom:
+    3px solid
+    transparent;
+
+  background:
+    transparent;
+
+  padding:
+    11px 14px;
+
+  color: #69758d;
+
+  font-weight: 800;
+  cursor: pointer;
+
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.psyDashViews button:hover {
+  color:
+    var(--psy-blue);
+}
+
+.psyDashViews button.active {
+  border-bottom-color:
+    var(--psy-blue);
+
+  color:
+    var(--psy-blue);
+}
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.psyDashFilters {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      6,
+      minmax(150px, 1fr)
+    );
+
+  gap: 10px;
+
+  margin-bottom:
+    14px;
+
+  padding:
+    14px;
+
+  background:
+    #fff;
+
+  border:
+    1px solid
+    var(--psy-line);
+
+  border-radius:
+    16px;
+}
+
+.psyDashFilter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  min-width: 0;
+}
+
+.psyDashFilter label {
+  font-size:
+    0.75rem;
+
+  color:
+    #5e6a81;
+
+  font-weight:
+    800;
+}
+
+.psyDashFilter input,
+.psyDashFilter select,
+.psyDashParticipantControls input,
+.psyDashParticipantControls select {
+  min-height:
+    40px;
+
+  width: 100%;
+
+  border:
+    1px solid
+    #d7dfeb;
+
+  border-radius:
+    10px;
+
+  padding:
+    8px 10px;
+
+  background:
+    #fff;
+
+  color:
+    var(--psy-text);
+
+  outline:
+    none;
+}
+
+.psyDashFilter input:focus,
+.psyDashFilter select:focus,
+.psyDashParticipantControls input:focus,
+.psyDashParticipantControls select:focus {
+  border-color:
+    #6e92c9;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      23,
+      58,
+      138,
+      0.09
+    );
+}
+
+/* =========================================================
+   CHIPS
+========================================================= */
+
+.psyDashChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  align-items: center;
+
+  margin-bottom:
+    16px;
+
+  color:
+    var(--psy-muted);
+
+  font-size:
+    0.8rem;
+}
+
+.psyDashChips > span {
+  font-weight:
+    700;
+}
+
+.psyDashChips button {
+  border:
+    1px solid
+    #cad7ea;
+
+  background:
+    #eef4ff;
+
+  color:
+    #234d91;
+
+  border-radius:
+    999px;
+
+  padding:
+    7px 10px;
+
+  cursor:
+    pointer;
+}
+
+/* =========================================================
+   KPIS
+========================================================= */
+
+.psyDashKpis {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(170px, 1fr)
+    );
+
+  gap: 12px;
+
+  margin-bottom:
+    16px;
+}
+
+.psyDashKpis article {
+  min-height:
+    116px;
+
+  padding:
+    17px;
+
+  border:
+    1px solid
+    var(--psy-line);
+
+  border-radius:
+    15px;
+
+  background:
+    #fff;
+
+  box-shadow:
+    0 8px 24px
+    rgba(
+      28,
+      46,
+      77,
+      0.045
+    );
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    center;
+}
+
+.psyDashKpis span,
+.psyDashCompany__stats span,
+.psyDashDetailSummary span,
+.psyDashResultCards span {
+  color:
+    var(--psy-muted);
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    750;
+}
+
+.psyDashKpis strong {
+  display:
+    block;
+
+  margin:
+    6px 0 3px;
+
+  color:
+    var(--psy-navy);
+
+  font-size:
+    1.75rem;
+}
+
+.psyDashKpis small {
+  color:
+    #8290a7;
+}
+
+/* =========================================================
+   GRIDS GENERALES
+========================================================= */
+
+.psyDashTwoCols {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 14px;
+
+  margin-bottom:
+    14px;
+}
+
+.psyDashThreeCols {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 14px;
+}
+
+.psyDashResultsGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 14px;
+
+  margin-bottom:
+    14px;
+}
+
+.psyDashResultsGrid--averages {
+  margin-top:
+    14px;
+}
+
+/* =========================================================
+   PANELES
+========================================================= */
+
+.psyDashPanel {
+  min-width: 0;
+
+  border:
+    1px solid
+    var(--psy-line);
+
+  border-radius:
+    16px;
+
+  padding:
+    16px;
+
+  background:
+    #fff;
+
+  box-shadow:
+    0 8px 24px
+    rgba(
+      28,
+      46,
+      77,
+      0.04
+    );
+}
+
+.psyDashPanel__header {
+  min-height:
+    44px;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  gap: 12px;
+
+  align-items:
+    flex-start;
+
+  margin-bottom:
+    8px;
+}
+
+.psyDashPanel h3,
+.psyDashParticipants h3,
+.psyDashCompany h3 {
+  margin: 0;
+
+  color:
+    #183564;
+
+  font-size:
+    1.02rem;
+}
+
+.psyDashPanel__subtitle {
+  margin:
+    5px 0 0;
+
+  color:
+    var(--psy-muted);
+
+  font-size:
+    0.78rem;
+
+  line-height:
+    1.45;
+}
+
+.psyDashEyebrow {
+  color:
+    #8390a6;
+}
+
+.psyDashMiniClear {
+  border: 0;
+
+  border-radius:
+    999px;
+
+  padding:
+    7px 9px;
+
+  background:
+    #edf3ff;
+
+  color:
+    var(--psy-blue);
+
+  font-size:
+    0.72rem;
+
+  cursor:
+    pointer;
+}
+
+/* =========================================================
+   CHARTS
+========================================================= */
+
+.psyDashChart {
+  width:
+    100%;
+
+  height:
+    270px;
+
+  min-width:
+    0;
+}
+
+.psyDashChart--large {
+  height:
+    310px;
+}
+
+/* Tooltip personalizado */
+
+.psyDashTooltip {
+  min-width:
+    145px;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid
+    #dbe3ef;
+
+  border-radius:
+    10px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.98
+    );
+
+  box-shadow:
+    0 8px 24px
+    rgba(
+      15,
+      42,
+      86,
+      0.14
+    );
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    4px;
+
+  color:
+    var(--psy-text);
+
+  font-size:
+    0.78rem;
+}
+
+.psyDashTooltip strong {
+  color:
+    var(--psy-blue);
+
+  font-size:
+    0.84rem;
+}
+
+.psyDashTooltip span {
+  color:
+    var(--psy-muted);
+}
+
+/* =========================================================
+   MÉTRICAS SIMPLES
+========================================================= */
+
+.psyDashMetricStrip {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    12px;
+
+  margin-top:
+    16px;
+
+  margin-bottom:
+    14px;
+}
+
+.psyDashMetricStrip article {
+  min-height:
+    110px;
+
+  padding:
+    16px;
+
+  border:
+    1px solid
+    var(--psy-line);
+
+  border-radius:
+    14px;
+
+  background:
+    #fff;
+
+  box-shadow:
+    0 7px 22px
+    rgba(
+      28,
+      46,
+      77,
+      0.045
+    );
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    center;
+}
+
+.psyDashMetricStrip span {
+  color:
+    var(--psy-muted);
+
+  font-size:
+    0.76rem;
+
+  font-weight:
+    800;
+}
+
+.psyDashMetricStrip strong {
+  display:
+    block;
+
+  margin:
+    6px 0 2px;
+
+  color:
+    var(--psy-navy);
+
+  font-size:
+    1.6rem;
+
+  line-height:
+    1;
+}
+
+.psyDashMetricStrip small {
+  color:
+    #8793a6;
+
+  font-size:
+    0.75rem;
+}
+
+/* =========================================================
+   ERROR / LOADING
+========================================================= */
+
+.psyDashError {
+  margin:
+    12px 0;
+
+  padding:
+    12px 14px;
+
+  border-radius:
+    12px;
+
+  border:
+    1px solid
+    #f3c4bf;
+
+  background:
+    #fff1ef;
+
+  color:
+    #9d251c;
+
+  font-weight:
+    700;
+}
+
+.psyDashLoading,
+.psyDashEmpty {
+  min-height:
+    150px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    12px;
+
+  color:
+    var(--psy-muted);
+
+  text-align:
+    center;
+}
+
+.psyDashSpinner {
+  width:
+    28px;
+
+  height:
+    28px;
+
+  border:
+    3px solid
+    #dce5f2;
+
+  border-top-color:
+    var(--psy-blue);
+
+  border-radius:
+    50%;
+
+  animation:
+    psy-spin 0.8s
+    linear infinite;
+}
+
+@keyframes psy-spin {
+  to {
+    transform:
+      rotate(360deg);
+  }
+}
+
+/* =========================================================
+   ORGANIZACIONES
+========================================================= */
+
+.psyDashOrganizations {
+  display:
+    grid;
+
+  gap:
+    14px;
+}
+
+.psyDashCompany {
+  border:
+    1px solid
+    var(--psy-line);
+
+  border-radius:
+    17px;
+
+  padding:
+    18px;
+
+  background:
+    #fff;
+}
+
+.psyDashCompany > header {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  gap:
+    18px;
+
+  align-items:
+    flex-start;
+
+  margin-bottom:
+    15px;
+}
+
+.psyDashCompany > header p {
+  margin:
+    5px 0 0;
+
+  color:
+    var(--psy-muted);
+}
+
+.psyDashCompany__stats {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    10px;
+}
+
+.psyDashCompany__stats > div,
+.psyDashDetailSummary > div {
+  border:
+    1px solid
+    #e8edf4;
+
+  border-radius:
+    12px;
+
+  padding:
+    12px;
+
+  background:
+    #fafcff;
+}
+
+.psyDashCompany__stats strong,
+.psyDashDetailSummary strong {
+  display:
+    block;
+
+  margin-top:
+    4px;
+
+  color:
+    #173d77;
+}
+
+.psyDashSectionGrid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(
+        160px,
+        1fr
+      )
+    );
+
+  gap:
+    9px;
+
+  margin-top:
+    12px;
+}
+
+.psyDashSectionCard {
+  border:
+    1px solid
+    #dfe7f2;
+
+  border-radius:
+    12px;
+
+  background:
+    #fff;
+
+  min-height:
+    96px;
+
+  padding:
+    12px;
+
+  text-align:
+    left;
+
+  cursor:
+    pointer;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.psyDashSectionCard:hover {
+  border-color:
+    #8eadd7;
+
+  background:
+    #f7faff;
+
+  transform:
+    translateY(-1px);
+}
+
+.psyDashSectionCard span,
+.psyDashSectionCard strong,
+.psyDashSectionCard small {
+  display:
+    block;
+}
+
+.psyDashSectionCard strong {
+  margin:
+    5px 0;
+
+  font-size:
+    1.45rem;
+
+  color:
+    var(--psy-blue);
+}
+
+/* =========================================================
+   PARTICIPANTES
+========================================================= */
+
+.psyDashParticipants {
+  border:
+    1px solid
+    var(--psy-line);
+
+  border-radius:
+    16px;
+
+  background:
+    #fff;
+
+  overflow:
+    hidden;
+}
+
+.psyDashParticipants__toolbar {
+  padding:
+    16px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-end;
+
+  gap:
+    15px;
+
+  border-bottom:
+    1px solid
+    var(--psy-line);
+}
+
+.psyDashParticipantControls {
+  display:
+    grid;
+
+  grid-template-columns:
+    minmax(
+      260px,
+      1fr
+    )
+    120px;
+
+  gap:
+    8px;
+}
+
+.psyDashTableWrap {
+  width:
+    100%;
+
+  overflow:
+    auto;
+}
+
+.psyDashTable {
+  width:
+    100%;
+
+  min-width:
+    1420px;
+
+  border-collapse:
+    collapse;
+}
+
+.psyDashTable th {
+  position:
+    sticky;
+
+  top:
+    0;
+
+  z-index:
+    2;
+
+  background:
+    #f7f9fc;
+
+  color:
+    #56657c;
+
+  font-size:
+    0.75rem;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.04em;
+
+  text-align:
+    left;
+
+  padding:
+    11px 12px;
+
+  border-bottom:
+    1px solid
+    var(--psy-line);
+}
+
+.psyDashTable td {
+  vertical-align:
+    top;
+
+  padding:
+    12px;
+
+  border-bottom:
+    1px solid
+    #edf1f6;
+
+  font-size:
+    0.83rem;
+
+  color:
+    #344157;
+}
+
+.psyDashTable td strong,
+.psyDashTable td small {
+  display:
+    block;
+}
+
+.psyDashTable td small {
+  margin-top:
+    3px;
+
+  color:
+    #8995a8;
+}
+
+.psyDashTable tr:hover td {
+  background:
+    #fbfcff;
+}
+
+.psyDashDetailBtn {
+  border:
+    0;
+
+  border-radius:
+    9px;
+
+  padding:
+    7px 10px;
+
+  background:
+    #173a8a;
+
+  color:
+    #fff;
+
+  font-weight:
+    750;
+
+  cursor:
+    pointer;
+}
+
+.psyDashDetailBtn:hover {
+  background:
+    #0d2b66;
+}
+
+/* botones acción participante */
+
+.psyDashRowActions {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    6px;
+
+  white-space:
+    nowrap;
+}
+
+.psyDashResultBtn {
+  border:
+    1px solid
+    #cbd8ea;
+
+  border-radius:
+    9px;
+
+  padding:
+    7px 10px;
+
+  background:
+    #fff;
+
+  color:
+    var(--psy-blue);
+
+  text-decoration:
+    none;
+
+  font-weight:
+    800;
+
+  cursor:
+    pointer;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+}
+
+.psyDashResultBtn:hover {
+  background:
+    #eef4ff;
+
+  border-color:
+    #9db5d7;
+}
+
+/* =========================================================
+   PAGINACIÓN
+========================================================= */
+
+.psyDashPagination {
+  padding:
+    13px 16px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+
+  color:
+    var(--psy-muted);
+
+  border-top:
+    1px solid
+    var(--psy-line);
+}
+
+.psyDashPagination div {
+  display:
+    flex;
+
+  gap:
+    7px;
+}
+
+.psyDashPagination button {
+  border:
+    1px solid
+    #d3dce9;
+
+  border-radius:
+    9px;
+
+  padding:
+    8px 11px;
+
+  background:
+    #fff;
+
+  cursor:
+    pointer;
+}
+
+.psyDashPagination button:hover:not(:disabled) {
+  background:
+    #f4f7fc;
+}
+
+.psyDashPagination button:disabled {
+  opacity:
+    0.42;
+
+  cursor:
+    not-allowed;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.psyDashModalBackdrop {
+  position:
+    fixed;
+
+  inset:
+    0;
+
+  z-index:
+    9500;
+
+  padding:
+    22px;
+
+  background:
+    rgba(
+      6,
+      18,
+      39,
+      0.58
+    );
+
+  backdrop-filter:
+    blur(5px);
+
+  display:
+    grid;
+
+  place-items:
+    center;
+}
+
+.psyDashModal {
+  width:
+    min(
+      1180px,
+      96vw
+    );
+
+  max-height:
+    92vh;
+
+  overflow:
+    hidden;
+
+  background:
+    #fff;
+
+  border-radius:
+    20px;
+
+  box-shadow:
+    0 30px 80px
+    rgba(
+      0,
+      0,
+      0,
+      0.25
+    );
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+}
+
+.psyDashModal__header {
+  padding:
+    18px 20px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap:
+    15px;
+
+  border-bottom:
+    1px solid
+    var(--psy-line);
+
+  flex-shrink:
+    0;
+}
+
+.psyDashModal__header h2 {
+  margin:
+    0;
+
+  color:
+    #17345f;
+}
+
+.psyDashModalClose {
+  width:
+    38px;
+
+  min-width:
+    38px;
+
+  height:
+    38px;
+
+  border:
+    0;
+
+  border-radius:
+    50%;
+
+  background:
+    #f0f3f8;
+
+  color:
+    #344054;
+
+  font-size:
+    1.5rem;
+
+  cursor:
+    pointer;
+}
+
+.psyDashModalClose:hover {
+  background:
+    #e4e9f1;
+}
+
+.psyDashModal__body {
+  padding:
+    18px 20px 24px;
+
+  overflow-y:
+    auto;
+
+  overflow-x:
+    hidden;
+}
+
+/* =========================================================
+   RESUMEN MODAL
+========================================================= */
+
+.psyDashDetailSummary {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    10px;
+}
+
+.psyDashDetailSummary > div {
+  min-width:
+    0;
+}
+
+.psyDashDetailSummary strong {
+  overflow-wrap:
+    anywhere;
+}
+
+/* =========================================================
+   TARJETAS RESULTADOS
+========================================================= */
+
+.psyDashResultCards {
+  margin-top:
+    12px;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    10px;
+}
+
+.psyDashResultCards article {
+  min-height:
+    112px;
+
+  padding:
+    14px;
+
+  border-radius:
+    13px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #173a8a,
+      #0d2b66
+    );
+
+  color:
+    #fff;
+
+  box-shadow:
+    0 6px 15px
+    rgba(
+      14,
+      42,
+      87,
+      0.12
+    );
+
+  overflow:
+    hidden;
+}
+
+.psyDashResultCards span {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.72
+    );
+
+  font-weight:
+    800;
+}
+
+.psyDashResultCards strong {
+  display:
+    block;
+
+  margin-top:
+    7px;
+
+  color:
+    #fff;
+
+  font-size:
+    1.08rem;
+
+  line-height:
+    1.25;
+
+  overflow-wrap:
+    anywhere;
+}
+
+.psyDashResultCards small {
+  display:
+    block;
+
+  margin-top:
+    4px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
+
+  line-height:
+    1.35;
+}
+
+/* =========================================================
+   NUMÉRICOS
+========================================================= */
+
+.psyDashNumericGrid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    10px;
+
+  margin-top:
+    14px;
+}
+
+.psyDashNumericGrid article {
+  min-width:
+    0;
+
+  border:
+    1px solid
+    var(--psy-line);
+
+  border-radius:
+    13px;
+
+  padding:
+    14px;
+
+  background:
+    #fff;
+}
+
+.psyDashNumericGrid h4 {
+  margin:
+    0 0 10px;
+
+  color:
+    #173a8a;
+
+  font-size:
+    1rem;
+}
+
+.psyDashNumericGrid article > div {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+
+  padding:
+    7px 0;
+
+  border-bottom:
+    1px dashed
+    #e4e9f1;
+}
+
+.psyDashNumericGrid article > div:last-child {
+  border-bottom:
+    0;
+}
+
+.psyDashNumericGrid article > div span {
+  min-width:
+    0;
+
+  overflow-wrap:
+    anywhere;
+}
+
+.psyDashNumericGrid article > div strong {
+  flex-shrink:
+    0;
+
+  color:
+    #26334a;
+}
+
+/* =========================================================
+   PERSONALIDAD
+========================================================= */
+
+.psyDashPersonalityDetail {
+  margin-top:
+    16px;
+
+  padding:
+    16px 18px;
+
+  border:
+    1px solid
+    #dbe3ef;
+
+  border-radius:
+    14px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfcff 0%,
+      #f5f8fc 100%
+    );
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    18px;
+
+  overflow:
+    hidden;
+}
+
+.psyDashPersonalityDetail > div:first-child {
+  min-width:
+    0;
+
+  flex:
+    1;
+}
+
+.psyDashPersonalityDetail h3 {
+  margin:
+    2px 0 5px;
+
+  color:
+    #22365b;
+
+  font-size:
+    1.15rem;
+
+  line-height:
+    1.3;
+
+  overflow-wrap:
+    anywhere;
+}
+
+.psyDashPersonalityDetail p {
+  margin:
+    0;
+
+  color:
+    var(--psy-muted);
+
+  font-size:
+    0.82rem;
+
+  overflow-wrap:
+    anywhere;
+}
+
+.psyDashPersonalityColors {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  justify-content:
+    flex-end;
+
+  gap:
+    8px;
+}
+
+.psyDashPersonalityColors span {
+  min-width:
+    140px;
+
+  padding:
+    9px 12px;
+
+  border-radius:
+    10px;
+
+  color:
+    #fff;
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    800;
+
+  text-align:
+    center;
+
+  box-shadow:
+    0 5px 12px
+    rgba(
+      20,
+      40,
+      70,
+      0.12
+    );
+}
+
+/* =========================================================
+   FOOTER MODAL
+========================================================= */
+
+.psyDashModal__footer {
+  margin-top:
+    16px;
+
+  display:
+    flex;
+
+  justify-content:
+    flex-end;
+
+  gap:
+    8px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (
+  max-width:
+    1350px
+) {
+  .psyDashFilters {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(
+          160px,
+          1fr
+        )
+      );
+  }
+
+  .psyDashKpis {
+    grid-template-columns:
+      repeat(
+        4,
+        minmax(
+          150px,
+          1fr
+        )
+      );
+  }
+
+  .psyDashThreeCols {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+}
+
+@media (
+  max-width:
+    1100px
+) {
+  .psyDashMetricStrip {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+
+  .psyDashResultCards {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+
+  .psyDashNumericGrid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+}
+
+@media (
+  max-width:
+    980px
+) {
+  .psyDashHero {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .psyDashHero__actions {
+    justify-content:
+      flex-start;
+  }
+
+  .psyDashKpis,
+  .psyDashCompany__stats,
+  .psyDashDetailSummary {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+
+  .psyDashTwoCols,
+  .psyDashResultsGrid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psyDashPersonalityDetail {
+    flex-direction:
+      column;
+
+    align-items:
+      stretch;
+  }
+
+  .psyDashPersonalityColors {
+    justify-content:
+      flex-start;
+  }
+}
+
+@media (
+  max-width:
+    700px
+) {
+  .psyDashHero {
+    padding:
+      20px;
+
+    border-radius:
+      16px;
+  }
+
+  .psyDashFilters {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psyDashKpis,
+  .psyDashThreeCols,
+  .psyDashCompany__stats,
+  .psyDashDetailSummary,
+  .psyDashResultCards,
+  .psyDashNumericGrid,
+  .psyDashMetricStrip {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psyDashParticipants__toolbar,
+  .psyDashPagination,
+  .psyDashCompany > header {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column;
+  }
+
+  .psyDashParticipantControls {
+    grid-template-columns:
+      1fr;
+  }
+
+  .psyDashModalBackdrop {
+    padding:
+      8px;
+  }
+
+  .psyDashModal {
+    width:
+      100%;
+
+    max-height:
+      96vh;
+
+    border-radius:
+      15px;
+  }
+
+  .psyDashModal__body {
+    padding:
+      14px;
+  }
+
+  .psyDashPersonalityColors span {
+    width:
+      100%;
+  }
+}

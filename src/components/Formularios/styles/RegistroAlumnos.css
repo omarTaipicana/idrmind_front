@@ -1254,3 +1254,416 @@
     align-items: flex-start;
   }
 }
+
+/* =========================================
+   PARTICIPACIÓN - EMPRESA ACTUAL
+========================================= */
+
+.registro_company_current {
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 1rem;
+
+  padding: 1.25rem;
+
+  border: 1px solid #cbdcf2;
+  border-radius: 1.1rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef6ff,
+      #f9fcff
+    );
+
+  box-shadow:
+    0 8px 22px
+    rgba(7, 27, 63, 0.06);
+}
+
+.registro_company_current_icon {
+  width: 52px;
+  height: 52px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 18px
+    rgba(23, 58, 138, 0.12);
+
+  font-size: 1.45rem;
+}
+
+.registro_company_current_content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.28rem;
+}
+
+.registro_company_current_content small {
+  color: var(--idr-cyan);
+
+  font-size: 0.74rem;
+  font-weight: 900;
+
+  letter-spacing: 0.05em;
+
+  text-transform: uppercase;
+}
+
+.registro_company_current_content strong {
+  overflow-wrap: anywhere;
+
+  color: var(--idr-blue-dark);
+
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.registro_company_current_content span {
+  color: #344054;
+
+  font-size: 0.9rem;
+}
+
+.registro_company_current_content p {
+  margin: 0.28rem 0 0;
+
+  color: var(--idr-muted);
+
+  font-size: 0.83rem;
+  line-height: 1.45;
+}
+
+/* =========================================
+   BOTÓN EDITAR EMPRESA
+========================================= */
+
+.registro_company_edit {
+  min-height: 44px;
+
+  padding: 0 1rem;
+
+  border:
+    1px solid
+    var(--idr-blue);
+
+  border-radius: 0.8rem;
+
+  background: #ffffff;
+
+  color: var(--idr-blue);
+
+  font-size: 0.85rem;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.registro_company_edit:hover {
+  background:
+    var(--idr-blue);
+
+  color: #ffffff;
+
+  transform:
+    translateY(-1px);
+}
+
+/* =========================================
+   OPCIONES DE PARTICIPACIÓN
+========================================= */
+
+.registro_participation_options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 1rem;
+
+  margin-top: 0.4rem;
+}
+
+.registro_participation_option {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 0.8rem;
+
+  padding: 1.05rem;
+
+  border:
+    1px solid
+    var(--idr-border);
+
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.registro_participation_option:hover {
+  border-color:
+    rgba(
+      40,
+      167,
+      232,
+      0.7
+    );
+
+  background: #f4f9ff;
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 8px 20px
+    rgba(
+      23,
+      58,
+      138,
+      0.08
+    );
+}
+
+.registro_participation_option input {
+  width: 18px;
+  height: 18px;
+
+  min-width: 18px;
+  min-height: 18px;
+
+  margin-top: 0.15rem;
+  padding: 0;
+
+  accent-color:
+    var(--idr-blue);
+}
+
+.registro_participation_option span {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.25rem;
+
+  color: var(--idr-muted);
+
+  font-size: 0.87rem;
+
+  line-height: 1.45;
+}
+
+.registro_participation_option strong {
+  color:
+    var(--idr-blue-dark);
+
+  font-size: 0.94rem;
+  font-weight: 900;
+}
+
+/*
+ * Si existen tres opciones:
+ *
+ * Mantener empresa
+ * Individual
+ * Empresarial
+ *
+ * la tercera ocupa todo el ancho.
+ */
+.registro_participation_options
+.registro_participation_option:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+/* =========================================
+   SELECTORES EMPRESARIALES
+========================================= */
+
+.registro_company_selector--participation {
+  margin-top: 1rem;
+
+  padding: 1.1rem;
+
+  border:
+    1px solid
+    var(--idr-border);
+
+  border-radius: 1rem;
+
+  background: #f8fafc;
+}
+
+/* =========================================
+   PARTICIPACIÓN INDIVIDUAL
+========================================= */
+
+.registro_individual_notice {
+  margin-top: 1rem;
+
+  grid-column: 1 / -1;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.9rem;
+
+  padding: 1rem;
+
+  border:
+    1px solid
+    #cbdcf2;
+
+  border-radius: 1rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef6ff,
+      #f8fbff
+    );
+}
+
+.registro_individual_notice > span {
+  width: 42px;
+  height: 42px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 5px 14px
+    rgba(
+      23,
+      58,
+      138,
+      0.08
+    );
+
+  font-size: 1.2rem;
+}
+
+.registro_individual_notice strong {
+  display: block;
+
+  margin-bottom: 0.2rem;
+
+  color:
+    var(--idr-blue-dark);
+
+  font-size: 0.92rem;
+
+  font-weight: 900;
+}
+
+.registro_individual_notice p {
+  margin: 0;
+
+  color:
+    var(--idr-muted);
+
+  font-size: 0.84rem;
+
+  line-height: 1.45;
+}
+
+/* =========================================
+   RESPONSIVE PARTICIPACIÓN
+========================================= */
+
+@media (max-width: 760px) {
+  .registro_company_current {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr);
+  }
+
+  .registro_company_edit {
+    grid-column: 1 / -1;
+
+    width: 100%;
+  }
+
+  .registro_participation_options {
+    grid-template-columns:
+      1fr;
+  }
+
+  .registro_participation_options
+  .registro_participation_option:nth-child(3) {
+    grid-column: auto;
+  }
+
+  .registro_company_selector--participation {
+    grid-template-columns:
+      1fr;
+  }
+}
+
+@media (max-width: 460px) {
+  .registro_company_current {
+    grid-template-columns:
+      1fr;
+
+    align-items: flex-start;
+  }
+
+  .registro_company_current_icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .registro_participation_option {
+    padding: 0.9rem;
+  }
+}

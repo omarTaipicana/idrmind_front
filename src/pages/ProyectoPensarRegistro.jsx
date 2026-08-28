@@ -16,6 +16,8 @@ import "./styles/ProyectoPensarRegistro.css";
 ========================================================= */
 
 const PATH_COURSES = "/courses";
+const PATH_VALIDATE = "/validate";
+
 const PATH_EMPRESAS =
   "/empresas/public";
 
@@ -24,6 +26,16 @@ const PATH_EMPRESA_SECCIONES =
 
 const PATH_PSYCHOMETRIC_REGISTER =
   "/psychometric/register";
+
+/* =========================================================
+   MODOS DE PARTICIPACIÓN
+========================================================= */
+
+const PARTICIPATION = {
+  CURRENT: "current",
+  INDIVIDUAL: "individual",
+  ENTERPRISE: "enterprise",
+};
 
 /* =========================================================
    ESTADO INICIAL
@@ -35,7 +47,7 @@ const INITIAL_FORM = {
   nombres: "",
   apellidos: "",
   celular: "",
-
+  dateBirth: "",
   aceptacion: false,
 };
 
@@ -85,6 +97,25 @@ const formatName = (value = "") => {
     .join(" ");
 };
 
+const normalizeEmail = (value = "") => {
+  return String(value)
+    .trim()
+    .toLowerCase();
+};
+
+const getCompanyName = (empresa) => {
+  if (!empresa) {
+    return "Empresa asignada";
+  }
+
+  return (
+    empresa.nombreComercial ||
+    empresa.razonSocial ||
+    empresa.nombre ||
+    "Empresa asignada"
+  );
+};
+
 /* =========================================================
    COMPONENTE
 ========================================================= */
@@ -96,13 +127,32 @@ const ProyectoPensarRegistro = () => {
      FORMULARIO
   ======================================================= */
 
-  const [form, setForm] = useState(
-    INITIAL_FORM
+  const [form, setForm] =
+    useState(INITIAL_FORM);
+
+  /*
+   * Primero únicamente verificamos correo.
+   */
+  const [
+    correoValidado,
+    setCorreoValidado,
+  ] = useState(false);
+
+  const [
+    userRegister,
+    setUserRegister,
+  ] = useState(null);
+
+  const [
+    participationMode,
+    setParticipationMode,
+  ] = useState(
+    PARTICIPATION.INDIVIDUAL
   );
 
   const [
-    participacionEmpresarial,
-    setParticipacionEmpresarial,
+    editingCompany,
+    setEditingCompany,
   ] = useState(false);
 
   const [
@@ -115,11 +165,15 @@ const ProyectoPensarRegistro = () => {
     setSeccionSeleccionada,
   ] = useState("");
 
-  const [message, setMessage] =
-    useState("");
+  const [
+    localError,
+    setLocalError,
+  ] = useState("");
 
-  const [localError, setLocalError] =
-    useState("");
+  const [
+    message,
+    setMessage,
+  ] = useState("");
 
   /* =======================================================
      APIs
@@ -133,6 +187,22 @@ const ProyectoPensarRegistro = () => {
     ,
     coursesError,
     isLoadingCourses,
+  ] = useCrud();
+
+  /*
+   * Exactamente el mismo patrón de RegistroAlumnos:
+   *
+   * postValidate(PATH_VALIDATE, body)
+   */
+  const [
+    ,
+    ,
+    postValidate,
+    ,
+    ,
+    validateError,
+    isLoadingValidate,
+    validate,
   ] = useCrud();
 
   const [
@@ -167,7 +237,7 @@ const ProyectoPensarRegistro = () => {
   ] = useCrud();
 
   /* =======================================================
-     LISTAS NORMALIZADAS
+     LISTAS
   ======================================================= */
 
   const coursesList = useMemo(() => {
@@ -191,39 +261,97 @@ const ProyectoPensarRegistro = () => {
   }, [empresaSecciones]);
 
   /* =======================================================
-     IDENTIFICAR TEST
+     IDENTIFICAR TEST PSICOMÉTRICO
   ======================================================= */
 
-  const psychometricCourse = useMemo(() => {
-    return coursesList.find((course) => {
-      const sigla = String(
-        course?.sigla || ""
-      )
-        .trim()
-        .toLowerCase();
+  const psychometricCourse =
+    useMemo(() => {
+      return coursesList.find(
+        (course) => {
+          const sigla = String(
+            course?.sigla || ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const tipo = String(
-        course?.tipo || ""
-      )
-        .trim()
-        .toLowerCase();
+          const tipo = String(
+            course?.tipo || ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const esTest =
-        sigla ===
-        "test_psicotecnico" ||
-        sigla ===
-        "test_psicometrico" ||
-        tipo ===
-        "test_psicotecnico" ||
-        tipo ===
-        "test_psicometrico";
+          const esTest =
+            sigla ===
+              "test_psicotecnico" ||
+            sigla ===
+              "test_psicometrico" ||
+            tipo ===
+              "test_psicotecnico" ||
+            tipo ===
+              "test_psicometrico";
+
+          return (
+            esTest &&
+            isEnabled(
+              course?.vigente
+            )
+          );
+        }
+      );
+    }, [coursesList]);
+
+  /* =======================================================
+     EMPRESA DEL USUARIO
+  ======================================================= */
+
+  const empresaUsuario =
+    useMemo(() => {
+      if (
+        !userRegister?.empresaId
+      ) {
+        return null;
+      }
 
       return (
-        esTest &&
-        isEnabled(course?.vigente)
+        empresasList.find(
+          (empresa) =>
+            String(empresa.id) ===
+            String(
+              userRegister.empresaId
+            )
+        ) || null
       );
-    });
-  }, [coursesList]);
+    }, [
+      empresasList,
+      userRegister,
+    ]);
+
+  const seccionUsuario =
+    useMemo(() => {
+      if (
+        !userRegister?.seccionId
+      ) {
+        return null;
+      }
+
+      return (
+        seccionesList.find(
+          (seccion) =>
+            String(seccion.id) ===
+            String(
+              userRegister.seccionId
+            )
+        ) || null
+      );
+    }, [
+      seccionesList,
+      userRegister,
+    ]);
+
+  const userHasCompany =
+    Boolean(
+      userRegister?.empresaId
+    );
 
   /* =======================================================
      CARGA INICIAL
@@ -243,46 +371,174 @@ const ProyectoPensarRegistro = () => {
 
   useEffect(() => {
     if (
-      !participacionEmpresarial ||
       !empresaSeleccionada
     ) {
-      setSeccionSeleccionada("");
       return;
     }
 
     getEmpresaSecciones(
       `${PATH_EMPRESA_SECCIONES}` +
-      `?empresaId=${empresaSeleccionada}` +
-      `&activo=true`
+        `?empresaId=${empresaSeleccionada}` +
+        `&activo=true`
     );
-  }, [
-    participacionEmpresarial,
-    empresaSeleccionada,
-  ]);
+  }, [empresaSeleccionada]);
 
   /* =======================================================
-     RESPUESTA DE REGISTRO
+     PROCESAR VALIDACIÓN
   ======================================================= */
 
   useEffect(() => {
-    if (!registrationResult) return;
+    if (!validate) {
+      return;
+    }
+
+    /*
+     * En RegistroAlumnos esto evita
+     * reinscribir al mismo curso.
+     *
+     * Para el test psicométrico probablemente
+     * sí permitimos nuevos intentos.
+     *
+     * Por eso NO bloqueamos por enrolled.
+     */
+
+    const usuario =
+      validate.user || null;
+
+    setUserRegister(usuario);
+    setCorreoValidado(true);
+
+    setLocalError("");
+    setMessage("");
+
+    /*
+     * Usuario existente.
+     */
+    if (usuario) {
+      setForm((previous) => ({
+        ...previous,
+
+        email:
+          usuario.email ||
+          previous.email,
+
+        cedula:
+          usuario.cI ||
+          previous.cedula,
+
+        nombres:
+          usuario.firstName ||
+          previous.nombres,
+
+        apellidos:
+          usuario.lastName ||
+          previous.apellidos,
+
+        celular:
+          usuario.cellular ||
+          previous.celular,
+
+        dateBirth:
+          usuario.dateBirth ||
+          previous.dateBirth,
+      }));
+
+      /*
+       * Tiene empresa.
+       */
+      if (
+        usuario.empresaId
+      ) {
+        setParticipationMode(
+          PARTICIPATION.CURRENT
+        );
+
+        setEmpresaSeleccionada(
+          usuario.empresaId
+        );
+
+        setSeccionSeleccionada(
+          usuario.seccionId || ""
+        );
+
+        setEditingCompany(false);
+
+        getEmpresaSecciones(
+          `${PATH_EMPRESA_SECCIONES}` +
+            `?empresaId=${usuario.empresaId}` +
+            `&activo=true`
+        );
+
+        return;
+      }
+    }
+
+    /*
+     * Usuario nuevo o existente sin empresa.
+     */
+    setParticipationMode(
+      PARTICIPATION.INDIVIDUAL
+    );
+
+    setEmpresaSeleccionada("");
+    setSeccionSeleccionada("");
+
+    setEditingCompany(false);
+  }, [validate]);
+
+  /* =======================================================
+     REGISTRO EXITOSO
+  ======================================================= */
+
+  useEffect(() => {
+    if (!registrationResult) {
+      return;
+    }
 
     setMessage(
       registrationResult?.message ||
-      "Registro completado. Revisa tu correo para acceder al test."
+        "Registro completado. Revisa tu correo para acceder al test."
     );
 
     setLocalError("");
 
+    /*
+     * No limpiamos instantáneamente el mensaje.
+     * Sí limpiamos información del formulario.
+     */
     setForm(INITIAL_FORM);
-    setParticipacionEmpresarial(false);
+
+    setCorreoValidado(false);
+    setUserRegister(null);
+
     setEmpresaSeleccionada("");
     setSeccionSeleccionada("");
+
+    setParticipationMode(
+      PARTICIPATION.INDIVIDUAL
+    );
+
+    setEditingCompany(false);
   }, [registrationResult]);
 
   /* =======================================================
-     ERRORES API
+     ERRORES
   ======================================================= */
+
+  useEffect(() => {
+    if (!validateError) {
+      return;
+    }
+
+    const apiMessage =
+      validateError?.response?.data
+        ?.message ||
+      validateError?.response?.data
+        ?.error ||
+      "No se pudo validar el usuario.";
+
+    setLocalError(apiMessage);
+  }, [validateError]);
 
   useEffect(() => {
     const requestError =
@@ -291,7 +547,9 @@ const ProyectoPensarRegistro = () => {
       seccionesError ||
       registerError;
 
-    if (!requestError) return;
+    if (!requestError) {
+      return;
+    }
 
     const apiMessage =
       requestError?.response?.data
@@ -312,7 +570,9 @@ const ProyectoPensarRegistro = () => {
      CAMBIOS DEL FORMULARIO
   ======================================================= */
 
-  const handleChange = (event) => {
+  const handleChange = (
+    event
+  ) => {
     const {
       name,
       value,
@@ -333,21 +593,182 @@ const ProyectoPensarRegistro = () => {
     setMessage("");
   };
 
-  const selectIndividual = () => {
-    setParticipacionEmpresarial(false);
+  /* =======================================================
+     VALIDAR CORREO
+  ======================================================= */
+
+  const handleValidateEmail = (
+    event
+  ) => {
+    event.preventDefault();
+
+    setLocalError("");
+    setMessage("");
+
+    const email =
+      normalizeEmail(
+        form.email
+      );
+
+    if (!email) {
+      setLocalError(
+        "Ingrese su correo electrónico."
+      );
+
+      return;
+    }
+
+    const validEmail =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        email
+      );
+
+    if (!validEmail) {
+      setLocalError(
+        "Ingrese un correo electrónico válido."
+      );
+
+      return;
+    }
+
+    if (!psychometricCourse) {
+      setLocalError(
+        "El test psicométrico no está disponible."
+      );
+
+      return;
+    }
+
+    /*
+     * Mismo mecanismo utilizado
+     * por RegistroAlumnos.
+     */
+    const body = {
+      email,
+
+      code:
+        psychometricCourse.sigla,
+    };
+
+    postValidate(
+      PATH_VALIDATE,
+      body
+    );
+  };
+
+  /* =======================================================
+     CAMBIAR CORREO
+  ======================================================= */
+
+  const volverAValidar = () => {
+    setCorreoValidado(false);
+
+    setUserRegister(null);
+
     setEmpresaSeleccionada("");
     setSeccionSeleccionada("");
 
+    setParticipationMode(
+      PARTICIPATION.INDIVIDUAL
+    );
+
+    setEditingCompany(false);
+
+    setForm((previous) => ({
+      ...INITIAL_FORM,
+
+      email:
+        previous.email || "",
+    }));
+
     setLocalError("");
     setMessage("");
   };
 
-  const selectEnterprise = () => {
-    setParticipacionEmpresarial(true);
+  /* =======================================================
+     PARTICIPACIÓN
+  ======================================================= */
 
-    setLocalError("");
-    setMessage("");
-  };
+  const selectCurrentCompany =
+    () => {
+      if (
+        !userRegister?.empresaId
+      ) {
+        return;
+      }
+
+      setParticipationMode(
+        PARTICIPATION.CURRENT
+      );
+
+      setEmpresaSeleccionada(
+        userRegister.empresaId
+      );
+
+      setSeccionSeleccionada(
+        userRegister.seccionId ||
+          ""
+      );
+
+      setEditingCompany(false);
+
+      getEmpresaSecciones(
+        `${PATH_EMPRESA_SECCIONES}` +
+          `?empresaId=${userRegister.empresaId}` +
+          `&activo=true`
+      );
+
+      setLocalError("");
+    };
+
+  const selectIndividual =
+    () => {
+      setParticipationMode(
+        PARTICIPATION.INDIVIDUAL
+      );
+
+      setEmpresaSeleccionada("");
+      setSeccionSeleccionada("");
+
+      setEditingCompany(true);
+
+      setLocalError("");
+    };
+
+  const selectEnterprise =
+    () => {
+      setParticipationMode(
+        PARTICIPATION.ENTERPRISE
+      );
+
+      /*
+       * Si ya tiene empresa,
+       * empezamos mostrando la actual.
+       */
+      if (
+        userRegister?.empresaId
+      ) {
+        setEmpresaSeleccionada(
+          userRegister.empresaId
+        );
+
+        setSeccionSeleccionada(
+          userRegister.seccionId ||
+            ""
+        );
+      } else {
+        setEmpresaSeleccionada("");
+        setSeccionSeleccionada("");
+      }
+
+      setEditingCompany(true);
+
+      setLocalError("");
+    };
+
+  /* =======================================================
+     CAMBIAR EMPRESA
+  ======================================================= */
 
   const handleEmpresaChange = (
     event
@@ -359,72 +780,116 @@ const ProyectoPensarRegistro = () => {
       empresaId
     );
 
+    /*
+     * Cada empresa posee sus propias secciones.
+     */
     setSeccionSeleccionada("");
 
     setLocalError("");
-    setMessage("");
   };
 
   /* =======================================================
-     VALIDACIÓN
+     VALIDACIÓN DEL REGISTRO
   ======================================================= */
 
   const validateForm = () => {
     if (!psychometricCourse) {
       return (
-        "No se encontró un test psicométrico " +
-        "vigente con la sigla test_psicotecnico."
+        "No se encontró un test psicométrico vigente."
       );
     }
 
-    if (!form.cedula.trim()) {
+    if (
+      !form.cedula.trim()
+    ) {
       return (
-        "Ingrese su número de " +
-        "identificación."
+        "Ingrese su número de identificación."
       );
     }
 
-    if (!form.email.trim()) {
+    if (
+      !form.email.trim()
+    ) {
       return (
         "Ingrese su correo electrónico."
       );
     }
 
-    const validEmail =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        form.email.trim()
-      );
-
-    if (!validEmail) {
-      return (
-        "Ingrese un correo electrónico válido."
-      );
-    }
-
-    if (!form.nombres.trim()) {
+    if (
+      !form.nombres.trim()
+    ) {
       return "Ingrese sus nombres.";
     }
 
-    if (!form.apellidos.trim()) {
+    if (
+      !form.apellidos.trim()
+    ) {
       return "Ingrese sus apellidos.";
     }
 
-    const celular = String(
-      form.celular || ""
-    ).replace(/\D/g, "");
-
     if (
-      celular &&
-      !/^09\d{8}$/.test(celular)
+      !form.dateBirth
     ) {
       return (
-        "El celular debe iniciar con 09 " +
-        "y tener 10 dígitos."
+        "Ingrese su fecha de nacimiento."
+      );
+    }
+
+    const birthDate =
+      new Date(
+        `${form.dateBirth}T00:00:00`
+      );
+
+    const today =
+      new Date();
+
+    today.setHours(
+      23,
+      59,
+      59,
+      999
+    );
+
+    if (
+      Number.isNaN(
+        birthDate.getTime()
+      )
+    ) {
+      return (
+        "Ingrese una fecha de nacimiento válida."
       );
     }
 
     if (
-      participacionEmpresarial &&
+      birthDate > today
+    ) {
+      return (
+        "La fecha de nacimiento no puede ser futura."
+      );
+    }
+
+    const celular =
+      String(
+        form.celular || ""
+      ).replace(/\D/g, "");
+
+    if (
+      celular &&
+      !/^09\d{8}$/.test(
+        celular
+      )
+    ) {
+      return (
+        "El celular debe iniciar con 09 y tener 10 dígitos."
+      );
+    }
+
+    /*
+     * Nueva empresa o cambio de empresa.
+     */
+    if (
+      participationMode ===
+        PARTICIPATION.ENTERPRISE &&
       !empresaSeleccionada
     ) {
       return (
@@ -433,7 +898,8 @@ const ProyectoPensarRegistro = () => {
     }
 
     if (
-      participacionEmpresarial &&
+      participationMode ===
+        PARTICIPATION.ENTERPRISE &&
       !seccionSeleccionada
     ) {
       return (
@@ -441,10 +907,25 @@ const ProyectoPensarRegistro = () => {
       );
     }
 
-    if (!form.aceptacion) {
+    /*
+     * Si mantiene empresa actual,
+     * debe existir al menos la empresa.
+     */
+    if (
+      participationMode ===
+        PARTICIPATION.CURRENT &&
+      !userRegister?.empresaId
+    ) {
       return (
-        "Debe aceptar el tratamiento " +
-        "de datos para continuar."
+        "No fue posible determinar la empresa registrada."
+      );
+    }
+
+    if (
+      !form.aceptacion
+    ) {
+      return (
+        "Debe aceptar el tratamiento de datos para continuar."
       );
     }
 
@@ -452,60 +933,127 @@ const ProyectoPensarRegistro = () => {
   };
 
   /* =======================================================
-     ENVIAR REGISTRO
+     REGISTRAR
   ======================================================= */
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (
+    event
+  ) => {
     event.preventDefault();
 
     const validationError =
       validateForm();
 
     if (validationError) {
-      setLocalError(validationError);
+      setLocalError(
+        validationError
+      );
+
       return;
     }
 
     setLocalError("");
     setMessage("");
 
+    let empresaIdFinal =
+      null;
+
+    let seccionIdFinal =
+      null;
+
+    /*
+     * Mantener datos registrados.
+     */
+    if (
+      participationMode ===
+      PARTICIPATION.CURRENT
+    ) {
+      empresaIdFinal =
+        userRegister?.empresaId ||
+        null;
+
+      seccionIdFinal =
+        userRegister?.seccionId ||
+        null;
+    }
+
+    /*
+     * Selección nueva.
+     */
+    if (
+      participationMode ===
+      PARTICIPATION.ENTERPRISE
+    ) {
+      empresaIdFinal =
+        empresaSeleccionada ||
+        null;
+
+      seccionIdFinal =
+        seccionSeleccionada ||
+        null;
+    }
+
+    /*
+     * INDIVIDUAL:
+     *
+     * empresaIdFinal = null
+     * seccionIdFinal = null
+     */
+
     const payload = {
-      cedula: String(form.cedula)
+      cedula: String(
+        form.cedula
+      )
         .trim()
         .replace(/\s+/g, ""),
 
-      email: String(form.email)
-        .trim()
-        .toLowerCase(),
+      email:
+        normalizeEmail(
+          form.email
+        ),
 
-      nombres: formatName(
-        form.nombres
-      ),
+      nombres:
+        formatName(
+          form.nombres
+        ),
 
-      apellidos: formatName(
-        form.apellidos
-      ),
+      apellidos:
+        formatName(
+          form.apellidos
+        ),
 
       celular:
-        String(form.celular || "")
-          .replace(/\D/g, "") ||
+        String(
+          form.celular || ""
+        ).replace(/\D/g, "") ||
+        null,
+
+      dateBirth:
+        form.dateBirth ||
         null,
 
       empresaId:
-        participacionEmpresarial
-          ? empresaSeleccionada
-          : null,
+        empresaIdFinal,
 
       seccionId:
-        participacionEmpresarial
-          ? seccionSeleccionada
-          : null,
+        seccionIdFinal,
+
+      /*
+       * Backend sabrá qué decidió
+       * explícitamente el usuario.
+       */
+      participationMode,
 
       courseId:
         psychometricCourse.id,
 
       aceptacion: true,
     };
+
+    console.log(
+      "PAYLOAD PSYCHOMETRIC:",
+      payload
+    );
 
     postPsychometricRegister(
       PATH_PSYCHOMETRIC_REGISTER,
@@ -519,13 +1067,16 @@ const ProyectoPensarRegistro = () => {
 
   const isLoading =
     isLoadingCourses ||
+    isLoadingValidate ||
     isLoadingEmpresas ||
     isLoadingSecciones ||
     isLoadingRegister;
 
   return (
     <main className="pensar-register">
-      {isLoading && <IsLoading />}
+      {isLoading && (
+        <IsLoading />
+      )}
 
       <div className="pensar-register__background">
         <span className="pensar-register__shape pensar-register__shape--one" />
@@ -537,7 +1088,9 @@ const ProyectoPensarRegistro = () => {
         <button
           type="button"
           className="pensar-register__back"
-          onClick={() => navigate("/")}
+          onClick={() =>
+            navigate("/")
+          }
         >
           ← Volver al inicio
         </button>
@@ -573,20 +1126,23 @@ const ProyectoPensarRegistro = () => {
           <div className="pensar-register__steps">
             <article>
               <strong>1</strong>
+
               <span>
-                Registra tus datos
+                Verifica tu correo
               </span>
             </article>
 
             <article>
               <strong>2</strong>
+
               <span>
-                Recibe el enlace
+                Confirma tus datos
               </span>
             </article>
 
             <article>
               <strong>3</strong>
+
               <span>
                 Desarrolla el test
               </span>
@@ -598,13 +1154,12 @@ const ProyectoPensarRegistro = () => {
             FORMULARIO
         ===================================== */}
 
-        <form
-          className="pensar-register__form"
-          onSubmit={handleSubmit}
-        >
+        <div className="pensar-register__form">
           <div className="pensar-register__form-header">
             <div>
-              <span>Registro</span>
+              <span>
+                Registro
+              </span>
 
               <h2>
                 Información del participante
@@ -618,7 +1173,10 @@ const ProyectoPensarRegistro = () => {
                 </small>
 
                 <strong>
-                  {psychometricCourse.nombre}
+                  {
+                    psychometricCourse
+                      .nombre
+                  }
                 </strong>
               </div>
             )}
@@ -646,298 +1204,576 @@ const ProyectoPensarRegistro = () => {
                 Registro completado
               </strong>
 
-              <span>{message}</span>
+              <span>
+                {message}
+              </span>
 
               <span>
-                Revisa también la carpeta de
-                correo no deseado.
+                Revisa también la carpeta
+                de correo no deseado.
               </span>
             </div>
           )}
 
           {/* =================================
-              DATOS PERSONALES
+              PASO 1 - VALIDAR CORREO
           ================================= */}
 
-          <div className="pensar-register__grid">
-            <label className="pensar-register__field">
-              <span>
-                Identificación *
-              </span>
+          {!correoValidado && (
+            <form
+              onSubmit={
+                handleValidateEmail
+              }
+            >
+              <div className="pensar-register__verify">
+                <div className="pensar-register__section-title">
+                  <span>
+                    Verificación
+                  </span>
 
-              <input
-                type="text"
-                name="cedula"
-                value={form.cedula}
-                onChange={handleChange}
-                placeholder="Cédula o pasaporte"
-                autoComplete="off"
-              />
-            </label>
+                  <h3>
+                    Ingresa tu correo electrónico
+                  </h3>
 
-            <label className="pensar-register__field">
-              <span>
-                Correo electrónico *
-              </span>
+                  <p>
+                    Verificaremos si ya tienes
+                    información registrada en
+                    iDr.Mind.
+                  </p>
+                </div>
 
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="correo@ejemplo.com"
-                autoComplete="email"
-              />
-            </label>
-
-            <label className="pensar-register__field">
-              <span>Nombres *</span>
-
-              <input
-                type="text"
-                name="nombres"
-                value={form.nombres}
-                onChange={handleChange}
-                placeholder="Tus nombres"
-                autoComplete="given-name"
-              />
-            </label>
-
-            <label className="pensar-register__field">
-              <span>Apellidos *</span>
-
-              <input
-                type="text"
-                name="apellidos"
-                value={form.apellidos}
-                onChange={handleChange}
-                placeholder="Tus apellidos"
-                autoComplete="family-name"
-              />
-            </label>
-
-            <label className="pensar-register__field pensar-register__field--full">
-              <span>Celular</span>
-
-              <input
-                type="text"
-                name="celular"
-                value={form.celular}
-                onChange={handleChange}
-                placeholder="09XXXXXXXX"
-                autoComplete="tel"
-                inputMode="numeric"
-                maxLength={10}
-              />
-            </label>
-          </div>
-
-          {/* =================================
-              EMPRESA Y SECCIÓN
-          ================================= */}
-
-          <section className="pensar-register__company">
-            <div className="pensar-register__section-title">
-              <span>Organización</span>
-
-              <h3>
-                ¿Perteneces a una empresa?
-              </h3>
-            </div>
-
-            <div className="pensar-register__company-options">
-              <label>
-                <input
-                  type="radio"
-                  name="tipoParticipacion"
-                  checked={
-                    !participacionEmpresarial
-                  }
-                  onChange={
-                    selectIndividual
-                  }
-                />
-
-                <span>
-                  <strong>
-                    Participación individual
-                  </strong>
-
-                  No pertenezco a una empresa
-                  registrada
-                </span>
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  name="tipoParticipacion"
-                  checked={
-                    participacionEmpresarial
-                  }
-                  onChange={
-                    selectEnterprise
-                  }
-                />
-
-                <span>
-                  <strong>
-                    Participación empresarial
-                  </strong>
-
-                  Pertenezco a una empresa o
-                  institución
-                </span>
-              </label>
-            </div>
-
-            {/* =================================
-                SELECTORES EMPRESARIALES
-            ================================= */}
-
-            {participacionEmpresarial && (
-              <div className="pensar-register__grid pensar-register__company-fields">
                 <label className="pensar-register__field">
-                  <span>Empresa *</span>
+                  <span>
+                    Correo electrónico *
+                  </span>
 
-                  <select
+                  <input
+                    type="email"
+                    name="email"
                     value={
-                      empresaSeleccionada
+                      form.email
                     }
                     onChange={
-                      handleEmpresaChange
+                      handleChange
+                    }
+                    placeholder="correo@ejemplo.com"
+                    autoComplete="email"
+                  />
+                </label>
+
+                <button
+                  type="submit"
+                  className="pensar-register__submit"
+                  disabled={
+                    isLoadingValidate ||
+                    !psychometricCourse
+                  }
+                >
+                  {isLoadingValidate
+                    ? "Verificando..."
+                    : "Continuar"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* =================================
+              PASO 2 - REGISTRO
+          ================================= */}
+
+          {correoValidado && (
+            <form
+              onSubmit={handleSubmit}
+            >
+              {/* ===============================
+                  USUARIO ENCONTRADO
+              =============================== */}
+
+              {userRegister && (
+                <section className="pensar-register__existing-user">
+                  <div>
+                    <small>
+                      Usuario encontrado
+                    </small>
+
+                    <strong>
+                      {userRegister.firstName ||
+                        ""}{" "}
+                      {userRegister.lastName ||
+                        ""}
+                    </strong>
+
+                    <span>
+                      {
+                        userRegister.email
+                      }
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={
+                      volverAValidar
                     }
                   >
-                    <option value="">
-                      Seleccione una empresa
-                    </option>
+                    Cambiar correo
+                  </button>
+                </section>
+              )}
 
-                    {empresasList.map(
-                      (empresa) => (
-                        <option
-                          key={empresa.id}
-                          value={empresa.id}
-                        >
-                          {empresa.nombreComercial ||
-                            empresa.razonSocial ||
-                            empresa.nombre ||
-                            "Empresa sin nombre"}
-                        </option>
-                      )
-                    )}
-                  </select>
+              {!userRegister && (
+                <section className="pensar-register__existing-user">
+                  <div>
+                    <small>
+                      Nuevo participante
+                    </small>
 
-                  {!isLoadingEmpresas &&
-                    empresasList.length ===
-                    0 && (
-                      <small className="registro_field_error">
-                        No existen empresas
-                        disponibles.
-                      </small>
-                    )}
+                    <strong>
+                      Completa tus datos
+                    </strong>
+
+                    <span>
+                      {form.email}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={
+                      volverAValidar
+                    }
+                  >
+                    Cambiar correo
+                  </button>
+                </section>
+              )}
+
+              {/* ===============================
+                  DATOS PERSONALES
+              =============================== */}
+
+              <div className="pensar-register__grid">
+                <label className="pensar-register__field">
+                  <span>
+                    Identificación *
+                  </span>
+
+                  <input
+                    type="text"
+                    name="cedula"
+                    value={
+                      form.cedula
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    placeholder="Cédula o pasaporte"
+                  />
                 </label>
 
                 <label className="pensar-register__field">
                   <span>
-                    Sección o departamento *
+                    Correo electrónico
                   </span>
 
-                  <select
+                  <input
+                    type="email"
                     value={
-                      seccionSeleccionada
+                      form.email
                     }
-                    onChange={(event) =>
-                      setSeccionSeleccionada(
-                        event.target.value
-                      )
-                    }
-                    disabled={
-                      !empresaSeleccionada ||
-                      isLoadingSecciones
-                    }
-                  >
-                    <option value="">
-                      {isLoadingSecciones
-                        ? "Cargando secciones..."
-                        : empresaSeleccionada
-                          ? "Seleccione una sección"
-                          : "Primero seleccione una empresa"}
-                    </option>
+                    disabled
+                  />
+                </label>
 
-                    {seccionesList.map(
-                      (seccion) => (
-                        <option
-                          key={seccion.id}
-                          value={seccion.id}
-                        >
-                          {seccion.nombre}
-                        </option>
-                      )
-                    )}
-                  </select>
+                <label className="pensar-register__field">
+                  <span>
+                    Nombres *
+                  </span>
 
-                  {empresaSeleccionada &&
-                    !isLoadingSecciones &&
-                    seccionesList.length ===
-                    0 && (
-                      <small className="registro_field_error">
-                        Esta empresa no tiene
-                        secciones disponibles.
-                      </small>
-                    )}
+                  <input
+                    type="text"
+                    name="nombres"
+                    value={
+                      form.nombres
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    placeholder="Tus nombres"
+                  />
+                </label>
+
+                <label className="pensar-register__field">
+                  <span>
+                    Apellidos *
+                  </span>
+
+                  <input
+                    type="text"
+                    name="apellidos"
+                    value={
+                      form.apellidos
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    placeholder="Tus apellidos"
+                  />
+                </label>
+
+                <label className="pensar-register__field">
+                  <span>
+                    Celular
+                  </span>
+
+                  <input
+                    type="text"
+                    name="celular"
+                    value={
+                      form.celular
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    placeholder="09XXXXXXXX"
+                    inputMode="numeric"
+                    maxLength={10}
+                  />
+                </label>
+
+                <label className="pensar-register__field">
+                  <span>
+                    Fecha de nacimiento *
+                  </span>
+
+                  <input
+                    type="date"
+                    name="dateBirth"
+                    value={
+                      form.dateBirth
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    max={
+                      new Date()
+                        .toISOString()
+                        .split("T")[0]
+                    }
+                  />
                 </label>
               </div>
-            )}
-          </section>
 
-          {/* =================================
-              ACEPTACIÓN
-          ================================= */}
+              {/* ===============================
+                  EMPRESA
+              =============================== */}
 
-          <label className="pensar-register__acceptance">
-            <input
-              type="checkbox"
-              name="aceptacion"
-              checked={
-                form.aceptacion
-              }
-              onChange={handleChange}
-            />
+              <section className="pensar-register__company">
+                <div className="pensar-register__section-title">
+                  <span>
+                    Organización
+                  </span>
 
-            <span>
-              Acepto el tratamiento de mis
-              datos para gestionar esta
-              evaluación y recibir las
-              comunicaciones relacionadas con
-              el test.
-            </span>
-          </label>
+                  <h3>
+                    Tipo de participación
+                  </h3>
+                </div>
 
-          {/* =================================
-              ENVÍO
-          ================================= */}
+                {/* ============================
+                    EMPRESA ACTUAL
+                ============================ */}
 
-          <button
-            type="submit"
-            className="pensar-register__submit"
-            disabled={
-              isLoadingRegister ||
-              !psychometricCourse
-            }
-          >
-            {isLoadingRegister
-              ? "Registrando..."
-              : "Registrarme y recibir enlace"}
-          </button>
+                {userHasCompany &&
+                  !editingCompany && (
+                    <div className="pensar-register__current-company">
+                      <div>
+                        <small>
+                          Empresa registrada
+                        </small>
 
-          {!isLoadingCourses &&
-            !psychometricCourse && (
-              <p className="pensar-register__unavailable">
-                El test psicométrico no se
-                encuentra disponible actualmente.
-              </p>
-            )}
-        </form>
+                        <strong>
+                          {getCompanyName(
+                            empresaUsuario
+                          )}
+                        </strong>
+
+                        <span>
+                          Sección:{" "}
+                          {seccionUsuario
+                            ?.nombre ||
+                            (userRegister
+                              ?.seccionId
+                              ? "Sección asignada"
+                              : "Sin sección")}
+                        </span>
+
+                        <p>
+                          Actualmente tu perfil
+                          está asociado a esta
+                          empresa.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditingCompany(
+                            true
+                          )
+                        }
+                      >
+                        Editar participación
+                      </button>
+                    </div>
+                  )}
+
+                {/* ============================
+                    OPCIONES
+                ============================ */}
+
+                {(!userHasCompany ||
+                  editingCompany) && (
+                  <div className="pensar-register__company-options">
+                    {userHasCompany && (
+                      <label>
+                        <input
+                          type="radio"
+                          name="participation"
+                          checked={
+                            participationMode ===
+                            PARTICIPATION.CURRENT
+                          }
+                          onChange={
+                            selectCurrentCompany
+                          }
+                        />
+
+                        <span>
+                          <strong>
+                            Mantener empresa actual
+                          </strong>
+
+                          {getCompanyName(
+                            empresaUsuario
+                          )}
+                        </span>
+                      </label>
+                    )}
+
+                    <label>
+                      <input
+                        type="radio"
+                        name="participation"
+                        checked={
+                          participationMode ===
+                          PARTICIPATION.INDIVIDUAL
+                        }
+                        onChange={
+                          selectIndividual
+                        }
+                      />
+
+                      <span>
+                        <strong>
+                          Inscripción individual
+                        </strong>
+
+                        Esta evaluación no se
+                        asociará a una empresa
+                      </span>
+                    </label>
+
+                    <label>
+                      <input
+                        type="radio"
+                        name="participation"
+                        checked={
+                          participationMode ===
+                          PARTICIPATION.ENTERPRISE
+                        }
+                        onChange={
+                          selectEnterprise
+                        }
+                      />
+
+                      <span>
+                        <strong>
+                          Participación empresarial
+                        </strong>
+
+                        Seleccionar o cambiar
+                        empresa y sección
+                      </span>
+                    </label>
+                  </div>
+                )}
+
+                {/* ============================
+                    CAMBIAR EMPRESA
+                ============================ */}
+
+                {participationMode ===
+                  PARTICIPATION.ENTERPRISE && (
+                  <div className="pensar-register__grid pensar-register__company-fields">
+                    <label className="pensar-register__field">
+                      <span>
+                        Empresa *
+                      </span>
+
+                      <select
+                        value={
+                          empresaSeleccionada
+                        }
+                        onChange={
+                          handleEmpresaChange
+                        }
+                      >
+                        <option value="">
+                          Seleccione una empresa
+                        </option>
+
+                        {empresasList.map(
+                          (empresa) => (
+                            <option
+                              key={
+                                empresa.id
+                              }
+                              value={
+                                empresa.id
+                              }
+                            >
+                              {getCompanyName(
+                                empresa
+                              )}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </label>
+
+                    <label className="pensar-register__field">
+                      <span>
+                        Sección o departamento *
+                      </span>
+
+                      <select
+                        value={
+                          seccionSeleccionada
+                        }
+                        onChange={(event) =>
+                          setSeccionSeleccionada(
+                            event.target
+                              .value
+                          )
+                        }
+                        disabled={
+                          !empresaSeleccionada ||
+                          isLoadingSecciones
+                        }
+                      >
+                        <option value="">
+                          {isLoadingSecciones
+                            ? "Cargando secciones..."
+                            : empresaSeleccionada
+                              ? "Seleccione una sección"
+                              : "Primero seleccione una empresa"}
+                        </option>
+
+                        {seccionesList.map(
+                          (seccion) => (
+                            <option
+                              key={
+                                seccion.id
+                              }
+                              value={
+                                seccion.id
+                              }
+                            >
+                              {
+                                seccion.nombre
+                              }
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </label>
+                  </div>
+                )}
+
+                {/* ============================
+                    INDIVIDUAL
+                ============================ */}
+
+                {participationMode ===
+                  PARTICIPATION.INDIVIDUAL && (
+                  <div className="pensar-register__individual-notice">
+                    <strong>
+                      Participación individual
+                    </strong>
+
+                    <p>
+                      Esta evaluación se
+                      registrará sin empresa ni
+                      sección asociada.
+                    </p>
+                  </div>
+                )}
+              </section>
+
+              {/* ===============================
+                  ACEPTACIÓN
+              =============================== */}
+
+              <label className="pensar-register__acceptance">
+                <input
+                  type="checkbox"
+                  name="aceptacion"
+                  checked={
+                    form.aceptacion
+                  }
+                  onChange={
+                    handleChange
+                  }
+                />
+
+                <span>
+                  Acepto el tratamiento de mis
+                  datos para gestionar esta
+                  evaluación y recibir las
+                  comunicaciones relacionadas
+                  con el test.
+                </span>
+              </label>
+
+              {/* ===============================
+                  BOTONES
+              =============================== */}
+
+              <button
+                type="submit"
+                className="pensar-register__submit"
+                disabled={
+                  isLoadingRegister ||
+                  !psychometricCourse
+                }
+              >
+                {isLoadingRegister
+                  ? "Registrando..."
+                  : "Registrarme y recibir enlace"}
+              </button>
+
+              <button
+                type="button"
+                className="pensar-register__back-email"
+                onClick={
+                  volverAValidar
+                }
+              >
+                Usar otro correo
+              </button>
+            </form>
+          )}
+        </div>
       </section>
     </main>
   );

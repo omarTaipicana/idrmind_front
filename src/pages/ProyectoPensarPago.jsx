@@ -18,9 +18,14 @@ import "./styles/ProyectoPensarPago.css";
 const API_URL =
   import.meta.env.VITE_API_URL;
 
+const PATH_COURSES =
+  "/courses";
+
 const ProyectoPensarPago = () => {
   const navigate = useNavigate();
-  const { token } = useParams();
+
+  const { token } =
+    useParams();
 
   /* =======================================================
      ESTADO
@@ -32,8 +37,23 @@ const ProyectoPensarPago = () => {
   ] = useState(null);
 
   const [
+    courses,
+    setCourses,
+  ] = useState([]);
+
+  const [
+    coursePrice,
+    setCoursePrice,
+  ] = useState(0);
+
+  const [
     isLoading,
     setIsLoading,
+  ] = useState(true);
+
+  const [
+    isLoadingCourses,
+    setIsLoadingCourses,
   ] = useState(true);
 
   const [
@@ -86,48 +106,131 @@ const ProyectoPensarPago = () => {
   ======================================================= */
 
   useEffect(() => {
-    const loadPaymentAccess = async () => {
-      if (!token) {
-        setAccessError({
-          message:
-            "No se recibió el token de pago.",
-        });
+    const loadPaymentAccess =
+      async () => {
+        if (!token) {
+          setAccessError({
+            message:
+              "No se recibió el token de pago.",
+          });
 
-        setIsLoading(false);
-        return;
-      }
+          setIsLoading(false);
 
-      setIsLoading(true);
-      setAccessError(null);
+          return;
+        }
 
-      try {
-        const response =
-          await axios.get(
-            `${API_URL}/psychometric/payment/${encodeURIComponent(
-              token
-            )}`
+        setIsLoading(true);
+
+        setAccessError(null);
+
+        try {
+          const response =
+            await axios.get(
+              `${API_URL}/psychometric/payment/${encodeURIComponent(
+                token
+              )}`
+            );
+
+          console.log(
+            "DATOS PAYMENT:",
+            response.data
           );
 
-        setAccessData(
-          response.data
-        );
-      } catch (error) {
-        console.error(
-          "Error cargando pago psicométrico:",
-          error.response?.data ||
-            error
-        );
+          setAccessData(
+            response.data
+          );
+        } catch (error) {
+          console.error(
+            "Error cargando pago psicométrico:",
+            error.response?.data ||
+              error
+          );
 
-        setAccessError(
-          error
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
+          setAccessError(
+            error
+          );
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
     loadPaymentAccess();
   }, [token]);
+
+  /* =======================================================
+     CARGAR CURSOS
+  ======================================================= */
+
+  useEffect(() => {
+    const loadCourses =
+      async () => {
+        setIsLoadingCourses(
+          true
+        );
+
+        try {
+          const response =
+            await axios.get(
+              `${API_URL}${PATH_COURSES}`
+            );
+
+          const data =
+            response.data;
+
+          let lista = [];
+
+          if (
+            Array.isArray(data)
+          ) {
+            lista = data;
+          } else if (
+            Array.isArray(
+              data?.data
+            )
+          ) {
+            lista =
+              data.data;
+          } else if (
+            Array.isArray(
+              data?.rows
+            )
+          ) {
+            lista =
+              data.rows;
+          } else if (
+            Array.isArray(
+              data?.results
+            )
+          ) {
+            lista =
+              data.results;
+          }
+
+          console.log(
+            "CURSOS CARGADOS:",
+            lista
+          );
+
+          setCourses(
+            lista
+          );
+        } catch (error) {
+          console.error(
+            "Error cargando cursos:",
+            error.response?.data ||
+              error
+          );
+
+          setCourses([]);
+        } finally {
+          setIsLoadingCourses(
+            false
+          );
+        }
+      };
+
+    loadCourses();
+  }, []);
 
   /* =======================================================
      DATOS NORMALIZADOS
@@ -149,6 +252,158 @@ const ProyectoPensarPago = () => {
     accessData?.payment ||
     null;
 
+  /* =======================================================
+     BUSCAR CURSO COMPLETO
+  ======================================================= */
+
+  const fullCourse =
+    useMemo(() => {
+      if (!course) {
+        return null;
+      }
+
+      /*
+       * Si aún no cargamos /courses,
+       * utilizamos directamente el curso
+       * del endpoint de payment.
+       */
+      if (!courses.length) {
+        return course;
+      }
+
+      /*
+       * Primero buscar por ID.
+       */
+      const courseById =
+        courses.find(
+          (item) =>
+            String(
+              item?.id || ""
+            ) ===
+            String(
+              course?.id || ""
+            )
+        );
+
+      if (courseById) {
+        /*
+         * Mezclamos ambos objetos.
+         *
+         * Esto permite conservar los datos
+         * del endpoint payment y agregar
+         * precio_emp del endpoint /courses.
+         */
+        return {
+          ...course,
+          ...courseById,
+        };
+      }
+
+      /*
+       * Segundo intento por sigla.
+       */
+      const courseBySigla =
+        courses.find(
+          (item) =>
+            String(
+              item?.sigla || ""
+            )
+              .trim()
+              .toLowerCase() ===
+            String(
+              course?.sigla || ""
+            )
+              .trim()
+              .toLowerCase()
+        );
+
+      if (courseBySigla) {
+        return {
+          ...course,
+          ...courseBySigla,
+        };
+      }
+
+      return course;
+    }, [
+      courses,
+      course,
+    ]);
+
+  /* =======================================================
+     PRECIO DEL CURSO
+  ======================================================= */
+
+  useEffect(() => {
+    if (!fullCourse) {
+      return;
+    }
+
+    /*
+     * El modelo Course utiliza precio_emp.
+     *
+     * También aceptamos precio si el endpoint
+     * de payment ya lo transforma.
+     */
+    const rawPrice =
+      fullCourse?.precio ??
+      fullCourse?.precio_emp ??
+      fullCourse?.precioCurso ??
+      fullCourse?.valor ??
+      0;
+
+    const precio =
+      Number(rawPrice);
+
+    console.log(
+      "CURSO COMPLETO:",
+      fullCourse
+    );
+
+    console.log(
+      "PRECIO ENCONTRADO:",
+      rawPrice
+    );
+
+    if (
+      Number.isNaN(precio) ||
+      precio <= 0
+    ) {
+      setCoursePrice(0);
+
+      return;
+    }
+
+    setCoursePrice(
+      precio
+    );
+
+    /*
+     * Colocar automáticamente
+     * el precio del curso.
+     *
+     * Solo si el usuario todavía
+     * no ha escrito ningún valor.
+     */
+    setValorDepositado(
+      (previous) => {
+        if (
+          previous !== "" &&
+          previous !== null &&
+          previous !== undefined
+        ) {
+          return previous;
+        }
+
+        return precio.toFixed(2);
+      }
+    );
+  }, [fullCourse]);
+
+  /* =======================================================
+     NOMBRE COMPLETO
+  ======================================================= */
+
   const nombreCompleto =
     useMemo(() => {
       return [
@@ -158,6 +413,63 @@ const ProyectoPensarPago = () => {
         .filter(Boolean)
         .join(" ");
     }, [user]);
+
+  /* =======================================================
+     SABER SI MODIFICÓ EL PRECIO
+  ======================================================= */
+
+  const priceWasModified =
+    useMemo(() => {
+      if (
+        !coursePrice ||
+        coursePrice <= 0
+      ) {
+        return false;
+      }
+
+      const current =
+        Number(
+          valorDepositado || 0
+        );
+
+      if (
+        Number.isNaN(current)
+      ) {
+        return true;
+      }
+
+      return (
+        current.toFixed(2) !==
+        Number(
+          coursePrice
+        ).toFixed(2)
+      );
+    }, [
+      valorDepositado,
+      coursePrice,
+    ]);
+
+  /* =======================================================
+     RESTAURAR PRECIO DEL CURSO
+  ======================================================= */
+
+  const restoreCoursePrice =
+    () => {
+      if (
+        !coursePrice ||
+        coursePrice <= 0
+      ) {
+        return;
+      }
+
+      setValorDepositado(
+        Number(
+          coursePrice
+        ).toFixed(2)
+      );
+
+      setFormError("");
+    };
 
   /* =======================================================
      VALIDAR ARCHIVO
@@ -173,6 +485,7 @@ const ProyectoPensarPago = () => {
 
     if (!file) {
       setComprobante(null);
+
       return;
     }
 
@@ -194,13 +507,16 @@ const ProyectoPensarPago = () => {
         "El comprobante debe ser JPG, PNG, WEBP o PDF."
       );
 
-      event.target.value = "";
+      event.target.value =
+        "";
 
       return;
     }
 
     const maxSize =
-      10 * 1024 * 1024;
+      10 *
+      1024 *
+      1024;
 
     if (
       file.size >
@@ -212,60 +528,63 @@ const ProyectoPensarPago = () => {
         "El comprobante no puede superar los 10 MB."
       );
 
-      event.target.value = "";
+      event.target.value =
+        "";
 
       return;
     }
 
-    setComprobante(file);
+    setComprobante(
+      file
+    );
   };
 
   /* =======================================================
      VALIDAR FORMULARIO
   ======================================================= */
 
-  const validateForm = () => {
-    if (!comprobante) {
-      setFormError(
-        "Debes seleccionar el comprobante de pago."
-      );
+  const validateForm =
+    () => {
+      if (!comprobante) {
+        setFormError(
+          "Debes seleccionar el comprobante de pago."
+        );
 
-      return false;
-    }
+        return false;
+      }
 
-    if (
-      valorDepositado ===
-        "" ||
-      valorDepositado ===
-        null ||
-      valorDepositado ===
-        undefined
-    ) {
-      setFormError(
-        "Ingresa el valor depositado."
-      );
+      if (
+        valorDepositado === "" ||
+        valorDepositado === null ||
+        valorDepositado === undefined
+      ) {
+        setFormError(
+          "Ingresa el valor depositado."
+        );
 
-      return false;
-    }
+        return false;
+      }
 
-    const valor =
-      Number(valorDepositado);
+      const valor =
+        Number(
+          valorDepositado
+        );
 
-    if (
-      Number.isNaN(valor) ||
-      valor <= 0
-    ) {
-      setFormError(
-        "El valor depositado no es válido."
-      );
+      if (
+        Number.isNaN(valor) ||
+        valor <= 0
+      ) {
+        setFormError(
+          "El valor depositado no es válido."
+        );
 
-      return false;
-    }
+        return false;
+      }
 
-    setFormError("");
+      setFormError("");
 
-    return true;
-  };
+      return true;
+    };
 
   /* =======================================================
      REGISTRAR PAGO
@@ -275,11 +594,16 @@ const ProyectoPensarPago = () => {
     async (event) => {
       event.preventDefault();
 
-      if (!validateForm()) {
+      if (
+        !validateForm()
+      ) {
         return;
       }
 
-      setIsSubmitting(true);
+      setIsSubmitting(
+        true
+      );
+
       setFormError("");
 
       try {
@@ -293,8 +617,25 @@ const ProyectoPensarPago = () => {
 
         formData.append(
           "valorDepositado",
-          valorDepositado
+          Number(
+            valorDepositado
+          ).toFixed(2)
         );
+
+        /*
+         * Precio original del curso.
+         */
+        if (
+          coursePrice >
+          0
+        ) {
+          formData.append(
+            "valorCurso",
+            Number(
+              coursePrice
+            ).toFixed(2)
+          );
+        }
 
         if (
           entidad.trim()
@@ -372,7 +713,9 @@ const ProyectoPensarPago = () => {
             "No se pudo registrar el comprobante."
         );
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(
+          false
+        );
       }
     };
 
@@ -381,7 +724,9 @@ const ProyectoPensarPago = () => {
   ======================================================= */
 
   if (isLoading) {
-    return <IsLoading />;
+    return (
+      <IsLoading />
+    );
   }
 
   /* =======================================================
@@ -406,7 +751,9 @@ const ProyectoPensarPago = () => {
             No se pudo abrir el pago
           </h1>
 
-          <p>{message}</p>
+          <p>
+            {message}
+          </p>
 
           <button
             type="button"
@@ -431,7 +778,8 @@ const ProyectoPensarPago = () => {
     payment?.alreadyRegistered
   ) {
     const verified =
-      payment?.verified === true;
+      payment?.verified ===
+      true;
 
     return (
       <main className="ppago">
@@ -451,8 +799,7 @@ const ProyectoPensarPago = () => {
           </h1>
 
           <p>
-            {successData
-              ?.message ||
+            {successData?.message ||
               (verified
                 ? "El pago de esta evaluación ya fue validado."
                 : "Ya existe un comprobante registrado para esta evaluación y está pendiente de validación.")}
@@ -468,7 +815,8 @@ const ProyectoPensarPago = () => {
                 <strong>
                   N.º{" "}
                   {
-                    evaluation.numeroEvaluacion
+                    evaluation
+                      .numeroEvaluacion
                   }
                 </strong>
               </div>
@@ -500,10 +848,8 @@ const ProyectoPensarPago = () => {
 
           {!verified && (
             <div className="ppago__notice ppago__notice--info">
-              Una vez validado el
-              pago recibirás un
-              correo con el enlace
-              para consultar tu
+              Una vez validado el pago recibirás un
+              correo con el enlace para consultar tu
               resultado.
             </div>
           )}
@@ -528,7 +874,8 @@ const ProyectoPensarPago = () => {
 
   return (
     <main className="ppago">
-      {isSubmitting && (
+      {(isSubmitting ||
+        isLoadingCourses) && (
         <IsLoading />
       )}
 
@@ -563,12 +910,12 @@ const ProyectoPensarPago = () => {
 
           <aside className="ppago__infoCard">
             <span className="ppago__eyebrow">
-              Información de la
-              evaluación
+              Información de la evaluación
             </span>
 
             <h2>
-              {course?.nombre ||
+              {fullCourse?.nombre ||
+                course?.nombre ||
                 "Test Psicotécnico"}
             </h2>
 
@@ -603,7 +950,8 @@ const ProyectoPensarPago = () => {
                 <strong>
                   N.º{" "}
                   {
-                    evaluation?.numeroEvaluacion
+                    evaluation
+                      ?.numeroEvaluacion
                   }
                 </strong>
               </div>
@@ -614,43 +962,62 @@ const ProyectoPensarPago = () => {
                 </span>
 
                 <strong>
-                  {course?.sigla ||
+                  {fullCourse?.sigla ||
+                    course?.sigla ||
                     "-"}
+                </strong>
+              </div>
+
+              <div className="ppago__infoItem ppago__infoItem--price">
+                <span>
+                  Valor del curso
+                </span>
+
+                <strong>
+                  {coursePrice > 0
+                    ? `$${Number(
+                        coursePrice
+                      ).toFixed(2)}`
+                    : "No registrado"}
                 </strong>
               </div>
             </div>
 
             <div className="ppago__notice">
-              No necesitas ingresar
-              nuevamente tu cédula,
-              correo ni datos de
-              inscripción. Este
-              enlace ya está asociado
-              a tu evaluación.
+              No necesitas ingresar nuevamente tu
+              cédula, correo ni datos de inscripción.
+              Este enlace ya está asociado a tu
+              evaluación.
             </div>
 
             <div className="ppago__process">
               <div>
-                <span>1</span>
+                <span>
+                  1
+                </span>
+
                 <p>
-                  Registra tu
-                  comprobante.
+                  Registra tu comprobante.
                 </p>
               </div>
 
               <div>
-                <span>2</span>
+                <span>
+                  2
+                </span>
+
                 <p>
-                  Nuestro equipo
-                  valida el pago.
+                  Nuestro equipo valida el pago.
                 </p>
               </div>
 
               <div>
-                <span>3</span>
+                <span>
+                  3
+                </span>
+
                 <p>
-                  Recibes por correo
-                  el acceso a tus
+                  Recibes por correo el acceso a tus
                   resultados.
                 </p>
               </div>
@@ -672,10 +1039,8 @@ const ProyectoPensarPago = () => {
               </h2>
 
               <p>
-                Completa la
-                información y adjunta
-                una imagen o PDF del
-                comprobante.
+                Completa la información y adjunta una
+                imagen o PDF del comprobante.
               </p>
             </div>
 
@@ -685,16 +1050,24 @@ const ProyectoPensarPago = () => {
                 handleSubmit
               }
             >
+              {/* =============================
+                  VALOR DEPOSITADO
+              ============================= */}
+
               <div className="ppago__field">
                 <label
                   htmlFor="valorDepositado"
                 >
                   Valor depositado
-                  <span>*</span>
+                  <span>
+                    *
+                  </span>
                 </label>
 
                 <div className="ppago__moneyInput">
-                  <span>$</span>
+                  <span>
+                    $
+                  </span>
 
                   <input
                     id="valorDepositado"
@@ -707,72 +1080,81 @@ const ProyectoPensarPago = () => {
                     }
                     onChange={(
                       event
-                    ) =>
+                    ) => {
                       setValorDepositado(
-                        event.target
-                          .value
-                      )
-                    }
-                  />
-                </div>
-              </div>
+                        event.target.value
+                      );
 
-              <div className="ppago__twoColumns">
-                {/* <div className="ppago__field">
-                  <label
-                    htmlFor="entidad"
-                  >
-                    Entidad
-                  </label>
-
-                  <input
-                    id="entidad"
-                    type="text"
-                    placeholder="Banco o cooperativa"
-                    value={entidad}
-                    onChange={(
-                      event
-                    ) =>
-                      setEntidad(
-                        event.target
-                          .value
-                      )
-                    }
+                      setFormError(
+                        ""
+                      );
+                    }}
                   />
                 </div>
 
-                <div className="ppago__field">
-                  <label
-                    htmlFor="idDeposito"
-                  >
-                    ID / referencia
-                  </label>
+                {/* ===========================
+                    VALOR ORIGINAL
+                =========================== */}
 
-                  <input
-                    id="idDeposito"
-                    type="text"
-                    placeholder="Número de operación"
-                    value={
-                      idDeposito
+                {coursePrice > 0 && (
+                  <div
+                    className={
+                      priceWasModified
+                        ? "ppago__priceReference ppago__priceReference--modified"
+                        : "ppago__priceReference"
                     }
-                    onChange={(
-                      event
-                    ) =>
-                      setIdDeposito(
-                        event.target
-                          .value
-                      )
-                    }
-                  />
-                </div> */}
+                  >
+                    <div className="ppago__priceReferenceInfo">
+                      <span>
+                        Valor registrado del curso
+                      </span>
+
+                      <strong>
+                        $
+                        {Number(
+                          coursePrice
+                        ).toFixed(2)}
+                      </strong>
+                    </div>
+
+                    {priceWasModified && (
+                      <button
+                        type="button"
+                        className="ppago__restorePrice"
+                        onClick={
+                          restoreCoursePrice
+                        }
+                      >
+                        <span>
+                          ↺
+                        </span>
+
+                        Usar valor del curso
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <small className="ppago__fieldHelp">
+                  El valor se carga automáticamente
+                  desde el curso. Puedes modificarlo si
+                  el valor realmente depositado fue
+                  diferente.
+                </small>
               </div>
+
+              {/* =============================
+                  COMPROBANTE
+              ============================= */}
 
               <div className="ppago__field">
                 <label
                   htmlFor="imagePago"
                 >
                   Comprobante
-                  <span>*</span>
+                  <span>
+                    *
+                  </span>
                 </label>
 
                 <label
@@ -820,30 +1202,9 @@ const ProyectoPensarPago = () => {
                 </label>
               </div>
 
-              {/* <div className="ppago__field">
-                <label
-                  htmlFor="observacion"
-                >
-                  Observación
-                </label>
-
-                <textarea
-                  id="observacion"
-                  rows="4"
-                  placeholder="Información adicional del pago (opcional)"
-                  value={
-                    observacion
-                  }
-                  onChange={(
-                    event
-                  ) =>
-                    setObservacion(
-                      event.target
-                        .value
-                    )
-                  }
-                />
-              </div> */}
+              {/* =============================
+                  ERROR
+              ============================= */}
 
               {formError && (
                 <div
@@ -853,6 +1214,10 @@ const ProyectoPensarPago = () => {
                   {formError}
                 </div>
               )}
+
+              {/* =============================
+                  SUBMIT
+              ============================= */}
 
               <button
                 type="submit"
@@ -867,8 +1232,7 @@ const ProyectoPensarPago = () => {
               </button>
 
               <p className="ppago__privacy">
-                El comprobante se
-                asociará únicamente a
+                El comprobante se asociará únicamente a
                 esta evaluación.
               </p>
             </form>
