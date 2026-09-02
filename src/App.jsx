@@ -83,6 +83,8 @@ import ProyectoPensarPago from "./pages/ProyectoPensarPago";
 import ProyectoPensarResultado from "./pages/ProyectoPensarResultado";
 import ProyectoPensarResultadoAdmin from "./pages/ProyectoPensarResultadoAdmin";
 import ProyectoPensarPdfPreview from "./pages/ProyectoPensarPdfPreview";
+import PsychometricCompanyResults from "./pages/PsychometricCompanyResults";
+import PsychometricCompanyParticipantResult from "./pages/PsychometricCompanyParticipantResult";
 
 /* =========================================================
    APP
@@ -108,6 +110,7 @@ const App = () => {
     "/test-psicotecnico/",
     "/pago-test/",
     "/resultado-psicometrico/",
+    "/resultados-empresa/",
   ];
 
   const isStandalonePublicPage =
@@ -348,6 +351,34 @@ const App = () => {
             path="/resultado-psicometrico/:token"
             element={
               <ProyectoPensarResultado />
+            }
+          />
+
+          {/* =============================================
+              PROYECTO PENSAR
+              RESULTADOS EMPRESARIALES PÚBLICOS
+              POR TOKEN DE EMPRESA
+          ============================================= */}
+
+          <Route
+            path="/resultados-empresa/:token"
+            element={
+              <PsychometricCompanyResults />
+            }
+          />
+
+          {/* =============================================
+              PROYECTO PENSAR
+              RESULTADO INDIVIDUAL DESDE EMPRESA
+
+              El backend valida que la evaluación
+              pertenezca a la empresa del token.
+          ============================================= */}
+
+          <Route
+            path="/resultados-empresa/:token/participante/:evaluationId"
+            element={
+              <PsychometricCompanyParticipantResult />
             }
           />
 

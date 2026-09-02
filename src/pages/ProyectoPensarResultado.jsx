@@ -191,6 +191,13 @@ const ProyectoPensarResultado = () => {
   const productivityIndex =
     result?.productivityIndex || {};
 
+  const recommendations =
+    Array.isArray(
+      result?.recommendations
+    )
+      ? result.recommendations
+      : [];
+
   /* =========================================================
      NOMBRE
   ========================================================= */
@@ -1209,15 +1216,6 @@ const ProyectoPensarResultado = () => {
                   "-"}
               </strong>
 
-              {negotiation
-                ?.quality && (
-                  <p>
-                    {
-                      negotiation
-                        .quality
-                    }
-                  </p>
-                )}
             </div>
           </div>
         </section>
@@ -1435,12 +1433,18 @@ const ProyectoPensarResultado = () => {
               </h2>
             </div>
 
-            <div
-              className={`ppr-productivity-grade ppr-productivity-grade--${String(
-                productivityIndex?.classification || "f"
-              ).toLowerCase()}`}
-            >
-              {productivityIndex?.classification || "-"}
+            <div className="ppr-productivity-grade-wrap">
+              <div
+                className={`ppr-productivity-grade ppr-productivity-grade--${String(
+                  productivityIndex?.classification || "f"
+                ).toLowerCase()}`}
+              >
+                {productivityIndex?.classification || "-"}
+              </div>
+
+              <span className="ppr-productivity-grade-name">
+                {productivityIndex?.classificationName || "-"}
+              </span>
             </div>
           </div>
 
@@ -1497,6 +1501,10 @@ const ProyectoPensarResultado = () => {
                 <strong>
                   {productivityIndex?.classification || "-"}
                 </strong>
+
+                <small className="ppr-productivity-classification-name">
+                  {productivityIndex?.classificationName || "-"}
+                </small>
               </div>
 
               <div>
@@ -1932,7 +1940,84 @@ const ProyectoPensarResultado = () => {
             </div>
           )}
 
-      
+          {/* =================================================
+              ENFOQUE DE MEJORA PERSONAL
+          ================================================= */}
+
+          {recommendations.length > 0 && (
+            <div className="ppr-improvement">
+              <div className="ppr-improvement__head">
+                <div className="ppr-improvement__icon">
+                  ↗
+                </div>
+
+                <div>
+                  <small>
+                    RECOMENDACIONES SEGÚN RESULTADOS
+                  </small>
+
+                  <h3>
+                    Enfoque de mejora personal
+                  </h3>
+
+                  <p>
+                    Esta sección identifica los resultados que
+                    originan cada recomendación y facilita el
+                    seguimiento administrativo del plan de mejora.
+                  </p>
+                </div>
+              </div>
+
+              <div className="ppr-improvement__table">
+                <div className="ppr-improvement__table-head">
+                  <span>
+                    HABILIDAD
+                  </span>
+
+                  <span>
+                    RESULTADO QUE ACTIVA LA RECOMENDACIÓN
+                  </span>
+
+                  <span>
+                    ENFOQUE RECOMENDADO
+                  </span>
+                </div>
+
+                <div className="ppr-improvement__grid">
+                  {recommendations.map(
+                    (
+                      item,
+                      index
+                    ) => (
+                      <article
+                        className="ppr-improvement__item"
+                        key={`${item?.skill || "recomendacion"}-${item?.value || index}-${index}`}
+                      >
+                        <div className="ppr-improvement__cell ppr-improvement__cell--skill">
+                          <strong>
+                            {item?.skill || "-"}
+                          </strong>
+                        </div>
+
+                        <div className="ppr-improvement__cell ppr-improvement__cell--result">
+                          <strong>
+                            {item?.value || "-"}
+                          </strong>
+                        </div>
+
+                        <div className="ppr-improvement__cell ppr-improvement__cell--recommendation">
+                          <p>
+                            {item?.recommendation || "-"}
+                          </p>
+                        </div>
+                      </article>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
         </section>
 
 

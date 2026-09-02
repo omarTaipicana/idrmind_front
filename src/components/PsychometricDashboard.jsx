@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
 
+import axios from "axios";
+
+import getConfigToken from "../services/getConfigToken";
+
 import {
     Bar,
     BarChart,
@@ -19,6 +23,9 @@ import {
 import usePsychometricDashboard from "../hooks/usePsychometricDashboard";
 
 import "./styles/PsychometricDashboard.css";
+
+const API_URL =
+    import.meta.env.VITE_API_URL;
 
 /* =========================================================
    PALETA GENERAL DE RESPALDO
@@ -129,6 +136,30 @@ const DIMENSION_COLORS = {
     },
 
     /* =========================
+       GÉNERO
+    ========================= */
+
+    genero: {
+        MASCULINO: "#175cd3",
+        HOMBRE: "#175cd3",
+        M: "#175cd3",
+        FEMENINO: "#d946ef",
+        MUJER: "#d946ef",
+        F: "#d946ef",
+    },
+
+    /* =========================
+       RANGO ETARIO
+    ========================= */
+
+    rangoEtario: {
+        GEN_0: "#28a7e8",
+        GEN_1: "#173a8a",
+        GEN_2: "#8b5cf6",
+        GEN_3: "#667085",
+    },
+
+    /* =========================
        PRODUCTIVIDAD
     ========================= */
 
@@ -147,6 +178,11 @@ const DIMENSION_COLORS = {
 ========================================================= */
 
 const LABELS = {
+    genero: "Género",
+
+    rangoEtario:
+        "Rango etario",
+
     animodo: "Animodo",
 
     comunicacion:
@@ -183,6 +219,32 @@ const normalizeKey = (
     )
         .trim()
         .toUpperCase();
+};
+
+const AGE_GROUP_LABELS = {
+    GEN_0: "Menor de 18",
+    GEN_1: "18 - 35",
+    GEN_2: "36 - 45",
+    GEN_3: "46 en adelante",
+};
+
+const getDisplayValue = (
+    dimension,
+    value,
+) => {
+    if (
+        dimension ===
+        "rangoEtario"
+    ) {
+        return (
+            AGE_GROUP_LABELS[
+            value
+            ] ||
+            value
+        );
+    }
+
+    return value;
 };
 
 const getDimensionColor = (
@@ -287,7 +349,7 @@ const DistributionTooltip = ({
     return (
         <div className="psyDashTooltip">
             <strong>
-                {item.key}
+                {item.label || item.key}
             </strong>
 
             <span>
@@ -322,6 +384,19 @@ const DistributionChart = ({
 
     subtitle = null,
 }) => {
+    const chartData =
+        (distribution || []).map(
+            (item) => ({
+                ...item,
+                displayKey:
+                    item.label ||
+                    getDisplayValue(
+                        filterKey,
+                        item.key,
+                    ),
+            }),
+        );
+
     const handleSelect = (
         value,
     ) => {
@@ -367,7 +442,10 @@ const DistributionChart = ({
                         }
                         title="Quitar filtro"
                     >
-                        {activeValue}
+                        {getDisplayValue(
+                            filterKey,
+                            activeValue,
+                        )}
                         {" ×"}
                     </button>
                 )}
@@ -391,10 +469,10 @@ const DistributionChart = ({
 
                                 <Pie
                                     data={
-                                        distribution
+                                        chartData
                                     }
                                     dataKey="cantidad"
-                                    nameKey="key"
+                                    nameKey="displayKey"
                                     innerRadius={52}
                                     outerRadius={88}
                                     paddingAngle={3}
@@ -412,7 +490,7 @@ const DistributionChart = ({
                                             "pointer",
                                     }}
                                 >
-                                    {distribution.map(
+                                    {chartData.map(
                                         (
                                             item,
                                             index,
@@ -449,14 +527,14 @@ const DistributionChart = ({
                         ) : (
                             <BarChart
                                 data={
-                                    distribution
+                                    chartData
                                 }
                                 margin={{
                                     top: 12,
                                     right: 12,
                                     left: 0,
                                     bottom:
-                                        distribution.length >
+                                        chartData.length >
                                             4
                                             ? 40
                                             : 10,
@@ -471,22 +549,22 @@ const DistributionChart = ({
                                 />
 
                                 <XAxis
-                                    dataKey="key"
+                                    dataKey="displayKey"
                                     interval={0}
                                     angle={
-                                        distribution.length >
+                                        chartData.length >
                                             4
                                             ? -18
                                             : 0
                                     }
                                     textAnchor={
-                                        distribution.length >
+                                        chartData.length >
                                             4
                                             ? "end"
                                             : "middle"
                                     }
                                     height={
-                                        distribution.length >
+                                        chartData.length >
                                             4
                                             ? 65
                                             : 35
@@ -515,7 +593,7 @@ const DistributionChart = ({
                                     ]}
                                     isAnimationActive
                                 >
-                                    {distribution.map(
+                                    {chartData.map(
                                         (
                                             item,
                                             index,
@@ -709,6 +787,12 @@ const PsychometricDashboard = () => {
 
         error,
 
+        companyAccess,
+        loadingCompanyAccess,
+        companyAccessAction,
+        companyAccessMessage,
+        companyAccessError,
+
         setParticipantPage,
 
         setParticipantLimit,
@@ -717,6 +801,10 @@ const PsychometricDashboard = () => {
 
         updateFilter,
 
+        setFilterValue,
+
+        selectCompanySection,
+
         clearFilters,
 
         loadDashboard,
@@ -724,6 +812,11 @@ const PsychometricDashboard = () => {
         loadParticipantDetail,
 
         closeParticipantDetail,
+
+        loadCompanyAccessStatus,
+        sendCompanyAccess,
+        setCompanyAccessActive,
+        clearCompanyAccessFeedback,
     } =
         usePsychometricDashboard();
 
@@ -734,6 +827,17 @@ const PsychometricDashboard = () => {
         useState(
             "general",
         );
+
+    const [
+        selectedCompanyId,
+        setSelectedCompanyId,
+    ] = useState("");
+
+
+    const [
+        generatingCompanyPdfId,
+        setGeneratingCompanyPdfId,
+    ] = useState("");
 
     /* =====================================================
        DATA
@@ -792,6 +896,8 @@ const PsychometricDashboard = () => {
         useMemo(
             () =>
                 [
+                    "genero",
+                    "rangoEtario",
                     "animodo",
                     "comunicacion",
                     "cerebro",
@@ -831,14 +937,229 @@ const PsychometricDashboard = () => {
     const handleCompanyFilter = (
         companyId,
     ) => {
-        updateFilter(
+        setFilterValue(
             "empresaId",
             companyId,
         );
 
-        setView(
-            "general",
+        setSelectedCompanyId(
+            companyId,
         );
+
+        setView(
+            "resultados",
+        );
+    };
+
+    const handleCompanyOpen = async (
+        companyId,
+    ) => {
+        setSelectedCompanyId(
+            companyId,
+        );
+
+        clearCompanyAccessFeedback();
+
+        try {
+            await loadCompanyAccessStatus(
+                companyId,
+            );
+        } catch {
+            // El hook ya administra el mensaje de error.
+        }
+    };
+
+    const handleCompanyClose = () => {
+        setSelectedCompanyId(
+            "",
+        );
+
+        clearCompanyAccessFeedback();
+    };
+
+    const handleSendCompanyAccess = async (
+        companyId,
+    ) => {
+        if (!companyId) {
+            return;
+        }
+
+        const confirmed =
+            window.confirm(
+                "Se generará un nuevo enlace de acceso y se enviará al correo registrado de la empresa. Los enlaces anteriores quedarán deshabilitados. ¿Deseas continuar?",
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            await sendCompanyAccess(
+                companyId,
+            );
+        } catch {
+            // El hook ya administra el mensaje de error.
+        }
+    };
+
+    const handleToggleCompanyAccess = async (
+        companyId,
+    ) => {
+        if (!companyId) {
+            return;
+        }
+
+        const accessData =
+            companyAccess[
+                companyId
+            ]?.access;
+
+        if (!accessData?.exists) {
+            window.alert(
+                "La empresa todavía no tiene un enlace generado. Primero utiliza Enviar acceso.",
+            );
+
+            return;
+        }
+
+        const nextActive =
+            !accessData.activo;
+
+        const confirmed =
+            window.confirm(
+                nextActive
+                    ? "¿Deseas activar nuevamente el acceso de esta empresa?"
+                    : "¿Deseas desactivar el acceso de esta empresa? El enlace dejará de funcionar inmediatamente.",
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            await setCompanyAccessActive(
+                companyId,
+                nextActive,
+            );
+        } catch {
+            // El hook ya administra el mensaje de error.
+        }
+    };
+
+    /* =====================================================
+       GENERAR INFORME EMPRESARIAL PDF
+
+       Utiliza exactamente el mismo generador empresarial
+       conectado en el backend administrativo:
+
+       GET /psychometric/dashboard/organizations/:empresaId/pdf
+    ===================================================== */
+
+    const handleGenerateCompanyPdf = async (
+        companyId,
+    ) => {
+        if (!companyId) {
+            return;
+        }
+
+        if (
+            generatingCompanyPdfId
+        ) {
+            return;
+        }
+
+        setGeneratingCompanyPdfId(
+            companyId,
+        );
+
+        try {
+            const response =
+                await axios.get(
+                    `${API_URL}/psychometric/dashboard/organizations/${companyId}/pdf`,
+                    {
+                        ...getConfigToken(),
+
+                        responseType:
+                            "blob",
+                    },
+                );
+
+            const pdfBlob =
+                new Blob(
+                    [
+                        response.data,
+                    ],
+                    {
+                        type:
+                            "application/pdf",
+                    },
+                );
+
+            const pdfUrl =
+                window.URL.createObjectURL(
+                    pdfBlob,
+                );
+
+            const pdfWindow =
+                window.open(
+                    pdfUrl,
+                    "_blank",
+                    "noopener,noreferrer",
+                );
+
+            /*
+             * Algunos navegadores pueden bloquear window.open
+             * si la respuesta tardó. En ese caso se descarga
+             * directamente el mismo PDF.
+             */
+            if (!pdfWindow) {
+                const link =
+                    document.createElement(
+                        "a",
+                    );
+
+                link.href =
+                    pdfUrl;
+
+                link.download =
+                    `informe-empresarial-${companyId}.pdf`;
+
+                document.body.appendChild(
+                    link,
+                );
+
+                link.click();
+
+                link.remove();
+            }
+
+            window.setTimeout(
+                () => {
+                    window.URL.revokeObjectURL(
+                        pdfUrl,
+                    );
+                },
+                60000,
+            );
+        } catch (error) {
+            console.error(
+                "Error generando informe empresarial:",
+                error,
+            );
+
+            const message =
+                error?.response?.data
+                    ?.message ||
+                "No fue posible generar el informe empresarial.";
+
+            window.alert(
+                message,
+            );
+        } finally {
+            setGeneratingCompanyPdfId(
+                "",
+            );
+        }
     };
 
     /* =====================================================
@@ -849,35 +1170,58 @@ const PsychometricDashboard = () => {
         companyId,
         sectionId,
     ) => {
-        if (
-            filters.empresaId !==
-            companyId
-        ) {
-            updateFilter(
-                "empresaId",
-                companyId,
-            );
+        selectCompanySection(
+            companyId,
+            sectionId,
+        );
 
-            window.setTimeout(
-                () => {
-                    updateFilter(
-                        "seccionId",
-                        sectionId,
-                    );
-                },
-                50,
-            );
-        } else {
-            updateFilter(
-                "seccionId",
-                sectionId,
-            );
-        }
+        setSelectedCompanyId(
+            companyId,
+        );
 
         setView(
-            "general",
+            "resultados",
         );
     };
+
+    const selectedCompany =
+        useMemo(
+            () =>
+                (
+                    organizations
+                        ?.companies ||
+                    []
+                ).find(
+                    (company) =>
+                        String(
+                            company.id,
+                        ) ===
+                        String(
+                            selectedCompanyId,
+                        ),
+                ) ||
+                null,
+            [
+                organizations,
+                selectedCompanyId,
+            ],
+        );
+
+
+    const selectedCompanyAccess =
+        selectedCompanyId
+            ? companyAccess[
+                selectedCompanyId
+            ]?.access
+            : null;
+
+    const selectedCompanyActionBusy =
+        Boolean(
+            selectedCompanyId &&
+            companyAccessAction?.endsWith(
+                `:${selectedCompanyId}`,
+            ),
+        );
 
     return (
         <section className="psyDash">
@@ -1275,9 +1619,12 @@ const PsychometricDashboard = () => {
 
                                     <strong>
                                         {
-                                            filters[
-                                            key
-                                            ]
+                                            getDisplayValue(
+                                                key,
+                                                filters[
+                                                key
+                                                ],
+                                            )
                                         }
                                     </strong>
 
@@ -1742,6 +2089,45 @@ const PsychometricDashboard = () => {
                         "resultados" && (
                             <>
 
+                                <section className="psyDashResultsGrid psyDashResultsGrid--demographic">
+
+                                    <DistributionChart
+                                        title="Género"
+                                        subtitle="Distribución de participantes por género."
+                                        filterKey="genero"
+                                        distribution={
+                                            analytical
+                                                .genero
+                                                ?.distribution
+                                        }
+                                        activeValue={
+                                            filters.genero
+                                        }
+                                        onSelect={
+                                            updateFilter
+                                        }
+                                        type="pie"
+                                    />
+
+                                    <DistributionChart
+                                        title="Rango etario"
+                                        subtitle="Edad calculada a la fecha de finalización de la evaluación."
+                                        filterKey="rangoEtario"
+                                        distribution={
+                                            analytical
+                                                .rangoEtario
+                                                ?.distribution
+                                        }
+                                        activeValue={
+                                            filters.rangoEtario
+                                        }
+                                        onSelect={
+                                            updateFilter
+                                        }
+                                    />
+
+                                </section>
+
                                 <section className="psyDashResultsGrid">
 
                                     <DistributionChart
@@ -2014,6 +2400,239 @@ const PsychometricDashboard = () => {
                         "organizaciones" && (
                             <section className="psyDashOrganizations">
 
+                                {(companyAccessMessage ||
+                                    companyAccessError) && (
+                                        <div
+                                            className={
+                                                companyAccessError
+                                                    ? "psyDashCompanyFeedback psyDashCompanyFeedback--error"
+                                                    : "psyDashCompanyFeedback psyDashCompanyFeedback--success"
+                                            }
+                                        >
+                                            {companyAccessError ||
+                                                companyAccessMessage}
+                                        </div>
+                                    )}
+
+                                {selectedCompany && (
+                                    <article className="psyDashCompany psyDashCompany--selected">
+                                        <header>
+                                            <div>
+                                                <span className="psyDashEyebrow">
+                                                    Vista empresarial
+                                                </span>
+
+                                                <h3>
+                                                    {selectedCompany.nombre}
+                                                </h3>
+
+                                                <p>
+                                                    {selectedCompany.totalResultados} resultados
+                                                    {" · "}
+                                                    {selectedCompany.secciones?.length || 0} secciones
+                                                </p>
+
+                                                <div className="psyDashAccessMeta">
+                                                    {loadingCompanyAccess ? (
+                                                        <span className="psyDashAccessBadge psyDashAccessBadge--loading">
+                                                            Consultando acceso...
+                                                        </span>
+                                                    ) : selectedCompanyAccess?.exists ? (
+                                                        <>
+                                                            <span
+                                                                className={
+                                                                    selectedCompanyAccess.activo
+                                                                        ? "psyDashAccessBadge psyDashAccessBadge--active"
+                                                                        : "psyDashAccessBadge psyDashAccessBadge--inactive"
+                                                                }
+                                                            >
+                                                                {selectedCompanyAccess.activo
+                                                                    ? "ACCESO ACTIVO"
+                                                                    : "ACCESO INACTIVO"}
+                                                            </span>
+
+                                                            {selectedCompanyAccess.ultimoEnvioAt && (
+                                                                <small>
+                                                                    Último envío:{" "}
+                                                                    {formatDate(
+                                                                        selectedCompanyAccess.ultimoEnvioAt,
+                                                                    )}
+                                                                </small>
+                                                            )}
+
+                                                            <small>
+                                                                Accesos:{" "}
+                                                                {selectedCompanyAccess.accessCount || 0}
+                                                            </small>
+                                                        </>
+                                                    ) : (
+                                                        <span className="psyDashAccessBadge psyDashAccessBadge--none">
+                                                            SIN ACCESO GENERADO
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="psyDashCompanyActions">
+                                                <button
+                                                    type="button"
+                                                    className="psyDashBtn psyDashBtn--small"
+                                                    onClick={() =>
+                                                        handleCompanyFilter(
+                                                            selectedCompany.id,
+                                                        )
+                                                    }
+                                                >
+                                                    Ver resultados
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="psyDashBtn psyDashBtn--outline psyDashBtn--small"
+                                                    disabled={
+                                                        selectedCompanyActionBusy
+                                                    }
+                                                    onClick={() =>
+                                                        handleSendCompanyAccess(
+                                                            selectedCompany.id,
+                                                        )
+                                                    }
+                                                    title="Generar un nuevo enlace y enviarlo al correo registrado de la empresa."
+                                                >
+                                                    {companyAccessAction ===
+                                                        `send:${selectedCompany.id}`
+                                                        ? "Enviando..."
+                                                        : selectedCompanyAccess?.exists
+                                                            ? "Reenviar acceso"
+                                                            : "Enviar acceso"}
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className={
+                                                        selectedCompanyAccess?.activo
+                                                            ? "psyDashBtn psyDashBtn--dangerOutline psyDashBtn--small"
+                                                            : "psyDashBtn psyDashBtn--successOutline psyDashBtn--small"
+                                                    }
+                                                    disabled={
+                                                        selectedCompanyActionBusy ||
+                                                        loadingCompanyAccess ||
+                                                        !selectedCompanyAccess?.exists
+                                                    }
+                                                    onClick={() =>
+                                                        handleToggleCompanyAccess(
+                                                            selectedCompany.id,
+                                                        )
+                                                    }
+                                                    title={
+                                                        selectedCompanyAccess?.exists
+                                                            ? selectedCompanyAccess.activo
+                                                                ? "Desactivar inmediatamente el enlace de la empresa."
+                                                                : "Reactivar el enlace empresarial."
+                                                            : "Primero debes generar y enviar un acceso."
+                                                    }
+                                                >
+                                                    {companyAccessAction ===
+                                                        `deactivate:${selectedCompany.id}`
+                                                        ? "Desactivando..."
+                                                        : companyAccessAction ===
+                                                            `activate:${selectedCompany.id}`
+                                                            ? "Activando..."
+                                                            : selectedCompanyAccess?.activo
+                                                                ? "Desactivar acceso"
+                                                                : "Activar acceso"}
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="psyDashBtn psyDashBtn--outline psyDashBtn--small"
+                                                    disabled={
+                                                        generatingCompanyPdfId ===
+                                                        selectedCompany.id
+                                                    }
+                                                    onClick={() =>
+                                                        handleGenerateCompanyPdf(
+                                                            selectedCompany.id,
+                                                        )
+                                                    }
+                                                    title="Generar el informe empresarial completo en PDF."
+                                                >
+                                                    {generatingCompanyPdfId ===
+                                                        selectedCompany.id
+                                                        ? "Generando PDF..."
+                                                        : "Generar informe"}
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="psyDashCompanyClose"
+                                                    onClick={
+                                                        handleCompanyClose
+                                                    }
+                                                >
+                                                    Cerrar
+                                                </button>
+                                            </div>
+                                        </header>
+
+                                        <section className="psyDashCompanyResults">
+                                            <DistributionChart
+                                                title="Género"
+                                                filterKey="genero"
+                                                distribution={
+                                                    selectedCompany
+                                                        .analytics
+                                                        ?.genero
+                                                        ?.distribution
+                                                }
+                                                activeValue=""
+                                                onSelect={() => { }}
+                                                type="pie"
+                                            />
+
+                                            <DistributionChart
+                                                title="Rango etario"
+                                                filterKey="rangoEtario"
+                                                distribution={
+                                                    selectedCompany
+                                                        .analytics
+                                                        ?.rangoEtario
+                                                        ?.distribution
+                                                }
+                                                activeValue=""
+                                                onSelect={() => { }}
+                                            />
+
+                                            <DistributionChart
+                                                title="Comunicación"
+                                                filterKey="comunicacion"
+                                                distribution={
+                                                    selectedCompany
+                                                        .analytics
+                                                        ?.comunicacion
+                                                        ?.distribution
+                                                }
+                                                activeValue=""
+                                                onSelect={() => { }}
+                                                type="pie"
+                                            />
+
+                                            <DistributionChart
+                                                title="Productividad"
+                                                filterKey="productividad"
+                                                distribution={
+                                                    selectedCompany
+                                                        .analytics
+                                                        ?.productividad
+                                                        ?.distribution
+                                                }
+                                                activeValue=""
+                                                onSelect={() => { }}
+                                            />
+                                        </section>
+                                    </article>
+                                )}
+
                                 {(
                                     organizations
                                         ?.companies ||
@@ -2073,17 +2692,75 @@ const PsychometricDashboard = () => {
                                                         </p>
                                                     </div>
 
-                                                    <button
-                                                        type="button"
-                                                        className="psyDashBtn psyDashBtn--small"
-                                                        onClick={() =>
-                                                            handleCompanyFilter(
-                                                                company.id,
-                                                            )
-                                                        }
-                                                    >
-                                                        Filtrar empresa
-                                                    </button>
+                                                    <div className="psyDashCompanyActions">
+                                                        <button
+                                                            type="button"
+                                                            className="psyDashBtn psyDashBtn--small"
+                                                            onClick={() =>
+                                                                handleCompanyOpen(
+                                                                    company.id,
+                                                                )
+                                                            }
+                                                        >
+                                                            Ver empresa
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            className="psyDashCompanyIconBtn"
+                                                            disabled={
+                                                                Boolean(
+                                                                    companyAccessAction?.endsWith(
+                                                                        `:${company.id}`,
+                                                                    ),
+                                                                )
+                                                            }
+                                                            onClick={() =>
+                                                                handleSendCompanyAccess(
+                                                                    company.id,
+                                                                )
+                                                            }
+                                                            title="Generar un nuevo enlace y enviarlo al correo de la empresa."
+                                                            aria-label="Enviar acceso por correo"
+                                                        >
+                                                            ✉
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            className="psyDashCompanyIconBtn"
+                                                            onClick={() =>
+                                                                handleCompanyOpen(
+                                                                    company.id,
+                                                                )
+                                                            }
+                                                            title="Abrir empresa para consultar, activar o desactivar su acceso."
+                                                            aria-label="Consultar estado del acceso"
+                                                        >
+                                                            ◉
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            className="psyDashCompanyIconBtn"
+                                                            disabled={
+                                                                generatingCompanyPdfId ===
+                                                                company.id
+                                                            }
+                                                            onClick={() =>
+                                                                handleGenerateCompanyPdf(
+                                                                    company.id,
+                                                                )
+                                                            }
+                                                            title="Generar el mismo informe empresarial completo en PDF."
+                                                            aria-label="Generar informe empresarial"
+                                                        >
+                                                            {generatingCompanyPdfId ===
+                                                                company.id
+                                                                ? "..."
+                                                                : "PDF"}
+                                                        </button>
+                                                    </div>
 
                                                 </header>
 
@@ -2315,6 +2992,14 @@ const PsychometricDashboard = () => {
                                                 </th>
 
                                                 <th>
+                                                    Género
+                                                </th>
+
+                                                <th>
+                                                    Rango etario
+                                                </th>
+
+                                                <th>
                                                     Animodo
                                                 </th>
 
@@ -2410,6 +3095,52 @@ const PsychometricDashboard = () => {
                                                                     "—"
                                                                 }
                                                             </small>
+                                                        </td>
+
+                                                        <td>
+                                                            <strong>
+                                                                {
+                                                                    row
+                                                                        .participante
+                                                                        ?.genre ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+                                                        </td>
+
+                                                        <td>
+                                                            <strong>
+                                                                {
+                                                                    row
+                                                                        .participante
+                                                                        ?.rangoEtarioLabel ||
+                                                                    getDisplayValue(
+                                                                        "rangoEtario",
+                                                                        row
+                                                                            .participante
+                                                                            ?.rangoEtario,
+                                                                    ) ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+
+                                                            {row
+                                                                .participante
+                                                                ?.edad !==
+                                                                null &&
+                                                                row
+                                                                    .participante
+                                                                    ?.edad !==
+                                                                undefined && (
+                                                                    <small>
+                                                                        {
+                                                                            row
+                                                                                .participante
+                                                                                ?.edad
+                                                                        }{" "}
+                                                                        años
+                                                                    </small>
+                                                                )}
                                                         </td>
 
                                                         <td>
@@ -2587,6 +3318,8 @@ const PsychometricDashboard = () => {
                                                                     href={`#/resultado-psicometrico-admin/${row.evaluationId}`}
                                                                     className="psyDashResultBtn"
                                                                     title="Ver resultado completo"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
                                                                 >
                                                                     Ver resultado
                                                                 </a>
@@ -2607,7 +3340,7 @@ const PsychometricDashboard = () => {
                                                     <tr>
                                                         <td
                                                             colSpan={
-                                                                11
+                                                                13
                                                             }
                                                         >
                                                             <div className="psyDashEmpty">
@@ -2745,9 +3478,9 @@ const PsychometricDashboard = () => {
                                             ?.participant
                                             ?.user
                                             ? `${participantDetail
-                                                    .participant
-                                                    .user
-                                                    .firstName ||
+                                                .participant
+                                                .user
+                                                .firstName ||
                                                 ""
                                                 } ${participantDetail
                                                     .participant
@@ -2834,6 +3567,45 @@ const PsychometricDashboard = () => {
                                                     ?.participant
                                                     ?.seccion
                                                     ?.nombre ||
+                                                    "—"}
+                                            </strong>
+                                        </div>
+
+                                        <div>
+                                            <span>
+                                                Género
+                                            </span>
+
+                                            <strong>
+                                                {participantDetail
+                                                    ?.participant
+                                                    ?.demografia
+                                                    ?.genero ||
+                                                    participantDetail
+                                                        ?.participant
+                                                        ?.user
+                                                        ?.genre ||
+                                                    "—"}
+                                            </strong>
+                                        </div>
+
+                                        <div>
+                                            <span>
+                                                Rango etario
+                                            </span>
+
+                                            <strong>
+                                                {participantDetail
+                                                    ?.participant
+                                                    ?.demografia
+                                                    ?.rangoEtarioLabel ||
+                                                    getDisplayValue(
+                                                        "rangoEtario",
+                                                        participantDetail
+                                                            ?.participant
+                                                            ?.demografia
+                                                            ?.rangoEtario,
+                                                    ) ||
                                                     "—"}
                                             </strong>
                                         </div>

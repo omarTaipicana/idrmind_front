@@ -202,6 +202,13 @@ const ProyectoPensarResultadoAdmin = () => {
   const productivityIndex =
     result?.productivityIndex || {};
 
+  const recommendations =
+    Array.isArray(
+      result?.recommendations
+    )
+      ? result.recommendations
+      : [];
+
   /* =========================================================
      NOMBRE
   ========================================================= */
@@ -838,6 +845,12 @@ const ProyectoPensarResultadoAdmin = () => {
                   {chestColor}
                 </b>
               </small>
+
+              {communication?.extraordinario && (
+                <span className="ppr-special-alert ppr-special-alert--extraordinario">
+                  ✦ EXTRAORDINARIO
+                </span>
+              )}
             </article>
 
             <article className="ppr-diagnostic-item">
@@ -855,6 +868,12 @@ const ProyectoPensarResultadoAdmin = () => {
                   {headColor}
                 </b>
               </small>
+
+              {brain?.alerta && (
+                <span className="ppr-special-alert ppr-special-alert--warning">
+                  ⚠ ALERTA DE EMPATE
+                </span>
+              )}
             </article>
 
             <article className="ppr-diagnostic-item">
@@ -892,6 +911,12 @@ const ProyectoPensarResultadoAdmin = () => {
                 Canal de aprendizaje
 
               </small>
+
+              {vak?.extraordinario && (
+                <span className="ppr-special-alert ppr-special-alert--extraordinario">
+                  ✦ EXTRAORDINARIO
+                </span>
+              )}
             </article>
 
             <article className="ppr-diagnostic-item">
@@ -912,6 +937,12 @@ const ProyectoPensarResultadoAdmin = () => {
                   /4
                 </b>
               </small>
+
+              {persistence?.alerta && (
+                <span className="ppr-special-alert ppr-special-alert--danger">
+                  ⚠ ALERTA
+                </span>
+              )}
             </article>
           </div>
         </section>
@@ -1099,6 +1130,12 @@ const ProyectoPensarResultadoAdmin = () => {
                 {chestColor}
               </strong>
 
+              {communication?.extraordinario && (
+                <span className="ppr-special-alert ppr-special-alert--extraordinario">
+                  ✦ EXTRAORDINARIO
+                </span>
+              )}
+
               <div className="ppr-result-panel__divider" />
 
               <span>
@@ -1246,6 +1283,12 @@ const ProyectoPensarResultadoAdmin = () => {
                 {headColor}
               </b>
             </small>
+
+            {brain?.alerta && (
+              <span className="ppr-special-alert ppr-special-alert--warning">
+                ⚠ ALERTA DE EMPATE
+              </span>
+            )}
           </div>
         </section>
 
@@ -1300,15 +1343,6 @@ const ProyectoPensarResultadoAdmin = () => {
                   "-"}
               </strong>
 
-              {negotiation
-                ?.quality && (
-                  <p>
-                    {
-                      negotiation
-                        .quality
-                    }
-                  </p>
-                )}
             </div>
           </div>
         </section>
@@ -1405,6 +1439,12 @@ const ProyectoPensarResultadoAdmin = () => {
                 vak?.dominantStyle,
               )}
             </strong>
+
+            {vak?.extraordinario && (
+              <span className="ppr-special-alert ppr-special-alert--extraordinario">
+                ✦ EXTRAORDINARIO
+              </span>
+            )}
           </div>
         </section>
 
@@ -1507,6 +1547,12 @@ const ProyectoPensarResultadoAdmin = () => {
                   "-"}
               </b>
             </small>
+
+            {persistence?.alerta && (
+              <span className="ppr-special-alert ppr-special-alert--danger">
+                ⚠ ALERTA: TODOS LOS INDICADORES EN 0
+              </span>
+            )}
           </div>
         </section>
 
@@ -1526,12 +1572,18 @@ const ProyectoPensarResultadoAdmin = () => {
               </h2>
             </div>
 
-            <div
-              className={`ppr-productivity-grade ppr-productivity-grade--${String(
-                productivityIndex?.classification || "f"
-              ).toLowerCase()}`}
-            >
-              {productivityIndex?.classification || "-"}
+            <div className="ppr-productivity-grade-wrap">
+              <div
+                className={`ppr-productivity-grade ppr-productivity-grade--${String(
+                  productivityIndex?.classification || "f"
+                ).toLowerCase()}`}
+              >
+                {productivityIndex?.classification || "-"}
+              </div>
+
+              <span className="ppr-productivity-grade-name">
+                {productivityIndex?.classificationName || "-"}
+              </span>
             </div>
           </div>
 
@@ -1588,6 +1640,10 @@ const ProyectoPensarResultadoAdmin = () => {
                 <strong>
                   {productivityIndex?.classification || "-"}
                 </strong>
+
+                <small className="ppr-productivity-classification-name">
+                  {productivityIndex?.classificationName || "-"}
+                </small>
               </div>
 
               <div>
@@ -2024,6 +2080,85 @@ const ProyectoPensarResultadoAdmin = () => {
           )}
 
       
+
+          {/* =================================================
+              ENFOQUE DE MEJORA PERSONAL
+          ================================================= */}
+
+          {recommendations.length > 0 && (
+            <div className="ppr-improvement">
+              <div className="ppr-improvement__head">
+                <div className="ppr-improvement__icon">
+                  ↗
+                </div>
+
+                <div>
+                  <small>
+                    RECOMENDACIONES SEGÚN RESULTADOS
+                  </small>
+
+                  <h3>
+                    Enfoque de mejora personal
+                  </h3>
+
+                  <p>
+                    Esta sección identifica los resultados que
+                    originan cada recomendación y facilita el
+                    seguimiento administrativo del plan de mejora.
+                  </p>
+                </div>
+              </div>
+
+              <div className="ppr-improvement__table">
+                <div className="ppr-improvement__table-head">
+                  <span>
+                    HABILIDAD
+                  </span>
+
+                  <span>
+                    RESULTADO QUE ACTIVA LA RECOMENDACIÓN
+                  </span>
+
+                  <span>
+                    ENFOQUE RECOMENDADO
+                  </span>
+                </div>
+
+                <div className="ppr-improvement__grid">
+                  {recommendations.map(
+                    (
+                      item,
+                      index
+                    ) => (
+                      <article
+                        className="ppr-improvement__item"
+                        key={`${item?.skill || "recomendacion"}-${item?.value || index}-${index}`}
+                      >
+                        <div className="ppr-improvement__cell ppr-improvement__cell--skill">
+                          <strong>
+                            {item?.skill || "-"}
+                          </strong>
+                        </div>
+
+                        <div className="ppr-improvement__cell ppr-improvement__cell--result">
+                          <strong>
+                            {item?.value || "-"}
+                          </strong>
+                        </div>
+
+                        <div className="ppr-improvement__cell ppr-improvement__cell--recommendation">
+                          <p>
+                            {item?.recommendation || "-"}
+                          </p>
+                        </div>
+                      </article>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
         </section>
 
 

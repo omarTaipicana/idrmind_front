@@ -2064,3 +2064,197 @@
       100%;
   }
 }
+
+/* =========================================================
+   DEMOGRAFÍA / EMPRESA SELECCIONADA
+========================================================= */
+
+.psyDashResultsGrid--demographic {
+  margin-bottom: 14px;
+}
+
+.psyDashCompanyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.psyDashBtn--outline {
+  border: 1px solid #cbd8ea;
+  background: #fff;
+  color: var(--psy-blue);
+}
+
+.psyDashBtn--outline:hover:not(:disabled) {
+  background: #eef4ff;
+}
+
+.psyDashCompanyIconBtn,
+.psyDashCompanyClose {
+  min-height: 36px;
+  border: 1px solid #d4deeb;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #fff;
+  color: #173a8a;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.psyDashCompanyIconBtn:disabled {
+  opacity: 0.46;
+  cursor: not-allowed;
+}
+
+.psyDashCompanyClose:hover {
+  background: #f4f7fc;
+}
+
+.psyDashCompany--selected {
+  border-color: #9bb4df;
+  background:
+    linear-gradient(
+      180deg,
+      #f7faff 0%,
+      #ffffff 100%
+    );
+  box-shadow:
+    0 12px 32px
+    rgba(23, 58, 138, 0.08);
+}
+
+.psyDashCompanyResults {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.psyDashCompanyResults .psyDashPanel {
+  box-shadow: none;
+}
+
+@media (max-width: 980px) {
+  .psyDashCompanyResults {
+    grid-template-columns: 1fr;
+  }
+
+  .psyDashCompanyActions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .psyDashCompanyActions {
+    width: 100%;
+  }
+
+  .psyDashCompanyActions .psyDashBtn,
+  .psyDashCompanyIconBtn,
+  .psyDashCompanyClose {
+    flex: 1 1 auto;
+  }
+}
+
+
+/* =========================================================
+   ACCESO EMPRESARIAL
+========================================================= */
+
+.psyDashCompanyFeedback {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.psyDashCompanyFeedback--success {
+  border-color: #a6e2c6;
+  background: #ecfdf3;
+  color: #067647;
+}
+
+.psyDashCompanyFeedback--error {
+  border-color: #f3c4bf;
+  background: #fff1ef;
+  color: #9d251c;
+}
+
+.psyDashAccessMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.psyDashAccessMeta small {
+  color: #7b879b;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.psyDashAccessBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 27px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.035em;
+}
+
+.psyDashAccessBadge--active {
+  border-color: #a6e2c6;
+  background: #ecfdf3;
+  color: #067647;
+}
+
+.psyDashAccessBadge--inactive {
+  border-color: #f3c4bf;
+  background: #fff1ef;
+  color: #b42318;
+}
+
+.psyDashAccessBadge--none {
+  border-color: #d8e0eb;
+  background: #f5f7fa;
+  color: #667085;
+}
+
+.psyDashAccessBadge--loading {
+  border-color: #cbd8ea;
+  background: #eef4ff;
+  color: #173a8a;
+}
+
+.psyDashBtn--dangerOutline {
+  border: 1px solid #f0b7b1;
+  background: #fff;
+  color: #b42318;
+}
+
+.psyDashBtn--dangerOutline:hover:not(:disabled) {
+  background: #fff1ef;
+}
+
+.psyDashBtn--successOutline {
+  border: 1px solid #9edbbd;
+  background: #fff;
+  color: #067647;
+}
+
+.psyDashBtn--successOutline:hover:not(:disabled) {
+  background: #ecfdf3;
+}
