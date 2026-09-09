@@ -7,11 +7,14 @@ import React, {
   useState,
 } from "react";
 
+import axios from "axios";
+
 import "./styles/UserEdit.css";
 
 import useCrud from "../hooks/useCrud";
 import IsLoading from "../components/shared/isLoading";
 import useAuth from "../hooks/useAuth";
+import getConfigToken from "../services/getConfigToken";
 
 import { useDispatch } from "react-redux";
 import { showAlert } from "../store/states/alert.slice";
@@ -22,6 +25,7 @@ const PATH_VARIABLES = "/variables";
 const PATH_EMPRESAS = "/empresas";
 const PATH_SECTOR = "/sector";
 const PATH_EMPRESA_SECCIONES = "/empresa-secciones";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 const initialEmpresaForm = {
@@ -107,6 +111,11 @@ const UserEdit = () => {
 
   const [showDeleteEmpresa, setShowDeleteEmpresa] = useState(false);
   const [empresaDelete, setEmpresaDelete] = useState(null);
+
+  const [empresaLogoFile, setEmpresaLogoFile] = useState(null);
+  const [empresaLogoPreview, setEmpresaLogoPreview] = useState("");
+  const [isSavingEmpresa, setIsSavingEmpresa] = useState(false);
+  const empresaLogoInputRef = useRef(null);
 
 
 
@@ -898,6 +907,69 @@ const UserEdit = () => {
      EMPRESAS
   ======================================== */
 
+  const getMultipartAuthConfig = () => {
+    const authConfig = getConfigToken() || {};
+    const headers = {
+      ...(authConfig.headers || {}),
+    };
+
+    delete headers["Content-Type"];
+    delete headers["content-type"];
+
+    return {
+      ...authConfig,
+      headers,
+    };
+  };
+
+  const revokeEmpresaLogoPreview = () => {
+    if (
+      empresaLogoPreview &&
+      empresaLogoPreview.startsWith("blob:")
+    ) {
+      URL.revokeObjectURL(empresaLogoPreview);
+    }
+  };
+
+  const handleEmpresaLogoChange = (event) => {
+    const file = event.target.files?.[0] || null;
+
+    if (!file) return;
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      showError("El logotipo debe ser una imagen JPG, PNG o WEBP.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showError("El logotipo no puede superar los 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    revokeEmpresaLogoPreview();
+
+    setEmpresaLogoFile(file);
+    setEmpresaLogoPreview(URL.createObjectURL(file));
+  };
+
+  const clearEmpresaLogoSelection = () => {
+    revokeEmpresaLogoPreview();
+    setEmpresaLogoFile(null);
+    setEmpresaLogoPreview(empresaForm.logoUrl || "");
+
+    if (empresaLogoInputRef.current) {
+      empresaLogoInputRef.current.value = "";
+    }
+  };
+
   const handleEmpresaInput = (event) => {
     const { name, value, type, checked } = event.target;
 
@@ -939,10 +1011,18 @@ const UserEdit = () => {
 
 
   const limpiarEmpresaForm = () => {
+    revokeEmpresaLogoPreview();
+
     setEmpresaForm(initialEmpresaForm);
     setEmpresaEditingId(null);
     setEmpresaCantones([]);
     setEmpresaSubsector([]);
+    setEmpresaLogoFile(null);
+    setEmpresaLogoPreview("");
+
+    if (empresaLogoInputRef.current) {
+      empresaLogoInputRef.current.value = "";
+    }
 
     setEmpresaSeccionNombre("");
     setEmpresaSeccionEditingId(null);
@@ -1012,80 +1092,109 @@ const UserEdit = () => {
     return true;
   };
 
-  const submitEmpresa = (event) => {
+  const submitEmpresa = async (event) => {
     event.preventDefault();
 
-    if (!validarEmpresa()) return;
+    if (!validarEmpresa() || isSavingEmpresa) return;
 
     const data = {
       razonSocial: capitalizeWords(empresaForm.razonSocial),
-
-      nombreComercial:
-        empresaForm.nombreComercial.trim() || null,
-
-      ruc:
-        empresaForm.ruc.replace(/\D/g, "") || null,
-
-      direccion:
-        empresaForm.direccion.trim() || null,
-
-      ciudad:
-        empresaForm.ciudad.trim() || null,
-
-      provincia:
-        empresaForm.provincia.trim() || null,
-
-      correo:
-        empresaForm.correo.trim().toLowerCase(),
-
-      telefono:
-        empresaForm.telefono
-          .replace(/[^\d+]/g, "")
-          .trim(),
-
-      gerente:
-        empresaForm.gerente.trim() || null,
-
-      contactoGerente:
-        empresaForm.contactoGerente
-          .replace(/[^\d+]/g, "")
-          .trim() || null,
-
-      correoGerente:
-        empresaForm.correoGerente
-          .trim()
-          .toLowerCase() || null,
-
-      sector:
-        empresaForm.sector.trim(),
-
-      subSector:
-        empresaForm.subSector.trim(),
-
-      especialidad:
-        empresaForm.especialidad.trim() || null,
-
-      numeroEmpleados:
-        Number(empresaForm.numeroEmpleados),
-
-      sitioWeb:
-        empresaForm.sitioWeb.trim() || null,
-
-      logoUrl:
-        empresaForm.logoUrl.trim() || null,
-
-      activo:
-        Boolean(empresaForm.activo),
+      nombreComercial: empresaForm.nombreComercial.trim(),
+      ruc: empresaForm.ruc.replace(/\D/g, ""),
+      direccion: empresaForm.direccion.trim(),
+      ciudad: empresaForm.ciudad.trim(),
+      provincia: empresaForm.provincia.trim(),
+      correo: empresaForm.correo.trim().toLowerCase(),
+      telefono: empresaForm.telefono.replace(/[^\d+]/g, "").trim(),
+      gerente: empresaForm.gerente.trim(),
+      contactoGerente: empresaForm.contactoGerente.replace(/[^\d+]/g, "").trim(),
+      correoGerente: empresaForm.correoGerente.trim().toLowerCase(),
+      sector: empresaForm.sector.trim(),
+      subSector: empresaForm.subSector.trim(),
+      especialidad: empresaForm.especialidad.trim(),
+      numeroEmpleados: String(Number(empresaForm.numeroEmpleados)),
+      sitioWeb: empresaForm.sitioWeb.trim(),
+      activo: empresaForm.activo ? "true" : "false",
     };
 
-    if (empresaEditingId) {
-      updateEmpresaApi(
-        PATH_EMPRESAS,
-        empresaEditingId,
-        data
-      );
-    } else {
-      createEmpresaApi(PATH_EMPRESAS, data);
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    if (empresaLogoFile) {
+      formData.append("logo", empresaLogoFile);
+    }
+
+    setIsSavingEmpresa(true);
+
+    try {
+      const response = empresaEditingId
+        ? await axios.put(
+            `${API_URL}${PATH_EMPRESAS}/${empresaEditingId}`,
+            formData,
+            getMultipartAuthConfig()
+          )
+        : await axios.post(
+            `${API_URL}${PATH_EMPRESAS}`,
+            formData,
+            getMultipartAuthConfig()
+          );
+
+      const empresaGuardada =
+        response?.data?.empresa ||
+        response?.data?.data?.empresa ||
+        response?.data?.data ||
+        response?.data;
+
+      await getEmpresas(PATH_EMPRESAS);
+
+      if (empresaEditingId) {
+        showSuccess("Empresa actualizada correctamente.");
+        limpiarEmpresaForm();
+        setShowEmpresaForm(false);
+      } else {
+        showSuccess("Empresa creada correctamente.");
+
+        const nuevaEmpresaId = empresaGuardada?.id;
+
+        if (nuevaEmpresaId) {
+          revokeEmpresaLogoPreview();
+          setEmpresaLogoFile(null);
+          setEmpresaLogoPreview(empresaGuardada?.logoUrl || "");
+
+          if (empresaLogoInputRef.current) {
+            empresaLogoInputRef.current.value = "";
+          }
+
+          setEmpresaEditingId(nuevaEmpresaId);
+          setEmpresaForm((previous) => ({
+            ...previous,
+            logoUrl: empresaGuardada?.logoUrl || "",
+          }));
+          setShowEmpresaForm(true);
+
+          await cargarSeccionesEmpresa(nuevaEmpresaId);
+
+          showSuccess(
+            "Empresa creada. Ahora puede registrar sus secciones."
+          );
+        } else {
+          limpiarEmpresaForm();
+          setShowEmpresaForm(false);
+        }
+      }
+    } catch (saveError) {
+      const message =
+        saveError?.response?.data?.message ||
+        saveError?.response?.data?.error ||
+        saveError?.response?.data?.errors?.[0]?.message ||
+        "No se pudo guardar la empresa.";
+
+      showError(message);
+    } finally {
+      setIsSavingEmpresa(false);
     }
   };
 
@@ -1093,6 +1202,14 @@ const UserEdit = () => {
     setEmpresaEditingId(empresa.id);
     setEmpresaSeccionNombre("");
     setEmpresaSeccionEditingId(null);
+
+    revokeEmpresaLogoPreview();
+    setEmpresaLogoFile(null);
+    setEmpresaLogoPreview(empresa.logoUrl || "");
+
+    if (empresaLogoInputRef.current) {
+      empresaLogoInputRef.current.value = "";
+    }
 
     cargarSeccionesEmpresa(empresa.id);
 
@@ -2054,20 +2171,78 @@ const UserEdit = () => {
               />
             </label>
 
-            <label className="ue_label">
+            <div className="ue_label ue_companyLogoField">
               <span className="ue_span">
-                URL del logotipo
+                Logotipo de la empresa
               </span>
 
-              <input
-                className="ue_input"
-                type="text"
-                name="logoUrl"
-                value={empresaForm.logoUrl}
-                onChange={handleEmpresaInput}
-                placeholder="/uploads/empresas/logo.png"
-              />
-            </label>
+              <div className="ue_companyLogoUploader">
+                <div className="ue_companyLogoPreview">
+                  {empresaLogoPreview ? (
+                    <img
+                      src={empresaLogoPreview}
+                      alt="Vista previa del logotipo"
+                    />
+                  ) : (
+                    <span>
+                      {String(
+                        empresaForm.nombreComercial ||
+                        empresaForm.razonSocial ||
+                        "E"
+                      )
+                        .charAt(0)
+                        .toUpperCase()}
+                    </span>
+                  )}
+                </div>
+
+                <div className="ue_companyLogoUploadInfo">
+                  <label
+                    className="ue_companyLogoUploadButton"
+                    htmlFor="empresaLogo"
+                  >
+                    {empresaLogoPreview
+                      ? "Cambiar logotipo"
+                      : "Seleccionar logotipo"}
+                  </label>
+
+                  <input
+                    ref={empresaLogoInputRef}
+                    id="empresaLogo"
+                    className="ue_companyLogoInput"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    onChange={handleEmpresaLogoChange}
+                  />
+
+                  <small>
+                    JPG, PNG o WEBP · Máximo 5 MB
+                  </small>
+
+                  {empresaLogoFile && (
+                    <div className="ue_companyLogoSelected">
+                      <span>
+                        ✓ {empresaLogoFile.name}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={clearEmpresaLogoSelection}
+                      >
+                        Cancelar cambio
+                      </button>
+                    </div>
+                  )}
+
+                  {!empresaLogoFile &&
+                    empresaForm.logoUrl && (
+                      <small className="ue_companyLogoCurrent">
+                        Logo actual registrado
+                      </small>
+                    )}
+                </div>
+              </div>
+            </div>
 
             <label className="ue_label ue_companyFull">
               <span className="ue_span">
@@ -2228,14 +2403,19 @@ const UserEdit = () => {
             <button
               type="submit"
               className="ue_btnPrimaryFull"
+              disabled={isSavingEmpresa}
             >
-              {empresaEditingId
-                ? "Guardar cambios"
-                : "Registrar empresa"}
+              {isSavingEmpresa
+                ? "Guardando empresa..."
+                : empresaEditingId
+                  ? "Guardar cambios"
+                  : "Registrar empresa"}
 
-              <span className="ue_btnArrow">
-                {empresaEditingId ? "✓" : "➜"}
-              </span>
+              {!isSavingEmpresa && (
+                <span className="ue_btnArrow">
+                  {empresaEditingId ? "✓" : "➜"}
+                </span>
+              )}
             </button>
 
             <button
@@ -2439,7 +2619,8 @@ const UserEdit = () => {
     <div className="ue_page">
       {(isLoadingUsers ||
         isLoadingAuth ||
-        isLoadingEmpresas) && <IsLoading />}
+        isLoadingEmpresas ||
+        isSavingEmpresa) && <IsLoading />}
 
       <div className="ue_shell">
         <button

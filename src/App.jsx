@@ -85,6 +85,7 @@ import ProyectoPensarResultadoAdmin from "./pages/ProyectoPensarResultadoAdmin";
 import ProyectoPensarPdfPreview from "./pages/ProyectoPensarPdfPreview";
 import PsychometricCompanyResults from "./pages/PsychometricCompanyResults";
 import PsychometricCompanyParticipantResult from "./pages/PsychometricCompanyParticipantResult";
+import PsychometricCompanyPdfPreview from "./pages/PsychometricCompanyPdfPreview";
 
 /* =========================================================
    APP
@@ -403,6 +404,12 @@ const App = () => {
               <ProyectoPensarPdfPreview />
             }
           />
+
+          <Route
+            path="/psychometric-company-pdf-preview/:empresaId"
+            element={<PsychometricCompanyPdfPreview />}
+          />
+
 
           {/* =============================================
               CURSOS

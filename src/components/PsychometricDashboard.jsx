@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import axios from "axios";
 
@@ -833,11 +833,41 @@ const PsychometricDashboard = () => {
         setSelectedCompanyId,
     ] = useState("");
 
+    const [
+        companyFilterSearch,
+        setCompanyFilterSearch,
+    ] = useState("");
+
+    const [
+        companyFilterOpen,
+        setCompanyFilterOpen,
+    ] = useState(false);
+
+    const companyFilterRef =
+        useRef(null);
 
     const [
         generatingCompanyPdfId,
         setGeneratingCompanyPdfId,
     ] = useState("");
+
+    const [
+        isDashboardFullscreen,
+        setIsDashboardFullscreen,
+    ] = useState(false);
+
+    const [
+        accessModal,
+        setAccessModal,
+    ] = useState({
+        open: false,
+        type: "confirm",
+        companyId: "",
+        companyName: "",
+        nextActive: null,
+        title: "",
+        message: "",
+    });
 
     /* =====================================================
        DATA
@@ -850,6 +880,221 @@ const PsychometricDashboard = () => {
     const analytical =
         analytics?.analytics ||
         {};
+
+    /* =====================================================
+       BUSCADOR DE EMPRESAS
+    ===================================================== */
+
+    const companyFilterOptions =
+        useMemo(
+            () =>
+                filterOptions
+                    ?.empresas ||
+                [],
+            [
+                filterOptions,
+            ],
+        );
+
+    const filteredCompanyOptions =
+        useMemo(
+            () => {
+                const search =
+                    String(
+                        companyFilterSearch ||
+                        "",
+                    )
+                        .trim()
+                        .toLowerCase();
+
+                if (!search) {
+                    return companyFilterOptions;
+                }
+
+                return companyFilterOptions.filter(
+                    (item) =>
+                        String(
+                            item.nombre ||
+                            "",
+                        )
+                            .toLowerCase()
+                            .includes(
+                                search,
+                            ),
+                );
+            },
+            [
+                companyFilterOptions,
+                companyFilterSearch,
+            ],
+        );
+
+    useEffect(
+        () => {
+            if (!filters.empresaId) {
+                setCompanyFilterSearch(
+                    "",
+                );
+                return;
+            }
+
+            const selected =
+                companyFilterOptions.find(
+                    (item) =>
+                        String(
+                            item.id,
+                        ) ===
+                        String(
+                            filters.empresaId,
+                        ),
+                );
+
+            if (selected) {
+                setCompanyFilterSearch(
+                    selected.nombre ||
+                    "",
+                );
+            }
+        },
+        [
+            filters.empresaId,
+            companyFilterOptions,
+        ],
+    );
+
+    useEffect(
+        () => {
+            const handleClickOutside =
+                (event) => {
+                    if (
+                        companyFilterRef.current &&
+                        !companyFilterRef.current.contains(
+                            event.target,
+                        )
+                    ) {
+                        setCompanyFilterOpen(
+                            false,
+                        );
+                    }
+                };
+
+            document.addEventListener(
+                "mousedown",
+                handleClickOutside,
+            );
+
+            return () => {
+                document.removeEventListener(
+                    "mousedown",
+                    handleClickOutside,
+                );
+            };
+        },
+        [],
+    );
+
+    useEffect(
+        () => {
+            if (!accessModal.open) {
+                return undefined;
+            }
+
+            const handleKeyDown =
+                (event) => {
+                    if (
+                        event.key ===
+                        "Escape"
+                    ) {
+                        closeAccessModal();
+                    }
+                };
+
+            document.addEventListener(
+                "keydown",
+                handleKeyDown,
+            );
+
+            return () => {
+                document.removeEventListener(
+                    "keydown",
+                    handleKeyDown,
+                );
+            };
+        },
+        [
+            accessModal.open,
+            accessModal.companyId,
+            companyAccessAction,
+        ],
+    );
+
+    useEffect(
+        () => {
+            if (!isDashboardFullscreen) {
+                return undefined;
+            }
+
+            const handleFullscreenKeyDown =
+                (event) => {
+                    if (event.key === "Escape") {
+                        setIsDashboardFullscreen(false);
+                    }
+                };
+
+            document.body.classList.add(
+                "psyDashBodyFullscreen",
+            );
+
+            document.addEventListener(
+                "keydown",
+                handleFullscreenKeyDown,
+            );
+
+            return () => {
+                document.body.classList.remove(
+                    "psyDashBodyFullscreen",
+                );
+
+                document.removeEventListener(
+                    "keydown",
+                    handleFullscreenKeyDown,
+                );
+            };
+        },
+        [isDashboardFullscreen],
+    );
+
+    const selectCompanyFilterOption = (
+        item,
+    ) => {
+        setCompanyFilterSearch(
+            item?.nombre || "",
+        );
+
+        setCompanyFilterOpen(
+            false,
+        );
+
+        updateFilter(
+            "empresaId",
+            item?.id || "",
+        );
+    };
+
+    const clearCompanyFilter = () => {
+        setCompanyFilterSearch(
+            "",
+        );
+
+        setCompanyFilterOpen(
+            false,
+        );
+
+        updateFilter(
+            "empresaId",
+            "",
+        );
+    };
 
     /* =====================================================
        SECCIONES SEGÚN EMPRESA
@@ -977,19 +1222,65 @@ const PsychometricDashboard = () => {
         clearCompanyAccessFeedback();
     };
 
-    const handleSendCompanyAccess = async (
+    const handleSendCompanyAccess = (
         companyId,
     ) => {
         if (!companyId) {
             return;
         }
 
-        const confirmed =
-            window.confirm(
-                "Se generará un nuevo enlace de acceso y se enviará al correo registrado de la empresa. Los enlaces anteriores quedarán deshabilitados. ¿Deseas continuar?",
+        const company =
+            (
+                organizations
+                    ?.companies ||
+                []
+            ).find(
+                (item) =>
+                    String(
+                        item.id,
+                    ) ===
+                    String(
+                        companyId,
+                    ),
             );
 
-        if (!confirmed) {
+        const companyName =
+            company?.nombre ||
+            selectedCompany?.nombre ||
+            "esta empresa";
+
+        const accessData =
+            companyAccess[
+                companyId
+            ]?.access;
+
+        const isResend =
+            Boolean(
+                accessData?.exists,
+            );
+
+        setAccessModal({
+            open: true,
+            type: "send",
+            companyId,
+            companyName,
+            nextActive: null,
+            title:
+                isResend
+                    ? "Generar un nuevo enlace"
+                    : "Enviar acceso empresarial",
+            message:
+                isResend
+                    ? `Se generará un nuevo enlace de acceso para ${companyName} y se enviará al correo registrado de la empresa. Los enlaces anteriores quedarán deshabilitados.`
+                    : `Se generará el enlace de acceso empresarial para ${companyName} y se enviará al correo registrado de la empresa.`,
+        });
+    };
+
+    const confirmSendCompanyAccess = async () => {
+        const companyId =
+            accessModal.companyId;
+
+        if (!companyId) {
             return;
         }
 
@@ -997,12 +1288,43 @@ const PsychometricDashboard = () => {
             await sendCompanyAccess(
                 companyId,
             );
+
+            setAccessModal({
+                open: false,
+                type: "confirm",
+                companyId: "",
+                companyName: "",
+                nextActive: null,
+                title: "",
+                message: "",
+            });
         } catch {
             // El hook ya administra el mensaje de error.
         }
     };
 
-    const handleToggleCompanyAccess = async (
+    const closeAccessModal = () => {
+        if (
+            accessModal.companyId &&
+            companyAccessAction?.endsWith(
+                `:${accessModal.companyId}`,
+            )
+        ) {
+            return;
+        }
+
+        setAccessModal({
+            open: false,
+            type: "confirm",
+            companyId: "",
+            companyName: "",
+            nextActive: null,
+            title: "",
+            message: "",
+        });
+    };
+
+    const handleToggleCompanyAccess = (
         companyId,
     ) => {
         if (!companyId) {
@@ -1014,10 +1336,38 @@ const PsychometricDashboard = () => {
                 companyId
             ]?.access;
 
-        if (!accessData?.exists) {
-            window.alert(
-                "La empresa todavía no tiene un enlace generado. Primero utiliza Enviar acceso.",
+        const company =
+            (
+                organizations
+                    ?.companies ||
+                []
+            ).find(
+                (item) =>
+                    String(
+                        item.id,
+                    ) ===
+                    String(
+                        companyId,
+                    ),
             );
+
+        const companyName =
+            company?.nombre ||
+            selectedCompany?.nombre ||
+            "esta empresa";
+
+        if (!accessData?.exists) {
+            setAccessModal({
+                open: true,
+                type: "info",
+                companyId,
+                companyName,
+                nextActive: null,
+                title:
+                    "Acceso aún no generado",
+                message:
+                    `La empresa ${companyName} todavía no tiene un enlace de acceso. Primero utiliza “Enviar acceso” para generar y enviar el enlace al correo registrado.`,
+            });
 
             return;
         }
@@ -1025,14 +1375,38 @@ const PsychometricDashboard = () => {
         const nextActive =
             !accessData.activo;
 
-        const confirmed =
-            window.confirm(
+        setAccessModal({
+            open: true,
+            type:
                 nextActive
-                    ? "¿Deseas activar nuevamente el acceso de esta empresa?"
-                    : "¿Deseas desactivar el acceso de esta empresa? El enlace dejará de funcionar inmediatamente.",
-            );
+                    ? "activate"
+                    : "deactivate",
+            companyId,
+            companyName,
+            nextActive,
+            title:
+                nextActive
+                    ? "Activar acceso empresarial"
+                    : "Desactivar acceso empresarial",
+            message:
+                nextActive
+                    ? `¿Deseas activar nuevamente el acceso de ${companyName}? El enlace empresarial volverá a estar disponible inmediatamente.`
+                    : `¿Deseas desactivar el acceso de ${companyName}? El enlace dejará de funcionar inmediatamente hasta que vuelvas a activarlo.`,
+        });
+    };
 
-        if (!confirmed) {
+    const confirmToggleCompanyAccess = async () => {
+        const {
+            companyId,
+            nextActive,
+        } =
+            accessModal;
+
+        if (
+            !companyId ||
+            typeof nextActive !==
+                "boolean"
+        ) {
             return;
         }
 
@@ -1041,6 +1415,16 @@ const PsychometricDashboard = () => {
                 companyId,
                 nextActive,
             );
+
+            setAccessModal({
+                open: false,
+                type: "confirm",
+                companyId: "",
+                companyName: "",
+                nextActive: null,
+                title: "",
+                message: "",
+            });
         } catch {
             // El hook ya administra el mensaje de error.
         }
@@ -1224,7 +1608,13 @@ const PsychometricDashboard = () => {
         );
 
     return (
-        <section className="psyDash">
+        <section
+            className={`psyDash ${
+                isDashboardFullscreen
+                    ? "psyDash--fullscreen"
+                    : ""
+            }`}
+        >
 
             {/* ===================================================
           HERO
@@ -1264,6 +1654,35 @@ const PsychometricDashboard = () => {
                         }
                     >
                         Limpiar filtros
+                    </button>
+
+                    <button
+                        type="button"
+                        className="psyDashBtn psyDashBtn--fullscreen"
+                        onClick={() =>
+                            setIsDashboardFullscreen(
+                                (current) =>
+                                    !current,
+                            )
+                        }
+                        title={
+                            isDashboardFullscreen
+                                ? "Salir de pantalla completa"
+                                : "Ver dashboard en pantalla completa"
+                        }
+                    >
+                        <span
+                            className="psyDashFullscreenIcon"
+                            aria-hidden="true"
+                        >
+                            {isDashboardFullscreen
+                                ? "↙"
+                                : "⛶"}
+                        </span>
+
+                        {isDashboardFullscreen
+                            ? "Salir de pantalla completa"
+                            : "Pantalla completa"}
                     </button>
 
                     <button
@@ -1392,53 +1811,204 @@ const PsychometricDashboard = () => {
                     />
                 </div>
 
-                <div className="psyDashFilter">
+                <div
+                    className="psyDashFilter psyDashCompanySearchFilter"
+                    ref={companyFilterRef}
+                >
                     <label>
                         Empresa
                     </label>
 
-                    <select
-                        value={
-                            filters.empresaId
-                        }
-                        onChange={(
-                            event,
-                        ) =>
-                            updateFilter(
-                                "empresaId",
-                                event
-                                    .target
-                                    .value,
-                            )
-                        }
-                    >
-                        <option value="">
-                            Todas
-                        </option>
+                    <div className="psyDashCompanySearch">
+                        <div className="psyDashCompanySearch__control">
+                            <input
+                                type="text"
+                                value={
+                                    companyFilterSearch
+                                }
+                                placeholder="Todas / buscar empresa..."
+                                autoComplete="off"
+                                onFocus={() =>
+                                    setCompanyFilterOpen(
+                                        true,
+                                    )
+                                }
+                                onClick={() =>
+                                    setCompanyFilterOpen(
+                                        true,
+                                    )
+                                }
+                                onChange={(
+                                    event,
+                                ) => {
+                                    const value =
+                                        event
+                                            .target
+                                            .value;
 
-                        {(
-                            filterOptions
-                                ?.empresas ||
-                            []
-                        ).map(
-                            (
-                                item,
-                            ) => (
-                                <option
-                                    key={
-                                        item.id
+                                    setCompanyFilterSearch(
+                                        value,
+                                    );
+
+                                    setCompanyFilterOpen(
+                                        true,
+                                    );
+
+                                    /*
+                                     * Si el usuario empieza a escribir
+                                     * sobre una empresa ya seleccionada,
+                                     * quitamos el ID hasta que elija una
+                                     * sugerencia válida.
+                                     */
+                                    if (
+                                        filters.empresaId
+                                    ) {
+                                        updateFilter(
+                                            "empresaId",
+                                            "",
+                                        );
                                     }
-                                    value={
-                                        item.id
+                                }}
+                                aria-expanded={
+                                    companyFilterOpen
+                                }
+                                aria-autocomplete="list"
+                            />
+
+                            {companyFilterSearch && (
+                                <button
+                                    type="button"
+                                    className="psyDashCompanySearch__clear"
+                                    onClick={
+                                        clearCompanyFilter
+                                    }
+                                    title="Quitar empresa"
+                                    aria-label="Quitar empresa"
+                                >
+                                    ×
+                                </button>
+                            )}
+
+                            <button
+                                type="button"
+                                className="psyDashCompanySearch__toggle"
+                                onClick={() =>
+                                    setCompanyFilterOpen(
+                                        (
+                                            previous,
+                                        ) =>
+                                            !previous,
+                                    )
+                                }
+                                aria-label="Abrir empresas"
+                            >
+                                ▾
+                            </button>
+                        </div>
+
+                        {companyFilterOpen && (
+                            <div
+                                className="psyDashCompanySearch__dropdown"
+                                role="listbox"
+                            >
+                                <button
+                                    type="button"
+                                    className={`psyDashCompanySearch__option ${
+                                        !filters.empresaId
+                                            ? "active"
+                                            : ""
+                                    }`}
+                                    onMouseDown={(
+                                        event,
+                                    ) =>
+                                        event.preventDefault()
+                                    }
+                                    onClick={
+                                        clearCompanyFilter
                                     }
                                 >
-                                    {
-                                        item.nombre
-                                    }
-                                </option>
-                            ),
+                                    <span>
+                                        Todas las empresas
+                                    </span>
+
+                                    {!filters.empresaId && (
+                                        <strong>
+                                            ✓
+                                        </strong>
+                                    )}
+                                </button>
+
+                                {filteredCompanyOptions.length >
+                                0 ? (
+                                    filteredCompanyOptions.map(
+                                        (
+                                            item,
+                                        ) => (
+                                            <button
+                                                key={
+                                                    item.id
+                                                }
+                                                type="button"
+                                                role="option"
+                                                aria-selected={
+                                                    String(
+                                                        filters.empresaId ||
+                                                        "",
+                                                    ) ===
+                                                    String(
+                                                        item.id,
+                                                    )
+                                                }
+                                                className={`psyDashCompanySearch__option ${
+                                                    String(
+                                                        filters.empresaId ||
+                                                        "",
+                                                    ) ===
+                                                    String(
+                                                        item.id,
+                                                    )
+                                                        ? "active"
+                                                        : ""
+                                                }`}
+                                                onMouseDown={(
+                                                    event,
+                                                ) =>
+                                                    event.preventDefault()
+                                                }
+                                                onClick={() =>
+                                                    selectCompanyFilterOption(
+                                                        item,
+                                                    )
+                                                }
+                                            >
+                                                <span>
+                                                    {
+                                                        item.nombre
+                                                    }
+                                                </span>
+
+                                                {String(
+                                                    filters.empresaId ||
+                                                    "",
+                                                ) ===
+                                                    String(
+                                                        item.id,
+                                                    ) && (
+                                                    <strong>
+                                                        ✓
+                                                    </strong>
+                                                )}
+                                            </button>
+                                        ),
+                                    )
+                                ) : (
+                                    <div className="psyDashCompanySearch__empty">
+                                        No se encontraron empresas
+                                    </div>
+                                )}
+                            </div>
                         )}
-                    </select>
+                    </div>
                 </div>
 
                 <div className="psyDashFilter">
@@ -3441,6 +4011,209 @@ const PsychometricDashboard = () => {
                         )}
 
                 </>
+            )}
+
+            {/* ===================================================
+          MODAL PROFESIONAL - ACCESO EMPRESARIAL
+      =================================================== */}
+
+            {accessModal.open && (
+                <div
+                    className="psyDashAccessModalBackdrop"
+                    onMouseDown={(
+                        event,
+                    ) => {
+                        if (
+                            event.target ===
+                            event.currentTarget
+                        ) {
+                            closeAccessModal();
+                        }
+                    }}
+                >
+                    <section
+                        className={`psyDashAccessModal psyDashAccessModal--${accessModal.type}`}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="psyDashAccessModalTitle"
+                    >
+                        <button
+                            type="button"
+                            className="psyDashAccessModal__close"
+                            onClick={
+                                closeAccessModal
+                            }
+                            disabled={
+                                Boolean(
+                                    accessModal.companyId &&
+                                    companyAccessAction?.endsWith(
+                                        `:${accessModal.companyId}`,
+                                    ),
+                                )
+                            }
+                            aria-label="Cerrar"
+                        >
+                            ×
+                        </button>
+
+                        <div className="psyDashAccessModal__icon">
+                            {accessModal.type ===
+                            "deactivate"
+                                ? "!"
+                                : accessModal.type ===
+                                  "activate"
+                                ? "✓"
+                                : accessModal.type ===
+                                  "send"
+                                ? "✉"
+                                : "i"}
+                        </div>
+
+                        <div className="psyDashAccessModal__content">
+                            <span className="psyDashEyebrow">
+                                Acceso empresarial
+                            </span>
+
+                            <h2
+                                id="psyDashAccessModalTitle"
+                            >
+                                {
+                                    accessModal.title
+                                }
+                            </h2>
+
+                            <p>
+                                {
+                                    accessModal.message
+                                }
+                            </p>
+
+                            {accessModal.companyName && (
+                                <div className="psyDashAccessModal__company">
+                                    <span>
+                                        Empresa
+                                    </span>
+
+                                    <strong>
+                                        {
+                                            accessModal.companyName
+                                        }
+                                    </strong>
+                                </div>
+                            )}
+                        </div>
+
+                        <footer className="psyDashAccessModal__actions">
+                            {accessModal.type ===
+                            "info" ? (
+                                <button
+                                    type="button"
+                                    className="psyDashBtn"
+                                    onClick={
+                                        closeAccessModal
+                                    }
+                                >
+                                    Entendido
+                                </button>
+                            ) : accessModal.type ===
+                              "send" ? (
+                                <>
+                                    <button
+                                        type="button"
+                                        className="psyDashBtn psyDashBtn--outline"
+                                        onClick={
+                                            closeAccessModal
+                                        }
+                                        disabled={
+                                            Boolean(
+                                                accessModal.companyId &&
+                                                companyAccessAction?.endsWith(
+                                                    `:${accessModal.companyId}`,
+                                                ),
+                                            )
+                                        }
+                                    >
+                                        Cancelar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="psyDashBtn psyDashAccessModal__confirm psyDashAccessModal__confirm--send"
+                                        onClick={
+                                            confirmSendCompanyAccess
+                                        }
+                                        disabled={
+                                            Boolean(
+                                                accessModal.companyId &&
+                                                companyAccessAction?.endsWith(
+                                                    `:${accessModal.companyId}`,
+                                                ),
+                                            )
+                                        }
+                                    >
+                                        {accessModal.companyId &&
+                                        companyAccessAction ===
+                                            `send:${accessModal.companyId}`
+                                            ? "Enviando..."
+                                            : "Sí, generar y enviar"}
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        type="button"
+                                        className="psyDashBtn psyDashBtn--outline"
+                                        onClick={
+                                            closeAccessModal
+                                        }
+                                        disabled={
+                                            Boolean(
+                                                accessModal.companyId &&
+                                                companyAccessAction?.endsWith(
+                                                    `:${accessModal.companyId}`,
+                                                ),
+                                            )
+                                        }
+                                    >
+                                        Cancelar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className={
+                                            accessModal.nextActive
+                                                ? "psyDashBtn psyDashAccessModal__confirm psyDashAccessModal__confirm--activate"
+                                                : "psyDashBtn psyDashAccessModal__confirm psyDashAccessModal__confirm--deactivate"
+                                        }
+                                        onClick={
+                                            confirmToggleCompanyAccess
+                                        }
+                                        disabled={
+                                            Boolean(
+                                                accessModal.companyId &&
+                                                companyAccessAction?.endsWith(
+                                                    `:${accessModal.companyId}`,
+                                                ),
+                                            )
+                                        }
+                                    >
+                                        {accessModal.companyId &&
+                                        companyAccessAction ===
+                                            `activate:${accessModal.companyId}`
+                                            ? "Activando..."
+                                            : accessModal.companyId &&
+                                              companyAccessAction ===
+                                                  `deactivate:${accessModal.companyId}`
+                                            ? "Desactivando..."
+                                            : accessModal.nextActive
+                                            ? "Sí, activar acceso"
+                                            : "Sí, desactivar acceso"}
+                                    </button>
+                                </>
+                            )}
+                        </footer>
+                    </section>
+                </div>
             )}
 
             {/* ===================================================

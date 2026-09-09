@@ -903,6 +903,75 @@ const ProyectoPensarPago = () => {
           </div>
         </header>
 
+
+            {/* =================================
+                DATOS DE PAGO
+            ================================= */}
+
+            <section className="ppago__bankCard">
+              <div className="ppago__bankHeader">
+                <div>
+                  <span className="ppago__eyebrow">
+                    Datos para realizar la transferencia
+                  </span>
+
+                  <h2>
+                    Información bancaria
+                  </h2>
+
+                  <p>
+                    Realiza el depósito o transferencia con los siguientes datos
+                    y luego adjunta el comprobante en el formulario.
+                  </p>
+                </div>
+
+                <div className="ppago__bankBadge">
+                  PRODUBANCO
+                </div>
+              </div>
+
+              <div className="ppago__bankGrid">
+                <div className="ppago__bankItem">
+                  <span>Banco</span>
+                  <strong>Produbanco</strong>
+                </div>
+
+                <div className="ppago__bankItem">
+                  <span>Tipo de cuenta</span>
+                  <strong>Cuenta Corriente</strong>
+                </div>
+
+                <div className="ppago__bankItem ppago__bankItem--highlight">
+                  <span>Número de cuenta</span>
+                  <strong>27059112625</strong>
+                </div>
+
+                <div className="ppago__bankItem">
+                  <span>Titular</span>
+                  <strong>IDR MIND EC S.A.S</strong>
+                </div>
+
+                <div className="ppago__bankItem">
+                  <span>RUC</span>
+                  <strong>1793224943001</strong>
+                </div>
+
+                <div className="ppago__bankItem">
+                  <span>Correo</span>
+                  <strong>idrmind@gmail.com</strong>
+                </div>
+              </div>
+
+              <div className="ppago__bankNote">
+                <span>✓</span>
+
+                <p>
+                  Verifica que los datos de la transferencia sean correctos antes
+                  de enviar el comprobante.
+                </p>
+              </div>
+            </section>
+
         <div className="ppago__grid">
           {/* =================================
               INFORMACIÓN

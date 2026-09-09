@@ -2110,3 +2110,149 @@
     width: 100%;
   }
 }
+
+/* =========================================
+   EMPRESAS - CARGA DE LOGOTIPO
+========================================= */
+
+.ue_companyLogoField {
+  min-width: 0;
+}
+
+.ue_companyLogoUploader {
+  min-height: 118px;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.8rem;
+  border: 1px dashed rgba(27, 50, 107, 0.24);
+  border-radius: 0.9rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(239, 244, 252, 0.86)
+  );
+}
+
+.ue_companyLogoPreview {
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--ue-blue),
+    var(--ue-blue-dark)
+  );
+  color: #ffffff;
+  box-shadow: 0 0.55rem 1.25rem rgba(15, 42, 99, 0.16);
+  font-size: 1.65rem;
+  font-weight: 950;
+}
+
+.ue_companyLogoPreview img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.ue_companyLogoUploadInfo {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.42rem;
+}
+
+.ue_companyLogoInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ue_companyLogoUploadButton {
+  min-height: 38px;
+  padding: 0.58rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  background: linear-gradient(
+    135deg,
+    var(--ue-blue),
+    var(--ue-blue-dark)
+  );
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 0.45rem 1rem rgba(15, 42, 99, 0.18);
+}
+
+.ue_companyLogoUploadInfo small {
+  color: var(--ue-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.ue_companyLogoSelected {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  padding: 0.48rem 0.58rem;
+  border-radius: 0.65rem;
+  background: rgba(24, 120, 59, 0.08);
+  border: 1px solid rgba(24, 120, 59, 0.16);
+}
+
+.ue_companyLogoSelected span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ue-success);
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.ue_companyLogoSelected button {
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ue-danger);
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.ue_companyLogoCurrent {
+  color: var(--ue-success) !important;
+}
+
+@media (max-width: 520px) {
+  .ue_companyLogoUploader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ue_companyLogoUploadButton {
+    width: 100%;
+  }
+
+  .ue_companyLogoSelected {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

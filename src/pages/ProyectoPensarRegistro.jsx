@@ -27,6 +27,9 @@ const PATH_EMPRESA_SECCIONES =
 const PATH_PSYCHOMETRIC_REGISTER =
   "/psychometric/register";
 
+const PATH_VARIABLES =
+  "/variables";
+
 /* =========================================================
    MODOS DE PARTICIPACIÓN
 ========================================================= */
@@ -48,6 +51,7 @@ const INITIAL_FORM = {
   apellidos: "",
   celular: "",
   dateBirth: "",
+  genre: "",
   aceptacion: false,
 };
 
@@ -236,6 +240,17 @@ const ProyectoPensarRegistro = () => {
     registrationResult,
   ] = useCrud();
 
+
+  const [
+    variables,
+    getVariables,
+    ,
+    ,
+    ,
+    variablesError,
+    isLoadingVariables,
+  ] = useCrud();
+
   /* =======================================================
      LISTAS
   ======================================================= */
@@ -259,6 +274,23 @@ const ProyectoPensarRegistro = () => {
         isEnabled(seccion?.activo)
     );
   }, [empresaSecciones]);
+
+
+  const generoOptions = useMemo(() => {
+    const values = normalizeList(
+      variables
+    )
+      .map((item) =>
+        String(
+          item?.genero || ""
+        ).trim()
+      )
+      .filter(Boolean);
+
+    return [
+      ...new Set(values),
+    ];
+  }, [variables]);
 
   /* =======================================================
      IDENTIFICAR TEST PSICOMÉTRICO
@@ -363,6 +395,10 @@ const ProyectoPensarRegistro = () => {
     getEmpresas(
       `${PATH_EMPRESAS}?activo=true`
     );
+
+    getVariables(
+      PATH_VARIABLES
+    );
   }, []);
 
   /* =======================================================
@@ -441,6 +477,10 @@ const ProyectoPensarRegistro = () => {
         dateBirth:
           usuario.dateBirth ||
           previous.dateBirth,
+
+        genre:
+          usuario.genre ||
+          previous.genre,
       }));
 
       /*
@@ -545,6 +585,7 @@ const ProyectoPensarRegistro = () => {
       coursesError ||
       empresasError ||
       seccionesError ||
+      variablesError ||
       registerError;
 
     if (!requestError) {
@@ -563,6 +604,7 @@ const ProyectoPensarRegistro = () => {
     coursesError,
     empresasError,
     seccionesError,
+    variablesError,
     registerError,
   ]);
 
@@ -835,6 +877,14 @@ const ProyectoPensarRegistro = () => {
       );
     }
 
+    if (
+      !form.genre
+    ) {
+      return (
+        "Seleccione su género."
+      );
+    }
+
     const birthDate =
       new Date(
         `${form.dateBirth}T00:00:00`
@@ -1032,6 +1082,9 @@ const ProyectoPensarRegistro = () => {
         form.dateBirth ||
         null,
 
+      genre:
+        form.genre,
+
       empresaId:
         empresaIdFinal,
 
@@ -1050,11 +1103,7 @@ const ProyectoPensarRegistro = () => {
       aceptacion: true,
     };
 
-    console.log(
-      "PAYLOAD PSYCHOMETRIC:",
-      payload
-    );
-
+  
     postPsychometricRegister(
       PATH_PSYCHOMETRIC_REGISTER,
       payload
@@ -1070,6 +1119,7 @@ const ProyectoPensarRegistro = () => {
     isLoadingValidate ||
     isLoadingEmpresas ||
     isLoadingSecciones ||
+    isLoadingVariables ||
     isLoadingRegister;
 
   return (
@@ -1461,6 +1511,49 @@ const ProyectoPensarRegistro = () => {
                         .split("T")[0]
                     }
                   />
+                </label>
+
+                <label className="pensar-register__field">
+                  <span>
+                    Género *
+                  </span>
+
+                  <select
+                    name="genre"
+                    value={
+                      form.genre
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    required
+                    disabled={
+                      isLoadingVariables
+                    }
+                  >
+                    <option value="">
+                      {isLoadingVariables
+                        ? "Cargando géneros..."
+                        : "Seleccione su género"}
+                    </option>
+
+                    {generoOptions.map(
+                      (genero) => (
+                        <option
+                          key={
+                            genero
+                          }
+                          value={
+                            genero
+                          }
+                        >
+                          {
+                            genero
+                          }
+                        </option>
+                      )
+                    )}
+                  </select>
                 </label>
               </div>
 

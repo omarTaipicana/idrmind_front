@@ -328,6 +328,150 @@
     );
 }
 
+
+/* =========================================================
+   BUSCADOR DESPLEGABLE DE EMPRESAS
+========================================================= */
+
+.psyDashCompanySearchFilter {
+  position: relative;
+  z-index: 30;
+}
+
+.psyDashCompanySearch {
+  position: relative;
+  width: 100%;
+}
+
+.psyDashCompanySearch__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.psyDashCompanySearch__control input {
+  width: 100%;
+  min-height: 40px;
+  padding-right: 68px;
+}
+
+.psyDashCompanySearch__clear,
+.psyDashCompanySearch__toggle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 28px;
+  height: 28px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #6e7a91;
+
+  font-size: 1rem;
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+.psyDashCompanySearch__clear {
+  right: 33px;
+}
+
+.psyDashCompanySearch__toggle {
+  right: 4px;
+  font-size: 0.82rem;
+}
+
+.psyDashCompanySearch__clear:hover,
+.psyDashCompanySearch__toggle:hover {
+  background: #eef3f9;
+  color: var(--psy-blue);
+}
+
+.psyDashCompanySearch__dropdown {
+  position: absolute;
+  z-index: 500;
+
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  max-height: 285px;
+  overflow-y: auto;
+
+  padding: 6px;
+
+  border: 1px solid #d7dfeb;
+  border-radius: 12px;
+
+  background: #fff;
+
+  box-shadow:
+    0 14px 35px
+    rgba(15, 42, 86, 0.18);
+}
+
+.psyDashCompanySearch__option {
+  width: 100%;
+  min-height: 40px;
+
+  padding: 9px 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: var(--psy-text);
+
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.psyDashCompanySearch__option:hover {
+  background: #f3f7fd;
+  color: var(--psy-blue);
+}
+
+.psyDashCompanySearch__option.active {
+  background: #eaf2ff;
+  color: var(--psy-blue);
+}
+
+.psyDashCompanySearch__option span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.psyDashCompanySearch__option strong {
+  flex-shrink: 0;
+  color: var(--psy-success);
+}
+
+.psyDashCompanySearch__empty {
+  padding: 14px 10px;
+  color: var(--psy-muted);
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 /* =========================================================
    CHIPS
 ========================================================= */
@@ -2257,4 +2401,511 @@
 
 .psyDashBtn--successOutline:hover:not(:disabled) {
   background: #ecfdf3;
+}
+
+
+/* =========================================================
+   MODAL PROFESIONAL - ACCESO EMPRESARIAL
+========================================================= */
+
+.psyDashAccessModalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9800;
+
+  padding: 20px;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    rgba(7, 27, 63, 0.62);
+
+  backdrop-filter:
+    blur(6px);
+  -webkit-backdrop-filter:
+    blur(6px);
+
+  animation:
+    psyDashAccessBackdropIn
+    0.18s ease-out;
+}
+
+.psyDashAccessModal {
+  position: relative;
+
+  width:
+    min(
+      500px,
+      96vw
+    );
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.46
+    );
+
+  border-radius:
+    22px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 28px 80px
+    rgba(
+      7,
+      27,
+      63,
+      0.3
+    );
+
+  animation:
+    psyDashAccessModalIn
+    0.2s ease-out;
+}
+
+.psyDashAccessModal::before {
+  content: "";
+
+  display: block;
+
+  width: 100%;
+  height: 6px;
+
+  background:
+    #173a8a;
+}
+
+.psyDashAccessModal--activate::before {
+  background:
+    #079455;
+}
+
+.psyDashAccessModal--deactivate::before {
+  background:
+    #d92d20;
+}
+
+.psyDashAccessModal--info::before {
+  background:
+    linear-gradient(
+      90deg,
+      #173a8a,
+      #28a7e8
+    );
+}
+
+.psyDashAccessModal__close {
+  position: absolute;
+
+  top: 17px;
+  right: 17px;
+
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background:
+    #f2f4f7;
+
+  color:
+    #475467;
+
+  font-size: 1.35rem;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.psyDashAccessModal__close:hover:not(:disabled) {
+  background:
+    #e4e7ec;
+
+  transform:
+    rotate(4deg);
+}
+
+.psyDashAccessModal__close:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.psyDashAccessModal__icon {
+  width: 58px;
+  height: 58px;
+
+  margin:
+    28px 28px 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 17px;
+
+  background:
+    #eef4ff;
+
+  color:
+    #173a8a;
+
+  font-size: 1.55rem;
+  font-weight: 900;
+
+  box-shadow:
+    inset 0 0 0 1px
+    #d7e3f7;
+}
+
+.psyDashAccessModal--activate
+.psyDashAccessModal__icon {
+  background:
+    #ecfdf3;
+
+  color:
+    #067647;
+
+  box-shadow:
+    inset 0 0 0 1px
+    #abefc6;
+}
+
+.psyDashAccessModal--deactivate
+.psyDashAccessModal__icon {
+  background:
+    #fef3f2;
+
+  color:
+    #b42318;
+
+  box-shadow:
+    inset 0 0 0 1px
+    #fecdca;
+}
+
+.psyDashAccessModal__content {
+  padding:
+    18px 28px 24px;
+}
+
+.psyDashAccessModal__content
+.psyDashEyebrow {
+  margin-bottom: 5px;
+
+  color:
+    #667085;
+}
+
+.psyDashAccessModal__content h2 {
+  margin:
+    0 44px 10px 0;
+
+  color:
+    #102a56;
+
+  font-size:
+    1.35rem;
+
+  line-height:
+    1.22;
+}
+
+.psyDashAccessModal__content p {
+  margin: 0;
+
+  color:
+    #667085;
+
+  font-size:
+    0.91rem;
+
+  line-height:
+    1.62;
+}
+
+.psyDashAccessModal__company {
+  margin-top: 18px;
+
+  padding:
+    12px 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  border:
+    1px solid
+    #e4e7ec;
+
+  border-radius:
+    12px;
+
+  background:
+    #f8fafc;
+}
+
+.psyDashAccessModal__company span {
+  color:
+    #667085;
+
+  font-size:
+    0.7rem;
+
+  font-weight: 800;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.05em;
+}
+
+.psyDashAccessModal__company strong {
+  color:
+    #173a8a;
+
+  font-size:
+    0.92rem;
+
+  overflow-wrap:
+    anywhere;
+}
+
+.psyDashAccessModal__actions {
+  padding:
+    16px 28px 22px;
+
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  border-top:
+    1px solid
+    #eaecf0;
+
+  background:
+    #fcfcfd;
+}
+
+.psyDashAccessModal__actions
+.psyDashBtn {
+  min-width: 130px;
+}
+
+.psyDashAccessModal__confirm--activate {
+  background:
+    #079455;
+}
+
+.psyDashAccessModal__confirm--activate:hover:not(:disabled) {
+  background:
+    #067647;
+}
+
+.psyDashAccessModal__confirm--deactivate {
+  background:
+    #d92d20;
+}
+
+.psyDashAccessModal__confirm--deactivate:hover:not(:disabled) {
+  background:
+    #b42318;
+}
+
+@keyframes psyDashAccessBackdropIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes psyDashAccessModalIn {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(8px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+  .psyDashAccessModalBackdrop {
+    padding: 10px;
+  }
+
+  .psyDashAccessModal {
+    border-radius: 18px;
+  }
+
+  .psyDashAccessModal__icon {
+    margin:
+      22px 20px 0;
+  }
+
+  .psyDashAccessModal__content {
+    padding:
+      16px 20px 20px;
+  }
+
+  .psyDashAccessModal__actions {
+    padding:
+      14px 20px 18px;
+
+    flex-direction:
+      column-reverse;
+  }
+
+  .psyDashAccessModal__actions
+  .psyDashBtn {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   MODAL ACCESO - GENERAR / REENVIAR ENLACE
+========================================================= */
+
+.psyDashAccessModal--send::before {
+  background:
+    linear-gradient(
+      90deg,
+      #173a8a,
+      #28a7e8
+    );
+}
+
+.psyDashAccessModal--send
+.psyDashAccessModal__icon {
+  background:
+    #eef4ff;
+
+  color:
+    #175cd3;
+
+  box-shadow:
+    inset 0 0 0 1px
+    #c7d7fe;
+}
+
+.psyDashAccessModal__confirm--send {
+  background:
+    linear-gradient(
+      135deg,
+      #173a8a,
+      #245fd3
+    );
+}
+
+.psyDashAccessModal__confirm--send:hover:not(:disabled) {
+  background:
+    linear-gradient(
+      135deg,
+      #102f76,
+      #1e52bc
+    );
+}
+
+
+/* =========================================================
+   PANTALLA COMPLETA INTERNA DEL DASHBOARD
+   No usa el modo fullscreen del navegador.
+========================================================= */
+
+body.psyDashBodyFullscreen {
+  overflow: hidden !important;
+}
+
+.psyDash--fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9500 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+  padding: 20px 24px 32px !important;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  box-sizing: border-box !important;
+  background: #f8fafc !important;
+}
+
+.psyDash--fullscreen .psyDashShell,
+.psyDash--fullscreen .psyDashContainer,
+.psyDash--fullscreen .psyDashContent {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.psyDashBtn--fullscreen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  white-space: nowrap;
+
+  background:
+    linear-gradient(
+      135deg,
+      #102a56,
+      #173a8a
+    );
+}
+
+.psyDashBtn--fullscreen:hover:not(:disabled) {
+  background:
+    linear-gradient(
+      135deg,
+      #0b2148,
+      #102f76
+    );
+}
+
+.psyDashFullscreenIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 18px;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+@media (max-width: 700px) {
+  .psyDash--fullscreen {
+    padding: 12px 12px 28px !important;
+  }
 }

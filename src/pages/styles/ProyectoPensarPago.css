@@ -1,3 +1,4 @@
+
 :root {
   --pp-blue: #173a8a;
   --pp-blue-dark: #071b3f;
@@ -42,7 +43,6 @@
     );
 
   color: var(--pp-text);
-
   box-sizing: border-box;
 }
 
@@ -58,7 +58,6 @@
 
 .ppago__shell {
   width: min(1250px, 100%);
-
   margin: 0 auto;
 }
 
@@ -68,11 +67,8 @@
 
 .ppago__header {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   gap: 1rem;
 
   padding: 1.35rem 1.5rem;
@@ -95,9 +91,7 @@
 
 .ppago__brand {
   display: flex;
-
   align-items: center;
-
   gap: 1rem;
 }
 
@@ -122,15 +116,11 @@
 
   margin-bottom: 0.2rem;
 
-  color:
-    var(--pp-cyan);
+  color: var(--pp-cyan);
 
   font-size: 0.78rem;
-
   font-weight: 900;
-
   letter-spacing: 0.09em;
-
   text-transform: uppercase;
 }
 
@@ -139,44 +129,251 @@
 
   color: #ffffff;
 
-  font-size:
-    clamp(
-      1.45rem,
-      3vw,
-      2.1rem
-    );
+  font-size: clamp(
+    1.45rem,
+    3vw,
+    2.1rem
+  );
 }
 
 .ppago__secureBadge {
-  padding:
-    0.55rem 0.9rem;
+  padding: 0.55rem 0.9rem;
 
-  border:
-    1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.22
-    );
+  border: 1px solid
+    rgba(255, 255, 255, 0.22);
 
   border-radius: 999px;
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      0.1
-    );
+    rgba(255, 255, 255, 0.1);
 
   color: #ffffff;
 
   font-size: 0.82rem;
-
   font-weight: 800;
 
   white-space: nowrap;
+}
+
+/* =========================================
+   DATOS BANCARIOS
+========================================= */
+
+.ppago__bankCard {
+  margin-top: 1.3rem;
+  padding: 1.35rem;
+
+  border: 1px solid
+    rgba(219, 228, 240, 0.95);
+
+  border-radius: 1.35rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8fbff 100%
+    );
+
+  box-shadow:
+    0 16px 38px
+    rgba(16, 24, 40, 0.07);
+}
+
+.ppago__bankHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding-bottom: 1rem;
+
+  border-bottom:
+    1px solid var(--pp-border);
+}
+
+.ppago__bankHeader h2 {
+  margin:
+    0.35rem 0 0.35rem;
+
+  color: var(--pp-blue-dark);
+
+  font-size: 1.25rem;
+}
+
+.ppago__bankHeader p {
+  max-width: 760px;
+
+  margin: 0;
+
+  color: var(--pp-muted);
+
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.ppago__bankBadge {
+  flex-shrink: 0;
+
+  padding:
+    0.7rem 1rem;
+
+  border:
+    1px solid #d7e5dd;
+
+  border-radius:
+    0.9rem;
+
+  background:
+    #f5fbf7;
+
+  color:
+    #24763c;
+
+  font-size:
+    0.82rem;
+
+  font-weight:
+    900;
+
+  letter-spacing:
+    0.04em;
+}
+
+.ppago__bankGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 0.75rem;
+
+  margin-top:
+    1rem;
+}
+
+.ppago__bankItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  min-height: 82px;
+
+  padding:
+    0.9rem 1rem;
+
+  border:
+    1px solid #e4ebf4;
+
+  border-radius:
+    0.9rem;
+
+  background:
+    #ffffff;
+}
+
+.ppago__bankItem span {
+  color:
+    var(--pp-muted);
+
+  font-size:
+    0.76rem;
+
+  font-weight:
+    700;
+}
+
+.ppago__bankItem strong {
+  color:
+    var(--pp-blue-dark);
+
+  font-size:
+    0.98rem;
+
+  line-height:
+    1.35;
+
+  word-break:
+    break-word;
+}
+
+.ppago__bankItem--highlight {
+  border-color:
+    rgba(40, 167, 232, 0.38);
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef8ff,
+      #f8fcff
+    );
+}
+
+.ppago__bankItem--highlight strong {
+  color:
+    var(--pp-blue);
+
+  font-size:
+    1.15rem;
+
+  letter-spacing:
+    0.025em;
+}
+
+.ppago__bankNote {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+
+  margin-top:
+    0.9rem;
+
+  padding:
+    0.85rem 1rem;
+
+  border-radius:
+    0.85rem;
+
+  background:
+    #eef7ff;
+
+  color:
+    #344054;
+}
+
+.ppago__bankNote > span {
+  width: 26px;
+  height: 26px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--pp-blue);
+
+  color:
+    #ffffff;
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    900;
+}
+
+.ppago__bankNote p {
+  margin: 0;
+
+  font-size:
+    0.84rem;
+
+  line-height:
+    1.5;
 }
 
 /* =========================================
@@ -185,16 +382,9 @@
 
 .ppago__grid {
   display: grid;
-
   grid-template-columns:
-    minmax(
-      300px,
-      0.78fr
-    )
-    minmax(
-      0,
-      1.35fr
-    );
+    minmax(300px, 0.78fr)
+    minmax(0, 1.35fr);
 
   gap: 1.3rem;
 
@@ -209,14 +399,8 @@
 
 .ppago__infoCard,
 .ppago__formCard {
-  border:
-    1px solid
-    rgba(
-      219,
-      228,
-      240,
-      0.9
-    );
+  border: 1px solid
+    rgba(219, 228, 240, 0.9);
 
   border-radius: 1.4rem;
 
@@ -224,17 +408,11 @@
 
   box-shadow:
     0 16px 38px
-    rgba(
-      16,
-      24,
-      40,
-      0.08
-    );
+    rgba(16, 24, 40, 0.08);
 }
 
 .ppago__infoCard {
   position: sticky;
-
   top: 1rem;
 
   padding: 1.5rem;
@@ -249,25 +427,19 @@
 ========================================= */
 
 .ppago__eyebrow {
-  color:
-    var(--pp-cyan);
+  color: var(--pp-cyan);
 
   font-size: 0.76rem;
-
   font-weight: 900;
-
   letter-spacing: 0.08em;
-
   text-transform: uppercase;
 }
 
 .ppago__infoCard h2,
 .ppago__formHeader h2 {
-  margin:
-    0.35rem 0 0;
+  margin: 0.35rem 0 0;
 
-  color:
-    var(--pp-blue-dark);
+  color: var(--pp-blue-dark);
 
   line-height: 1.25;
 }
@@ -275,8 +447,7 @@
 .ppago__formHeader p {
   margin-bottom: 0;
 
-  color:
-    var(--pp-muted);
+  color: var(--pp-muted);
 
   line-height: 1.65;
 }
@@ -287,7 +458,6 @@
 
 .ppago__infoList {
   display: grid;
-
   gap: 0.75rem;
 
   margin-top: 1.4rem;
@@ -295,13 +465,10 @@
 
 .ppago__infoItem {
   display: flex;
-
   flex-direction: column;
-
   gap: 0.2rem;
 
-  padding:
-    0.95rem 1rem;
+  padding: 0.95rem 1rem;
 
   border-radius: 0.9rem;
 
@@ -309,48 +476,15 @@
 }
 
 .ppago__infoItem span {
-  color:
-    var(--pp-muted);
+  color: var(--pp-muted);
 
   font-size: 0.78rem;
 }
 
 .ppago__infoItem strong {
-  color:
-    var(--pp-blue-dark);
+  color: var(--pp-blue-dark);
 
   word-break: break-word;
-}
-
-/* =========================================
-   PRECIO EN INFORMACIÓN
-========================================= */
-
-.ppago__infoItem--price {
-  border:
-    1px solid
-    rgba(
-      40,
-      167,
-      232,
-      0.24
-    );
-
-  background:
-    linear-gradient(
-      135deg,
-      #eef7ff,
-      #f7fbff
-    );
-}
-
-.ppago__infoItem--price strong {
-  color:
-    var(--pp-blue);
-
-  font-size: 1.15rem;
-
-  font-weight: 900;
 }
 
 /* =========================================
@@ -363,8 +497,7 @@
   padding: 1rem;
 
   border-left:
-    5px solid
-    var(--pp-cyan);
+    5px solid var(--pp-cyan);
 
   border-radius: 0.85rem;
 
@@ -373,7 +506,6 @@
   color: #344054;
 
   font-size: 0.9rem;
-
   line-height: 1.6;
 }
 
@@ -387,7 +519,6 @@
 
 .ppago__process {
   display: grid;
-
   gap: 0.75rem;
 
   margin-top: 1.25rem;
@@ -395,12 +526,10 @@
 
 .ppago__process > div {
   display: grid;
-
   grid-template-columns:
     auto 1fr;
 
   gap: 0.75rem;
-
   align-items: center;
 }
 
@@ -409,29 +538,24 @@
   height: 31px;
 
   display: grid;
-
   place-items: center;
 
   border-radius: 50%;
 
-  background:
-    var(--pp-blue);
+  background: var(--pp-blue);
 
   color: #ffffff;
 
   font-size: 0.82rem;
-
   font-weight: 900;
 }
 
 .ppago__process p {
   margin: 0;
 
-  color:
-    var(--pp-muted);
+  color: var(--pp-muted);
 
   font-size: 0.88rem;
-
   line-height: 1.45;
 }
 
@@ -441,7 +565,6 @@
 
 .ppago__form {
   display: grid;
-
   gap: 1.1rem;
 
   margin-top: 1.5rem;
@@ -449,22 +572,14 @@
 
 .ppago__twoColumns {
   display: grid;
-
   grid-template-columns:
-    repeat(
-      2,
-      minmax(
-        0,
-        1fr
-      )
-    );
+    repeat(2, minmax(0, 1fr));
 
   gap: 1rem;
 }
 
 .ppago__field {
   display: grid;
-
   gap: 0.45rem;
 }
 
@@ -472,32 +587,27 @@
   color: #344054;
 
   font-size: 0.88rem;
-
   font-weight: 800;
 }
 
 .ppago__field label span {
-  color:
-    var(--pp-danger);
+  color: var(--pp-danger);
 }
 
 .ppago__field input,
 .ppago__field textarea {
   width: 100%;
 
-  border:
-    1px solid
+  border: 1px solid
     var(--pp-border);
 
   border-radius: 0.85rem;
 
   background: #ffffff;
 
-  color:
-    var(--pp-text);
+  color: var(--pp-text);
 
   font-family: inherit;
-
   font-size: 0.95rem;
 
   outline: none;
@@ -510,8 +620,7 @@
 .ppago__field input {
   min-height: 48px;
 
-  padding:
-    0 0.95rem;
+  padding: 0 0.95rem;
 }
 
 .ppago__field textarea {
@@ -522,33 +631,25 @@
 
 .ppago__field input:focus,
 .ppago__field textarea:focus {
-  border-color:
-    var(--pp-cyan);
+  border-color: var(--pp-cyan);
 
   box-shadow:
     0 0 0 4px
-    rgba(
-      40,
-      167,
-      232,
-      0.12
-    );
+    rgba(40, 167, 232, 0.12);
 }
 
 /* =========================================
-   INPUT VALOR
+   VALOR
 ========================================= */
 
 .ppago__moneyInput {
   display: grid;
-
   grid-template-columns:
     auto 1fr;
 
   align-items: center;
 
-  border:
-    1px solid
+  border: 1px solid
     var(--pp-border);
 
   border-radius: 0.85rem;
@@ -563,40 +664,30 @@
 }
 
 .ppago__moneyInput:focus-within {
-  border-color:
-    var(--pp-cyan);
+  border-color: var(--pp-cyan);
 
   box-shadow:
     0 0 0 4px
-    rgba(
-      40,
-      167,
-      232,
-      0.12
-    );
+    rgba(40, 167, 232, 0.12);
 }
 
 .ppago__moneyInput > span {
   height: 100%;
 
   display: grid;
-
   place-items: center;
 
-  padding:
-    0 0.9rem;
+  padding: 0 0.9rem;
 
   background: #f4f7fb;
 
-  color:
-    var(--pp-blue);
+  color: var(--pp-blue);
 
   font-weight: 900;
 }
 
 .ppago__moneyInput input {
   border: 0;
-
   border-radius: 0;
 }
 
@@ -605,186 +696,56 @@
 }
 
 /* =========================================
-   REFERENCIA DEL PRECIO
+   REFERENCIA DE PRECIO
 ========================================= */
 
 .ppago__priceReference {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
+  gap: 0.75rem;
 
-  gap: 1rem;
+  padding: 0.8rem 0.9rem;
 
-  margin-top: 0.25rem;
+  border-radius: 0.8rem;
 
-  padding:
-    0.85rem 1rem;
-
-  border:
-    1px solid
-    #dce7f3;
-
-  border-radius: 0.9rem;
-
-  background:
-    linear-gradient(
-      135deg,
-      #f7faff,
-      #f2f7fc
-    );
-
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
+  background: #f7f9fc;
 }
 
 .ppago__priceReference--modified {
-  border-color:
-    rgba(
-      247,
-      144,
-      9,
-      0.4
-    );
-
-  background:
-    linear-gradient(
-      135deg,
-      #fffaf3,
-      #fff7e8
-    );
+  background: #fff8eb;
 }
 
 .ppago__priceReferenceInfo {
-  min-width: 0;
-
   display: flex;
-
   flex-direction: column;
-
   gap: 0.15rem;
 }
 
 .ppago__priceReferenceInfo span {
-  color:
-    var(--pp-muted);
-
-  font-size: 0.75rem;
-
-  font-weight: 700;
+  color: var(--pp-muted);
+  font-size: 0.74rem;
 }
 
 .ppago__priceReferenceInfo strong {
-  color:
-    var(--pp-blue);
-
-  font-size: 1.08rem;
-
-  font-weight: 900;
+  color: var(--pp-blue-dark);
 }
-
-/* =========================================
-   BOTÓN USAR VALOR DEL CURSO
-========================================= */
 
 .ppago__restorePrice {
-  min-height: 40px;
-
-  flex-shrink: 0;
-
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 0.4rem;
-
-  padding:
-    0 0.9rem;
-
-  border:
-    1px solid
-    var(--pp-blue);
-
+  border: 0;
   border-radius: 0.75rem;
 
-  background: #ffffff;
+  padding: 0.6rem 0.8rem;
 
-  color:
-    var(--pp-blue);
+  background: #eef4ff;
+  color: var(--pp-blue);
 
-  font-family: inherit;
-
-  font-size: 0.78rem;
-
-  font-weight: 900;
-
+  font-weight: 800;
   cursor: pointer;
-
-  white-space: nowrap;
-
-  box-shadow:
-    0 5px 14px
-    rgba(
-      23,
-      58,
-      138,
-      0.08
-    );
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
-
-.ppago__restorePrice span {
-  color: inherit;
-
-  font-size: 1rem;
-
-  font-weight: 900;
-}
-
-.ppago__restorePrice:hover {
-  background:
-    var(--pp-blue);
-
-  color: #ffffff;
-
-  transform:
-    translateY(-1px);
-
-  box-shadow:
-    0 8px 18px
-    rgba(
-      23,
-      58,
-      138,
-      0.18
-    );
-}
-
-.ppago__restorePrice:active {
-  transform: translateY(0);
-}
-
-/* =========================================
-   AYUDA PRECIO
-========================================= */
 
 .ppago__fieldHelp {
-  display: block;
-
-  color:
-    var(--pp-muted);
-
-  font-size: 0.76rem;
-
+  color: var(--pp-muted);
   line-height: 1.45;
 }
 
@@ -796,17 +757,14 @@
   min-height: 120px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   gap: 1rem;
 
   padding: 1rem;
 
-  border:
-    2px dashed
+  border: 2px dashed
     var(--pp-border);
 
   border-radius: 1rem;
@@ -822,20 +780,16 @@
 }
 
 .ppago__fileBox:hover {
-  border-color:
-    var(--pp-cyan);
+  border-color: var(--pp-cyan);
 
   background: #f2f9ff;
 
-  transform:
-    translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .ppago__fileBox--selected {
   border-style: solid;
-
-  border-color:
-    var(--pp-success);
+  border-color: var(--pp-success);
 
   background: #f0fdf4;
 }
@@ -858,45 +812,36 @@
   flex-shrink: 0;
 
   display: grid;
-
   place-items: center;
 
   border-radius: 50%;
 
   background: #e9f5ff;
 
-  color:
-    var(--pp-blue);
+  color: var(--pp-blue);
 
   font-size: 1.35rem;
-
   font-weight: 900;
 }
 
 .ppago__fileBox--selected
-.ppago__fileIcon {
-  background:
-    var(--pp-success);
-
+  .ppago__fileIcon {
+  background: var(--pp-success);
   color: #ffffff;
 }
 
 .ppago__fileBox div:last-child {
   display: flex;
-
   flex-direction: column;
-
   gap: 0.25rem;
 }
 
 .ppago__fileBox strong {
-  color:
-    var(--pp-blue-dark);
+  color: var(--pp-blue-dark);
 }
 
 .ppago__fileBox span {
-  color:
-    var(--pp-muted);
+  color: var(--pp-muted);
 
   font-size: 0.82rem;
 }
@@ -906,12 +851,10 @@
 ========================================= */
 
 .ppago__formError {
-  padding:
-    0.9rem 1rem;
+  padding: 0.9rem 1rem;
 
   border-left:
-    5px solid
-    var(--pp-danger);
+    5px solid var(--pp-danger);
 
   border-radius: 0.85rem;
 
@@ -920,12 +863,11 @@
   color: #912018;
 
   font-size: 0.9rem;
-
   font-weight: 700;
 }
 
 /* =========================================
-   BOTONES PRINCIPALES
+   BOTONES
 ========================================= */
 
 .ppago__submitButton,
@@ -946,19 +888,13 @@
   color: #ffffff;
 
   font-size: 0.95rem;
-
   font-weight: 900;
 
   cursor: pointer;
 
   box-shadow:
     0 12px 24px
-    rgba(
-      23,
-      58,
-      138,
-      0.22
-    );
+    rgba(23, 58, 138, 0.22);
 
   transition:
     transform 0.2s ease,
@@ -971,46 +907,38 @@
 }
 
 .ppago__primaryButton {
-  padding:
-    0 1.4rem;
+  padding: 0 1.4rem;
 }
 
-.ppago__submitButton:hover:not(:disabled),
-.ppago__primaryButton:hover:not(:disabled) {
-  transform:
-    translateY(-2px);
+.ppago__submitButton:hover:not(
+    :disabled
+  ),
+.ppago__primaryButton:hover:not(
+    :disabled
+  ) {
+  transform: translateY(-2px);
 
   box-shadow:
     0 16px 30px
-    rgba(
-      23,
-      58,
-      138,
-      0.28
-    );
+    rgba(23, 58, 138, 0.28);
 }
 
 .ppago__submitButton:disabled,
 .ppago__primaryButton:disabled {
   opacity: 0.55;
-
   cursor: not-allowed;
 
   transform: none;
-
   box-shadow: none;
 }
 
 .ppago__privacy {
   margin: 0;
 
-  color:
-    var(--pp-muted);
+  color: var(--pp-muted);
 
   font-size: 0.78rem;
-
   text-align: center;
-
   line-height: 1.5;
 }
 
@@ -1019,19 +947,9 @@
 ========================================= */
 
 .ppago__statusCard {
-  width:
-    min(
-      600px,
-      100%
-    );
+  width: min(600px, 100%);
 
-  margin:
-    min(
-      14vh,
-      8rem
-    )
-    auto
-    0;
+  margin: min(14vh, 8rem) auto 0;
 
   padding: 2.2rem;
 
@@ -1043,25 +961,17 @@
 
   box-shadow:
     0 22px 55px
-    rgba(
-      7,
-      27,
-      63,
-      0.18
-    );
+    rgba(7, 27, 63, 0.18);
 }
 
 .ppago__statusCard h1 {
-  margin:
-    0.7rem 0 0;
+  margin: 0.7rem 0 0;
 
-  color:
-    var(--pp-blue-dark);
+  color: var(--pp-blue-dark);
 }
 
 .ppago__statusCard > p {
-  color:
-    var(--pp-muted);
+  color: var(--pp-muted);
 
   line-height: 1.7;
 }
@@ -1073,32 +983,26 @@
   margin: 0 auto;
 
   display: grid;
-
   place-items: center;
 
   border-radius: 50%;
 
   background: #fef3f2;
 
-  color:
-    var(--pp-danger);
+  color: var(--pp-danger);
 
   font-size: 2rem;
-
   font-weight: 900;
 }
 
 .ppago__statusIcon--success {
   background: #ecfdf3;
-
-  color:
-    var(--pp-success-dark);
+  color: var(--pp-success-dark);
 }
 
 .ppago__statusCard--success {
   border-top:
-    5px solid
-    var(--pp-success);
+    5px solid var(--pp-success);
 }
 
 /* =========================================
@@ -1107,27 +1011,17 @@
 
 .ppago__summary {
   display: grid;
-
   grid-template-columns:
-    repeat(
-      3,
-      minmax(
-        0,
-        1fr
-      )
-    );
+    repeat(3, minmax(0, 1fr));
 
   gap: 0.75rem;
 
-  margin:
-    1.5rem 0;
+  margin: 1.5rem 0;
 }
 
 .ppago__summary div {
   display: flex;
-
   flex-direction: column;
-
   gap: 0.25rem;
 
   padding: 0.9rem;
@@ -1138,15 +1032,13 @@
 }
 
 .ppago__summary span {
-  color:
-    var(--pp-muted);
+  color: var(--pp-muted);
 
   font-size: 0.75rem;
 }
 
 .ppago__summary strong {
-  color:
-    var(--pp-blue-dark);
+  color: var(--pp-blue-dark);
 
   font-size: 0.9rem;
 }
@@ -1159,6 +1051,11 @@
   .ppago {
     padding:
       1rem 1rem 2rem;
+  }
+
+  .ppago__bankGrid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
   }
 
   .ppago__grid {
@@ -1177,17 +1074,13 @@
 @media (max-width: 650px) {
   .ppago {
     padding:
-      0.75rem
-      0.75rem
-      1.5rem;
+      0.75rem 0.75rem 1.5rem;
   }
 
-  .ppago__header {
-    align-items:
-      flex-start;
-
-    flex-direction:
-      column;
+  .ppago__header,
+  .ppago__bankHeader {
+    align-items: flex-start;
+    flex-direction: column;
 
     padding: 1rem;
   }
@@ -1198,13 +1091,19 @@
   }
 
   .ppago__secureBadge {
-    align-self:
-      flex-start;
+    align-self: flex-start;
+  }
+
+  .ppago__bankCard {
+    padding: 1rem;
+  }
+
+  .ppago__bankGrid {
+    grid-template-columns: 1fr;
   }
 
   .ppago__twoColumns {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
   }
 
   .ppago__infoCard,
@@ -1213,23 +1112,8 @@
   }
 
   .ppago__fileBox {
-    align-items:
-      flex-start;
-
-    flex-direction:
-      column;
-  }
-
-  .ppago__priceReference {
-    align-items:
-      stretch;
-
-    flex-direction:
-      column;
-  }
-
-  .ppago__restorePrice {
-    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .ppago__statusCard {
