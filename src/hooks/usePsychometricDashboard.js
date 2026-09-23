@@ -80,6 +80,20 @@ const apiGet = async (path, params = {}) => {
 };
 
 /* =========================================================
+   PUT API
+========================================================= */
+
+const apiPut = async (path, body = {}) => {
+  const response = await axios.put(
+    `${API_URL}${path}`,
+    body,
+    getConfigToken(),
+  );
+
+  return response.data;
+};
+
+/* =========================================================
    HOOK
 ========================================================= */
 
@@ -114,6 +128,11 @@ const usePsychometricDashboard = () => {
     participantDetail,
     setParticipantDetail,
   ] = useState(null);
+
+  const [
+    linkingParticipantOrganization,
+    setLinkingParticipantOrganization,
+  ] = useState(false);
 
   /* =====================================================
      ACCESO EMPRESARIAL
@@ -939,6 +958,74 @@ const usePsychometricDashboard = () => {
   );
 
   /* =====================================================
+     VINCULAR EMPRESA / SECCIÓN A EVALUACIÓN
+  ===================================================== */
+
+  const linkParticipantOrganization =
+    useCallback(
+      async ({
+        evaluationId,
+        empresaId,
+        seccionId,
+      }) => {
+        if (
+          !evaluationId ||
+          !empresaId ||
+          !seccionId
+        ) {
+          throw new Error(
+            "Debes seleccionar empresa y sección.",
+          );
+        }
+
+        setLinkingParticipantOrganization(
+          true,
+        );
+
+        try {
+          const data = await apiPut(
+            `/psychometric/dashboard/participants/${evaluationId}/organization`,
+            {
+              empresaId,
+              seccionId,
+            },
+          );
+
+          await Promise.all([
+            loadDashboard(),
+            loadFilters(),
+          ]);
+
+          return data;
+        } catch (err) {
+          console.error(
+            "Error vinculando empresa y sección:",
+            err,
+          );
+
+          const error = new Error(
+            err?.response?.data?.message ||
+              err?.message ||
+              "No fue posible vincular la empresa y sección.",
+          );
+
+          error.response =
+            err?.response;
+
+          throw error;
+        } finally {
+          setLinkingParticipantOrganization(
+            false,
+          );
+        }
+      },
+      [
+        loadDashboard,
+        loadFilters,
+      ],
+    );
+
+  /* =====================================================
      CARGAR DASHBOARD AUTOMÁTICAMENTE
   ===================================================== */
 
@@ -988,6 +1075,7 @@ const usePsychometricDashboard = () => {
 
     loading,
     loadingDetail,
+    linkingParticipantOrganization,
     error,
 
     setParticipantPage,
@@ -1004,6 +1092,7 @@ const usePsychometricDashboard = () => {
     loadDashboard,
     loadParticipantDetail,
     closeParticipantDetail,
+    linkParticipantOrganization,
 
     loadCompanyAccessStatus,
     sendCompanyAccess,

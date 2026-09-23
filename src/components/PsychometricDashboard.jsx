@@ -785,6 +785,8 @@ const PsychometricDashboard = () => {
 
         loadingDetail,
 
+        linkingParticipantOrganization,
+
         error,
 
         companyAccess,
@@ -812,6 +814,8 @@ const PsychometricDashboard = () => {
         loadParticipantDetail,
 
         closeParticipantDetail,
+
+        linkParticipantOrganization,
 
         loadCompanyAccessStatus,
         sendCompanyAccess,
@@ -867,6 +871,18 @@ const PsychometricDashboard = () => {
         nextActive: null,
         title: "",
         message: "",
+    });
+
+    const [
+        organizationLinkModal,
+        setOrganizationLinkModal,
+    ] = useState({
+        open: false,
+        evaluationId: "",
+        participantName: "",
+        empresaId: "",
+        seccionId: "",
+        error: "",
     });
 
     /* =====================================================
@@ -1220,6 +1236,142 @@ const PsychometricDashboard = () => {
         );
 
         clearCompanyAccessFeedback();
+    };
+
+    /* =====================================================
+       VINCULAR PARTICIPANTE A EMPRESA / SECCIÓN
+    ===================================================== */
+
+    const openOrganizationLinkModal = (
+        row,
+    ) => {
+        setOrganizationLinkModal({
+            open: true,
+            evaluationId:
+                row?.evaluationId || "",
+            participantName:
+                row?.participante
+                    ?.nombreCompleto ||
+                "Participante",
+            empresaId:
+                row?.empresa?.id || "",
+            seccionId:
+                row?.seccion?.id || "",
+            error: "",
+        });
+    };
+
+    const closeOrganizationLinkModal = () => {
+        if (
+            linkingParticipantOrganization
+        ) {
+            return;
+        }
+
+        setOrganizationLinkModal({
+            open: false,
+            evaluationId: "",
+            participantName: "",
+            empresaId: "",
+            seccionId: "",
+            error: "",
+        });
+    };
+
+    const organizationLinkSections =
+        useMemo(
+            () => {
+                const rows =
+                    filterOptions
+                        ?.secciones ||
+                    [];
+
+                if (
+                    !organizationLinkModal
+                        .empresaId
+                ) {
+                    return [];
+                }
+
+                return rows.filter(
+                    (item) =>
+                        String(
+                            item.empresaId ||
+                            "",
+                        ) ===
+                        String(
+                            organizationLinkModal
+                                .empresaId,
+                        ),
+                );
+            },
+            [
+                filterOptions,
+                organizationLinkModal
+                    .empresaId,
+            ],
+        );
+
+    const saveOrganizationLink = async () => {
+        if (
+            !organizationLinkModal
+                .empresaId
+        ) {
+            setOrganizationLinkModal(
+                (prev) => ({
+                    ...prev,
+                    error:
+                        "Selecciona una empresa.",
+                }),
+            );
+            return;
+        }
+
+        if (
+            !organizationLinkModal
+                .seccionId
+        ) {
+            setOrganizationLinkModal(
+                (prev) => ({
+                    ...prev,
+                    error:
+                        "Selecciona una sección.",
+                }),
+            );
+            return;
+        }
+
+        try {
+            await linkParticipantOrganization({
+                evaluationId:
+                    organizationLinkModal
+                        .evaluationId,
+                empresaId:
+                    organizationLinkModal
+                        .empresaId,
+                seccionId:
+                    organizationLinkModal
+                        .seccionId,
+            });
+
+            setOrganizationLinkModal({
+                open: false,
+                evaluationId: "",
+                participantName: "",
+                empresaId: "",
+                seccionId: "",
+                error: "",
+            });
+        } catch (err) {
+            setOrganizationLinkModal(
+                (prev) => ({
+                    ...prev,
+                    error:
+                        err?.message ||
+                        "No fue posible guardar la vinculación.",
+                }),
+            );
+        }
     };
 
     const handleSendCompanyAccess = (
@@ -3562,6 +3714,11 @@ const PsychometricDashboard = () => {
                                                 </th>
 
                                                 <th>
+                                                    Vincular
+                                                    empresa
+                                                </th>
+
+                                                <th>
                                                     Género
                                                 </th>
 
@@ -3665,6 +3822,37 @@ const PsychometricDashboard = () => {
                                                                     "—"
                                                                 }
                                                             </small>
+                                                        </td>
+
+                                                        <td>
+                                                            <button
+                                                                type="button"
+                                                                className={`psyDashLinkOrgBtn ${
+                                                                    row
+                                                                        .empresa
+                                                                        ?.id
+                                                                        ? "psyDashLinkOrgBtn--linked"
+                                                                        : ""
+                                                                }`}
+                                                                onClick={() =>
+                                                                    openOrganizationLinkModal(
+                                                                        row,
+                                                                    )
+                                                                }
+                                                                title={
+                                                                    row
+                                                                        .empresa
+                                                                        ?.id
+                                                                        ? "Cambiar empresa y sección de esta evaluación"
+                                                                        : "Vincular esta evaluación a una empresa y sección"
+                                                                }
+                                                            >
+                                                                {row
+                                                                    .empresa
+                                                                    ?.id
+                                                                    ? "Cambiar"
+                                                                    : "Vincular"}
+                                                            </button>
                                                         </td>
 
                                                         <td>
@@ -3910,7 +4098,7 @@ const PsychometricDashboard = () => {
                                                     <tr>
                                                         <td
                                                             colSpan={
-                                                                13
+                                                                14
                                                             }
                                                         >
                                                             <div className="psyDashEmpty">
@@ -4011,6 +4199,251 @@ const PsychometricDashboard = () => {
                         )}
 
                 </>
+            )}
+
+            {/* ===================================================
+          MODAL - VINCULAR EMPRESA / SECCIÓN
+      =================================================== */}
+
+            {organizationLinkModal.open && (
+                <div
+                    className="psyDashOrgLinkBackdrop"
+                    onMouseDown={(
+                        event,
+                    ) => {
+                        if (
+                            event.target ===
+                            event.currentTarget
+                        ) {
+                            closeOrganizationLinkModal();
+                        }
+                    }}
+                >
+                    <section
+                        className="psyDashOrgLinkModal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="psyDashOrgLinkTitle"
+                    >
+                        <button
+                            type="button"
+                            className="psyDashOrgLinkModal__close"
+                            onClick={
+                                closeOrganizationLinkModal
+                            }
+                            disabled={
+                                linkingParticipantOrganization
+                            }
+                            aria-label="Cerrar"
+                        >
+                            ×
+                        </button>
+
+                        <div className="psyDashOrgLinkModal__icon">
+                            ↗
+                        </div>
+
+                        <div className="psyDashOrgLinkModal__content">
+                            <span className="psyDashEyebrow">
+                                Vinculación organizacional
+                            </span>
+
+                            <h2 id="psyDashOrgLinkTitle">
+                                Vincular empresa y sección
+                            </h2>
+
+                            <p>
+                                Esta asignación quedará guardada
+                                en esta evaluación y también
+                                actualizará la empresa y sección
+                                actuales del usuario.
+                            </p>
+
+                            <div className="psyDashOrgLinkParticipant">
+                                <span>
+                                    Participante
+                                </span>
+
+                                <strong>
+                                    {
+                                        organizationLinkModal
+                                            .participantName
+                                    }
+                                </strong>
+                            </div>
+
+                            <div className="psyDashOrgLinkFields">
+                                <label>
+                                    <span>
+                                        Empresa
+                                    </span>
+
+                                    <select
+                                        value={
+                                            organizationLinkModal
+                                                .empresaId
+                                        }
+                                        onChange={(
+                                            event,
+                                        ) =>
+                                            setOrganizationLinkModal(
+                                                (
+                                                    prev,
+                                                ) => ({
+                                                    ...prev,
+                                                    empresaId:
+                                                        event
+                                                            .target
+                                                            .value,
+                                                    seccionId:
+                                                        "",
+                                                    error:
+                                                        "",
+                                                }),
+                                            )
+                                        }
+                                        disabled={
+                                            linkingParticipantOrganization
+                                        }
+                                    >
+                                        <option value="">
+                                            Selecciona una empresa
+                                        </option>
+
+                                        {companyFilterOptions.map(
+                                            (
+                                                company,
+                                            ) => (
+                                                <option
+                                                    key={
+                                                        company.id
+                                                    }
+                                                    value={
+                                                        company.id
+                                                    }
+                                                >
+                                                    {
+                                                        company.nombre
+                                                    }
+                                                </option>
+                                            ),
+                                        )}
+                                    </select>
+                                </label>
+
+                                <label>
+                                    <span>
+                                        Sección
+                                    </span>
+
+                                    <select
+                                        value={
+                                            organizationLinkModal
+                                                .seccionId
+                                        }
+                                        onChange={(
+                                            event,
+                                        ) =>
+                                            setOrganizationLinkModal(
+                                                (
+                                                    prev,
+                                                ) => ({
+                                                    ...prev,
+                                                    seccionId:
+                                                        event
+                                                            .target
+                                                            .value,
+                                                    error:
+                                                        "",
+                                                }),
+                                            )
+                                        }
+                                        disabled={
+                                            !organizationLinkModal
+                                                .empresaId ||
+                                            linkingParticipantOrganization
+                                        }
+                                    >
+                                        <option value="">
+                                            {organizationLinkModal
+                                                .empresaId
+                                                ? "Selecciona una sección"
+                                                : "Primero selecciona una empresa"}
+                                        </option>
+
+                                        {organizationLinkSections.map(
+                                            (
+                                                section,
+                                            ) => (
+                                                <option
+                                                    key={
+                                                        section.id
+                                                    }
+                                                    value={
+                                                        section.id
+                                                    }
+                                                >
+                                                    {
+                                                        section.nombre
+                                                    }
+                                                </option>
+                                            ),
+                                        )}
+                                    </select>
+                                </label>
+                            </div>
+
+                            {organizationLinkModal.error && (
+                                <div className="psyDashOrgLinkError">
+                                    {
+                                        organizationLinkModal
+                                            .error
+                                    }
+                                </div>
+                            )}
+
+                            <div className="psyDashOrgLinkNotice">
+                                <strong>
+                                    Importante:
+                                </strong>{" "}
+                                si después el usuario cambia de
+                                empresa en su perfil, esta
+                                evaluación conservará la
+                                vinculación que guardes aquí.
+                            </div>
+                        </div>
+
+                        <footer className="psyDashOrgLinkModal__actions">
+                            <button
+                                type="button"
+                                className="psyDashBtn psyDashBtn--outline"
+                                onClick={
+                                    closeOrganizationLinkModal
+                                }
+                                disabled={
+                                    linkingParticipantOrganization
+                                }
+                            >
+                                Cancelar
+                            </button>
+
+                            <button
+                                type="button"
+                                className="psyDashBtn psyDashOrgLinkSave"
+                                onClick={
+                                    saveOrganizationLink
+                                }
+                                disabled={
+                                    linkingParticipantOrganization
+                                }
+                            >
+                                {linkingParticipantOrganization
+                                    ? "Guardando..."
+                                    : "Guardar vinculación"}
+                            </button>
+                        </footer>
+                    </section>
+                </div>
             )}
 
             {/* ===================================================
