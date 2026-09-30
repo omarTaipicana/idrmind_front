@@ -924,6 +924,111 @@ const AverageValuesChart = ({
 };
 
 /* =========================================================
+   RESUMEN INTERPRETATIVO DEL GRUPO
+========================================================= */
+
+const GroupInterpretationPanel = ({
+    interpretation,
+}) => {
+    if (
+        !interpretation
+    ) {
+        return null;
+    }
+
+    const strengths =
+        Array.isArray(
+            interpretation.strengths,
+        )
+            ? interpretation.strengths
+            : [];
+
+    const attention =
+        Array.isArray(
+            interpretation.attention,
+        )
+            ? interpretation.attention
+            : [];
+
+    return (
+        <article className="psyDashPanel psyDashGroupInsight">
+
+            <div className="psyDashPanel__header">
+                <div>
+                    <span className="psyDashEyebrow">
+                        Lectura ejecutiva
+                    </span>
+
+                    <h3>
+                        {interpretation.title ||
+                            "Resumen interpretativo del grupo"}
+                    </h3>
+                </div>
+
+                <span className="psyDashGroupInsight__count">
+                    {interpretation.totalResultados || 0}
+                    {" "}
+                    resultados
+                </span>
+            </div>
+
+            <div className="psyDashGroupInsight__body">
+
+                {interpretation.introduction && (
+                    <p className="psyDashGroupInsight__intro">
+                        {interpretation.introduction}
+                    </p>
+                )}
+
+                {interpretation.summary && (
+                    <p className="psyDashGroupInsight__summary">
+                        {interpretation.summary}
+                    </p>
+                )}
+
+                {strengths.length > 0 && (
+                    <div className="psyDashGroupInsight__section">
+                        <strong>
+                            Perfil predominante
+                        </strong>
+
+                        {strengths.map(
+                            (item, index) => (
+                                <p
+                                    key={`group-strength-${index}`}
+                                >
+                                    {item}
+                                </p>
+                            ),
+                        )}
+                    </div>
+                )}
+
+                {attention.length > 0 && (
+                    <div className="psyDashGroupInsight__section psyDashGroupInsight__section--attention">
+                        <strong>
+                            Insumos para la gestión
+                        </strong>
+
+                        {attention.map(
+                            (item, index) => (
+                                <p
+                                    key={`group-attention-${index}`}
+                                >
+                                    {item}
+                                </p>
+                            ),
+                        )}
+                    </div>
+                )}
+
+            </div>
+
+        </article>
+    );
+};
+
+/* =========================================================
    COMPONENTE PRINCIPAL
 ========================================================= */
 
@@ -1064,6 +1169,10 @@ const PsychometricDashboard = () => {
     const analytical =
         analytics?.analytics ||
         {};
+
+    const groupInterpretation =
+        analytics?.groupInterpretation ||
+        null;
 
     /* =====================================================
        BUSCADOR DE EMPRESAS
@@ -3242,6 +3351,12 @@ const PsychometricDashboard = () => {
                                                 ?.averagePercentages
                                         }
                                         suffix="%"
+                                    />
+
+                                    <GroupInterpretationPanel
+                                        interpretation={
+                                            groupInterpretation
+                                        }
                                     />
 
                                 </section>

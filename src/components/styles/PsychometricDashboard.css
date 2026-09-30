@@ -3186,3 +3186,91 @@ body.psyDashBodyFullscreen {
   font-style: normal;
   font-weight: 700;
 }
+
+/* =========================================================
+   RESUMEN INTERPRETATIVO DEL GRUPO
+========================================================= */
+
+.psyDashGroupInsight {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f8fbff 100%
+    );
+}
+
+.psyDashGroupInsight__count {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border: 1px solid #d9e5f5;
+  border-radius: 999px;
+  background: #f4f8fd;
+  color: #315b8d;
+  font-size: 0.7rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.psyDashGroupInsight__body {
+  max-height: 270px;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+}
+
+.psyDashGroupInsight__intro,
+.psyDashGroupInsight__summary,
+.psyDashGroupInsight__section p {
+  margin: 0;
+  color: #53647d;
+  font-size: 0.78rem;
+  line-height: 1.58;
+}
+
+.psyDashGroupInsight__intro {
+  margin-bottom: 9px;
+  color: #263f65;
+  font-weight: 700;
+}
+
+.psyDashGroupInsight__summary {
+  margin-bottom: 11px;
+}
+
+.psyDashGroupInsight__section {
+  margin-top: 10px;
+  padding: 10px 11px;
+  border: 1px solid #e2eaf4;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.psyDashGroupInsight__section > strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #183564;
+  font-size: 0.75rem;
+}
+
+.psyDashGroupInsight__section p + p {
+  margin-top: 6px;
+}
+
+.psyDashGroupInsight__section--attention {
+  border-color: #f0dfb8;
+  background: #fffaf0;
+}
+
+.psyDashGroupInsight__section--attention > strong {
+  color: #7b5716;
+}
+
+@media (max-width: 900px) {
+  .psyDashGroupInsight__body {
+    max-height: none;
+  }
+}
