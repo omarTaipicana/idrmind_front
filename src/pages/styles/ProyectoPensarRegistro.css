@@ -1176,3 +1176,35 @@ label:last-child:nth-child(3) {
     padding: 1rem;
   }
 }
+
+/* =========================================================
+   VALIDACIÓN VISUAL - EDAD ACTUAL
+========================================================= */
+
+.pensar-register__age {
+  display: block;
+  margin-top: 0.15rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.65rem;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  line-height: 1.35;
+}
+
+.pensar-register__age--valid {
+  border: 1px solid #fecdca;
+  background: #fff4f2;
+  color: #b42318 !important;
+}
+
+.pensar-register__age--invalid {
+  border: 1px solid #fda29b;
+  background: #fef3f2;
+  color: #b42318 !important;
+}
+
+.pensar-register__field input[aria-invalid="true"] {
+  border-color: #f04438;
+  background: #fff8f7;
+  box-shadow: 0 0 0 4px rgba(240, 68, 56, 0.10);
+}

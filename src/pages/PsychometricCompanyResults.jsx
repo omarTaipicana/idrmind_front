@@ -139,6 +139,81 @@ const AGE_GROUP_LABELS = {
   GEN_3: "46 en adelante",
 };
 
+const AGE_GROUP_ORDER = {
+  GEN_0: 0,
+  GEN_1: 1,
+  GEN_2: 2,
+  GEN_3: 3,
+};
+
+/* Rangos definidos en psychometricScoring.service.js */
+const NEGOTIATION_RANGES = {
+  "MAESTRO DE LA NEGOCIACIÓN": "81–90 puntos",
+  "MAESTRO DE LA NEGOCIACION": "81–90 puntos",
+  "ESTRATEGA DE INFLUENCIA": "71–80 puntos",
+  "ARQUITECTO DE ACUERDOS": "61–70 puntos",
+  "EXPLORADOR ESTRATÉGICO": "30–60 puntos",
+  "EXPLORADOR ESTRATEGICO": "30–60 puntos",
+};
+
+const getNegotiationRange = (value) =>
+  NEGOTIATION_RANGES[normalizeKey(value)] || "";
+
+const orderDistributionData = (
+  dimension,
+  items = [],
+) => {
+  const data = [
+    ...(items || []),
+  ];
+
+  if (
+    dimension ===
+    "rangoEtario"
+  ) {
+    return data.sort(
+      (a, b) =>
+        (
+          AGE_GROUP_ORDER[
+            a.key
+          ] ?? 99
+        ) -
+        (
+          AGE_GROUP_ORDER[
+            b.key
+          ] ?? 99
+        ),
+    );
+  }
+
+  if (
+    dimension ===
+    "personalidad"
+  ) {
+    return data.sort(
+      (a, b) =>
+        String(
+          a.label ||
+          a.key ||
+          "",
+        ).localeCompare(
+          String(
+            b.label ||
+            b.key ||
+            "",
+          ),
+          "es",
+          {
+            sensitivity:
+              "base",
+          },
+        ),
+    );
+  }
+
+  return data;
+};
+
 const EMPTY_FILTERS = {
   seccionId: "",
   genero: "",
@@ -294,6 +369,9 @@ const DistributionTooltip = ({
         {item.displayKey ||
           item.label ||
           item.key}
+        {getNegotiationRange(item.label || item.key)
+          ? ` · ${getNegotiationRange(item.label || item.key)}`
+          : ""}
       </strong>
 
       <span>
@@ -321,7 +399,10 @@ const DistributionChart = ({
   subtitle = null,
 }) => {
   const chartData =
-    (data || []).map(
+    orderDistributionData(
+      dimension,
+      data,
+    ).map(
       (
         item,
       ) => ({
@@ -384,6 +465,26 @@ const DistributionChart = ({
           </button>
         )}
       </header>
+
+      {dimension === "negociacion" && chartData.length > 0 && (
+        <div className="companyResultsNegotiationLegend">
+          {chartData.map((item, index) => (
+            <span key={`neg-range-${item.key}`}>
+              <i
+                style={{
+                  backgroundColor: getDimensionColor(
+                    dimension,
+                    item.key,
+                    index,
+                  ),
+                }}
+              />
+              <strong>{item.label || item.key}</strong>
+              <em>{getNegotiationRange(item.label || item.key)}</em>
+            </span>
+          ))}
+        </div>
+      )}
 
       {!chartData.length ? (
         <div className="companyResultsEmpty">
@@ -473,14 +574,17 @@ const DistributionChart = ({
                   chartData
                 }
                 margin={{
-                  top: 12,
+                  top: 26,
                   right: 12,
                   left: 0,
                   bottom:
-                    chartData.length >
-                    4
-                      ? 48
-                      : 12,
+                    dimension ===
+                    "personalidad"
+                      ? 86
+                      : chartData.length >
+                        4
+                        ? 52
+                        : 18,
                 }}
               >
                 <CartesianGrid
@@ -494,29 +598,50 @@ const DistributionChart = ({
                   dataKey="displayKey"
                   interval={0}
                   angle={
-                    chartData.length >
-                    2
-                      ? -28
-                      : 0
+                    dimension ===
+                    "personalidad"
+                      ? -35
+                      : chartData.length >
+                        2
+                        ? -28
+                        : 0
                   }
                   textAnchor={
+                    dimension ===
+                      "personalidad" ||
                     chartData.length >
-                    2
+                      2
                       ? "end"
                       : "middle"
                   }
                   height={
-                    chartData.length >
-                    2
-                      ? 88
-                      : 42
+                    dimension ===
+                    "personalidad"
+                      ? 110
+                      : chartData.length >
+                        2
+                        ? 88
+                        : 42
                   }
+                  tick={{
+                    fontSize:
+                      dimension ===
+                      "personalidad"
+                        ? 11
+                        : 12,
+                  }}
                   tickFormatter={(
                     value,
                   ) =>
-                    shortenAxisLabel(
-                      value,
-                    )
+                    dimension ===
+                    "personalidad"
+                      ? String(
+                          value ||
+                          "",
+                        )
+                      : shortenAxisLabel(
+                          value,
+                        )
                   }
                 />
 

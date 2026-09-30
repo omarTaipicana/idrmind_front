@@ -10,6 +10,7 @@ import {
     CartesianGrid,
     Cell,
     Legend,
+    LabelList,
     Line,
     LineChart,
     Pie,
@@ -228,6 +229,76 @@ const AGE_GROUP_LABELS = {
     GEN_3: "46 en adelante",
 };
 
+const AGE_GROUP_ORDER = {
+    GEN_0: 0,
+    GEN_1: 1,
+    GEN_2: 2,
+    GEN_3: 3,
+};
+
+const PRODUCTIVITY_LABELS = {
+    A: "Élite Productiva",
+    B: "Alto Desempeño",
+    C: "Productividad Estratégica",
+    D: "Productividad Consolidada",
+    E: "Productividad Emergente",
+    F: "Potencial Productivo",
+};
+
+/* Rangos definidos en psychometricScoring.service.js */
+const NEGOTIATION_RANGES = {
+    "MAESTRO DE LA NEGOCIACIÓN": "81–90 puntos",
+    "MAESTRO DE LA NEGOCIACION": "81–90 puntos",
+    "ESTRATEGA DE INFLUENCIA": "71–80 puntos",
+    "ARQUITECTO DE ACUERDOS": "61–70 puntos",
+    "EXPLORADOR ESTRATÉGICO": "30–60 puntos",
+    "EXPLORADOR ESTRATEGICO": "30–60 puntos",
+};
+
+const getNegotiationRange = (value) =>
+    NEGOTIATION_RANGES[normalizeKey(value)] || "";
+
+const orderDistributionData = (
+    dimension,
+    items = [],
+) => {
+    const data = [
+        ...(items || []),
+    ];
+
+    if (
+        dimension ===
+        "rangoEtario"
+    ) {
+        return data.sort(
+            (a, b) =>
+                (
+                    AGE_GROUP_ORDER[
+                        a.key
+                    ] ?? 99
+                ) -
+                (
+                    AGE_GROUP_ORDER[
+                        b.key
+                    ] ?? 99
+                ),
+        );
+    }
+
+    if (
+        dimension ===
+        "personalidad"
+    ) {
+        return data.sort(
+            (a, b) =>
+                Number(b?.cantidad || 0) -
+                Number(a?.cantidad || 0),
+        );
+    }
+
+    return data;
+};
+
 const getDisplayValue = (
     dimension,
     value,
@@ -331,6 +402,8 @@ const formatDate = (
 const DistributionTooltip = ({
     active,
     payload,
+    total = 0,
+    filterKey,
 }) => {
     if (
         !active ||
@@ -350,11 +423,19 @@ const DistributionTooltip = ({
         <div className="psyDashTooltip">
             <strong>
                 {item.label || item.key}
+                {filterKey === "negociacion" &&
+                getNegotiationRange(item.label || item.key)
+                    ? ` · ${getNegotiationRange(item.label || item.key)}`
+                    : ""}
+                {filterKey === "productividad" &&
+                PRODUCTIVITY_LABELS[normalizeKey(item.key)]
+                    ? ` - ${PRODUCTIVITY_LABELS[normalizeKey(item.key)]}`
+                    : ""}
             </strong>
 
             <span>
                 Personas:{" "}
-                {item.cantidad}
+                {item.cantidad} / {total}
             </span>
 
             <span>
@@ -385,7 +466,10 @@ const DistributionChart = ({
     subtitle = null,
 }) => {
     const chartData =
-        (distribution || []).map(
+        orderDistributionData(
+            filterKey,
+            distribution,
+        ).map(
             (item) => ({
                 ...item,
                 displayKey:
@@ -396,6 +480,12 @@ const DistributionChart = ({
                     ),
             }),
         );
+
+    const totalGroup = chartData.reduce(
+        (total, item) =>
+            total + Number(item?.cantidad || 0),
+        0,
+    );
 
     const handleSelect = (
         value,
@@ -451,6 +541,26 @@ const DistributionChart = ({
                 )}
             </div>
 
+            {filterKey === "negociacion" && chartData.length > 0 && (
+                <div className="psyDashNegotiationLegend">
+                    {chartData.map((item, index) => (
+                        <span key={`neg-range-${item.key}`}>
+                            <i
+                                style={{
+                                    backgroundColor: getDimensionColor(
+                                        filterKey,
+                                        item.key,
+                                        index,
+                                    ),
+                                }}
+                            />
+                            <strong>{item.label || item.key}</strong>
+                            <em>{getNegotiationRange(item.label || item.key)}</em>
+                        </span>
+                    ))}
+                </div>
+            )}
+
             {!distribution?.length ? (
                 <div className="psyDashEmpty">
                     Sin datos para los
@@ -478,6 +588,13 @@ const DistributionChart = ({
                                     paddingAngle={3}
                                     stroke="#ffffff"
                                     strokeWidth={2}
+                                    labelLine={false}
+                                    label={({
+                                        payload,
+                                    }) =>
+                                        payload?.cantidad ??
+                                        ""
+                                    }
                                     onClick={(
                                         entry,
                                     ) =>
@@ -490,6 +607,14 @@ const DistributionChart = ({
                                             "pointer",
                                     }}
                                 >
+                                    <LabelList
+                                        dataKey="cantidad"
+                                        position="top"
+                                        fill="#344054"
+                                        fontSize={12}
+                                        fontWeight={800}
+                                    />
+
                                     {chartData.map(
                                         (
                                             item,
@@ -517,7 +642,10 @@ const DistributionChart = ({
 
                                 <Tooltip
                                     content={
-                                        <DistributionTooltip />
+                                        <DistributionTooltip
+                                            total={totalGroup}
+                                            filterKey={filterKey}
+                                        />
                                     }
                                 />
 
@@ -530,14 +658,17 @@ const DistributionChart = ({
                                     chartData
                                 }
                                 margin={{
-                                    top: 12,
+                                    top: 26,
                                     right: 12,
                                     left: 0,
                                     bottom:
-                                        chartData.length >
-                                            4
-                                            ? 40
-                                            : 10,
+                                        filterKey ===
+                                        "personalidad"
+                                            ? 82
+                                            : chartData.length >
+                                                4
+                                                ? 52
+                                                : 18,
                                 }}
                             >
 
@@ -552,23 +683,38 @@ const DistributionChart = ({
                                     dataKey="displayKey"
                                     interval={0}
                                     angle={
-                                        chartData.length >
-                                            4
-                                            ? -18
-                                            : 0
+                                        filterKey ===
+                                        "personalidad"
+                                            ? -35
+                                            : chartData.length >
+                                                4
+                                                ? -18
+                                                : 0
                                     }
                                     textAnchor={
+                                        filterKey ===
+                                            "personalidad" ||
                                         chartData.length >
                                             4
                                             ? "end"
                                             : "middle"
                                     }
                                     height={
-                                        chartData.length >
-                                            4
-                                            ? 65
-                                            : 35
+                                        filterKey ===
+                                        "personalidad"
+                                            ? 105
+                                            : chartData.length >
+                                                4
+                                                ? 72
+                                                : 42
                                     }
+                                    tick={{
+                                        fontSize:
+                                            filterKey ===
+                                            "personalidad"
+                                                ? 11
+                                                : 12,
+                                    }}
                                 />
 
                                 <YAxis
@@ -579,7 +725,10 @@ const DistributionChart = ({
 
                                 <Tooltip
                                     content={
-                                        <DistributionTooltip />
+                                        <DistributionTooltip
+                                            total={totalGroup}
+                                            filterKey={filterKey}
+                                        />
                                     }
                                 />
 
@@ -593,6 +742,14 @@ const DistributionChart = ({
                                     ]}
                                     isAnimationActive
                                 >
+                                    <LabelList
+                                        dataKey="cantidad"
+                                        position="top"
+                                        fill="#344054"
+                                        fontSize={12}
+                                        fontWeight={800}
+                                    />
+
                                     {chartData.map(
                                         (
                                             item,
@@ -730,6 +887,17 @@ const AverageValuesChart = ({
                                 0,
                             ]}
                         >
+                            <LabelList
+                                dataKey="value"
+                                position="top"
+                                formatter={(value) =>
+                                    `${value}${suffix}`
+                                }
+                                fill="#344054"
+                                fontSize={12}
+                                fontWeight={800}
+                            />
+
                             {data.map(
                                 (
                                     item,
@@ -2600,6 +2768,12 @@ const PsychometricDashboard = () => {
                                                     data={
                                                         evaluationTimeline
                                                     }
+                                                    margin={{
+                                                        top: 24,
+                                                        right: 18,
+                                                        left: 0,
+                                                        bottom: 8,
+                                                    }}
                                                 >
 
                                                     <CartesianGrid
@@ -2634,7 +2808,15 @@ const PsychometricDashboard = () => {
                                                         dot={{
                                                             r: 4,
                                                         }}
-                                                    />
+                                                    >
+                                                        <LabelList
+                                                            dataKey="evaluaciones"
+                                                            position="top"
+                                                            fill="#344054"
+                                                            fontSize={11}
+                                                            fontWeight={800}
+                                                        />
+                                                    </Line>
 
                                                     <Line
                                                         type="monotone"
@@ -2647,7 +2829,15 @@ const PsychometricDashboard = () => {
                                                         dot={{
                                                             r: 3,
                                                         }}
-                                                    />
+                                                    >
+                                                        <LabelList
+                                                            dataKey="completadas"
+                                                            position="bottom"
+                                                            fill="#344054"
+                                                            fontSize={11}
+                                                            fontWeight={800}
+                                                        />
+                                                    </Line>
 
                                                 </LineChart>
                                             </ResponsiveContainer>
@@ -2679,6 +2869,12 @@ const PsychometricDashboard = () => {
                                                     data={
                                                         paymentTimeline
                                                     }
+                                                    margin={{
+                                                        top: 28,
+                                                        right: 18,
+                                                        left: 0,
+                                                        bottom: 8,
+                                                    }}
                                                 >
 
                                                     <CartesianGrid
@@ -2721,7 +2917,18 @@ const PsychometricDashboard = () => {
                                                             0,
                                                             0,
                                                         ]}
-                                                    />
+                                                    >
+                                                        <LabelList
+                                                            dataKey="valorRegistrado"
+                                                            position="top"
+                                                            formatter={(value) =>
+                                                                formatMoney(value)
+                                                            }
+                                                            fill="#344054"
+                                                            fontSize={10}
+                                                            fontWeight={800}
+                                                        />
+                                                    </Bar>
 
                                                     <Bar
                                                         dataKey="valorVerificado"
@@ -2733,7 +2940,18 @@ const PsychometricDashboard = () => {
                                                             0,
                                                             0,
                                                         ]}
-                                                    />
+                                                    >
+                                                        <LabelList
+                                                            dataKey="valorVerificado"
+                                                            position="top"
+                                                            formatter={(value) =>
+                                                                formatMoney(value)
+                                                            }
+                                                            fill="#344054"
+                                                            fontSize={10}
+                                                            fontWeight={800}
+                                                        />
+                                                    </Bar>
 
                                                 </BarChart>
                                             </ResponsiveContainer>
@@ -2954,6 +3172,7 @@ const PsychometricDashboard = () => {
 
                                     <DistributionChart
                                         title="Índice de productividad personal"
+                                        subtitle="A: Élite Productiva · B: Alto Desempeño · C: Productividad Estratégica · D: Productividad Consolidada · E: Productividad Emergente · F: Potencial Productivo"
                                         filterKey="productividad"
                                         distribution={
                                             analytical

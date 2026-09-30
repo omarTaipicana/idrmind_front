@@ -826,6 +826,57 @@ const UserEdit = () => {
       return;
     }
 
+    if (dateBirth) {
+      const birthDate =
+        new Date(
+          `${dateBirth}T00:00:00`
+        );
+
+      const today =
+        new Date();
+
+      if (
+        Number.isNaN(
+          birthDate.getTime()
+        ) ||
+        birthDate > today
+      ) {
+        showError(
+          "La fecha de nacimiento es incorrecta."
+        );
+        return;
+      }
+
+      let age =
+        today.getFullYear() -
+        birthDate.getFullYear();
+
+      const monthDifference =
+        today.getMonth() -
+        birthDate.getMonth();
+
+      if (
+        monthDifference < 0 ||
+        (
+          monthDifference === 0 &&
+          today.getDate() <
+            birthDate.getDate()
+        )
+      ) {
+        age -= 1;
+      }
+
+      if (
+        age < 0 ||
+        age > 120
+      ) {
+        showError(
+          "La edad ingresada es incoherente. Verifica la fecha de nacimiento."
+        );
+        return;
+      }
+    }
+
     const formattedData = {
       firstName: capitalizeWords(firstName),
       lastName: capitalizeWords(lastName),
@@ -2290,7 +2341,7 @@ const UserEdit = () => {
               </div>
 
               <span className="ue_companySectionsCounter">
-                {empresaSeccionesList.length}
+               Número de seecciones registradas:  {empresaSeccionesList.length}
               </span>
             </div>
 

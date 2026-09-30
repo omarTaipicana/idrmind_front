@@ -59,6 +59,85 @@ const INITIAL_FORM = {
    HELPERS
 ========================================================= */
 
+const getBirthDateStatus = (value) => {
+  if (!value) {
+    return {
+      age: null,
+      valid: false,
+      message: "",
+    };
+  }
+
+  const birthDate =
+    new Date(`${value}T00:00:00`);
+
+  if (
+    Number.isNaN(
+      birthDate.getTime()
+    )
+  ) {
+    return {
+      age: null,
+      valid: false,
+      message:
+        "La fecha ingresada no es válida.",
+    };
+  }
+
+  const today = new Date();
+
+  if (birthDate > today) {
+    return {
+      age: null,
+      valid: false,
+      message:
+        "La fecha de nacimiento no puede ser futura.",
+    };
+  }
+
+  let age =
+    today.getFullYear() -
+    birthDate.getFullYear();
+
+  const monthDifference =
+    today.getMonth() -
+    birthDate.getMonth();
+
+  if (
+    monthDifference < 0 ||
+    (
+      monthDifference === 0 &&
+      today.getDate() <
+        birthDate.getDate()
+    )
+  ) {
+    age -= 1;
+  }
+
+  if (
+    age < 0 ||
+    age > 120
+  ) {
+    return {
+      age,
+      valid: false,
+      message:
+        "La edad ingresada es incoherente. Verifica tu fecha de nacimiento.",
+    };
+  }
+
+  return {
+    age,
+    valid: true,
+    message:
+      `Tu edad actual es: ${age} ${
+        age === 1
+          ? "año"
+          : "años"
+      }`,
+  };
+};
+
 const normalizeList = (value) => {
   if (Array.isArray(value)) {
     return value;
@@ -133,6 +212,15 @@ const ProyectoPensarRegistro = () => {
 
   const [form, setForm] =
     useState(INITIAL_FORM);
+
+  const birthDateStatus =
+    useMemo(
+      () =>
+        getBirthDateStatus(
+          form.dateBirth,
+        ),
+      [form.dateBirth],
+    );
 
   /*
    * Primero únicamente verificamos correo.
@@ -918,6 +1006,20 @@ const ProyectoPensarRegistro = () => {
       );
     }
 
+    const birthStatus =
+      getBirthDateStatus(
+        form.dateBirth,
+      );
+
+    if (
+      !birthStatus.valid
+    ) {
+      return (
+        birthStatus.message ||
+        "La fecha de nacimiento es incoherente."
+      );
+    }
+
     const celular =
       String(
         form.celular || ""
@@ -1510,7 +1612,27 @@ const ProyectoPensarRegistro = () => {
                         .toISOString()
                         .split("T")[0]
                     }
+                    aria-invalid={
+                      Boolean(
+                        form.dateBirth &&
+                        !birthDateStatus.valid
+                      )
+                    }
                   />
+
+                  {form.dateBirth && (
+                    <small
+                      className={`pensar-register__age ${
+                        birthDateStatus.valid
+                          ? "pensar-register__age--valid"
+                          : "pensar-register__age--invalid"
+                      }`}
+                    >
+                      {
+                        birthDateStatus.message
+                      }
+                    </small>
+                  )}
                 </label>
 
                 <label className="pensar-register__field">
