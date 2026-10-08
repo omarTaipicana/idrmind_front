@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import "./App.css";
+import SessionActivityManager from "./components/shared/SessionActivityManager";
 
 /* =========================================================
    PÁGINAS GENERALES
@@ -175,6 +176,7 @@ const App = () => {
 
   return (
     <div>
+      <SessionActivityManager />
       {/* =================================================
           HEADER
       ================================================= */}

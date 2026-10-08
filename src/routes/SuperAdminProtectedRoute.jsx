@@ -13,7 +13,7 @@ const SuperAdminProtectedRoute = () => {
 
     if (user) {
         if (
-            user?.cI === superAdmin
+            user?.isSuperAdmin === true || user?.cI === superAdmin
         ) {
             return <Outlet />;
         } else {

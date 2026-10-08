@@ -51,6 +51,7 @@ const useAuth = () => {
       .then((res) => {
         // setUserLogged(res.data);
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("idrmind.session.lastActivity", String(Date.now()));
         // localStorage.setItem("user", JSON.stringify(res.data.user));
         // navigate("/");
       })

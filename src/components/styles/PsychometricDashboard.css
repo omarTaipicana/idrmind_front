@@ -3274,3 +3274,75 @@ body.psyDashBodyFullscreen {
     max-height: none;
   }
 }
+
+/* Acciones SVG junto al nombre de cada participante */
+.psyDashParticipantIdentity { min-width: 220px; }
+.psyDashParticipantIdentity__nameRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.psyDashParticipantIdentity__nameRow > strong { min-width: 0; overflow-wrap: anywhere; }
+.psyDashParticipantIconActions { display: inline-flex; align-items: center; flex-shrink: 0; gap: 5px; }
+.psyDashParticipantIconBtn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid #cbd8ea; border-radius: 9px; color: #173a8a; background: #f7faff; text-decoration: none; cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease; }
+.psyDashParticipantIconBtn:hover, .psyDashParticipantIconBtn:focus-visible { background: #173a8a; color: #fff; border-color: #173a8a; }
+.psyDashParticipantIconBtn--result { color: #087e65; background: #f1fcf7; border-color: #b6e3d1; }
+.psyDashParticipantIconBtn--result:hover, .psyDashParticipantIconBtn--result:focus-visible { background: #087e65; border-color: #087e65; color: #fff; }
+
+/* Tabla de participantes: orden, movimiento y eliminación segura */
+.psyDashColumnTools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:8px 0;font-size:12px;color:#54627a}
+.psyDashColumnTools button{border:1px solid #cbd5e1;background:#f8fafc;border-radius:8px;padding:8px 12px;cursor:pointer;color:#173a8a;font-weight:700}
+.psyDashMovableHeader{cursor:grab;user-select:none;white-space:nowrap}
+.psyDashMovableHeader button{background:transparent;border:0;color:inherit;font:inherit;font-weight:inherit;cursor:pointer;text-align:left;padding:6px 2px;white-space:nowrap}
+.psyDashParticipantIconBtn--delete{color:#b42318;border-color:#fecaca;background:#fff7f7}
+.psyDashParticipantIconBtn--delete:hover{background:#b42318;border-color:#b42318;color:white}
+.psyDashDeleteOverlay{position:fixed;inset:0;z-index:20000;background:rgba(8,20,40,.65);display:flex;align-items:center;justify-content:center;padding:18px}
+.psyDashDeleteDialog{background:white;border-radius:16px;padding:24px;width:min(100%,480px);box-shadow:0 20px 60px #0003;color:#1b2940}
+.psyDashDeleteDialog h3{margin:0 0 12px}.psyDashDeleteDialog p{line-height:1.5}
+.psyDashDeleteDialog button{border:1px solid #cbd5e1;border-radius:9px;padding:10px 14px;cursor:pointer;background:#f1f5f9}
+.psyDashDeleteDialog button:disabled{opacity:.5;cursor:not-allowed}
+.psyDashDeleteCodeLabel{display:grid;gap:6px;margin:14px 0;font-weight:600}
+.psyDashDeleteCodeLabel input{border:1px solid #94a3b8;border-radius:8px;padding:10px;font-size:20px;letter-spacing:5px;width:100%;box-sizing:border-box}
+.psyDashDeleteActions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.psyDashDeleteActions button:last-child{background:#b42318;color:#fff;border-color:#b42318}
+
+/* Modal seguro de eliminación de evaluaciones */
+.psyDashDeleteOverlay{position:fixed;inset:0;z-index:20000;background:rgba(9,18,37,.74);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
+.psyDashDeleteDialog{width:min(100%,530px);max-height:min(92vh,820px);overflow-y:auto;padding:0;background:#fff;color:#233149;border:1px solid #e7eaf0;border-radius:20px;box-shadow:0 30px 85px rgba(3,10,28,.35);animation:psyDeleteAppear .2s ease-out}
+@keyframes psyDeleteAppear{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.psyDashDeleteHeader{display:flex;align-items:center;gap:14px;padding:23px 26px 19px;border-bottom:1px solid #eef0f4;background:linear-gradient(120deg,#fff7f5,#fff)}
+.psyDashDeleteWarningIcon{flex-shrink:0;width:52px;height:52px;display:grid;place-items:center;color:#b42318;background:#fee9e7;border:1px solid #f8cbc6;border-radius:15px}
+.psyDashDeleteEyebrow{display:block;color:#b42318;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.psyDashDeleteHeader h3{margin:0;color:#202a3b;font-size:21px;line-height:1.2}
+.psyDashDeleteDialog .psyDashDeleteClose{margin-left:auto;align-self:flex-start;display:grid;place-items:center;width:32px;height:32px;padding:0;background:transparent;border:0;color:#718096;font-size:26px;line-height:1;border-radius:8px}
+.psyDashDeleteDialog .psyDashDeleteClose:hover{background:#f5e6e5;color:#a51c16}
+.psyDashDeleteBody{padding:22px 26px 12px}
+.psyDashDeleteBody>p:first-child{margin:0 0 18px;color:#49566a;font-size:14px;line-height:1.65}
+.psyDashDeleteBody>p:first-child strong{color:#a5231b}
+.psyDashDeleteParticipant{display:flex;flex-direction:column;gap:3px;padding:14px 16px;background:#f7f9fc;border:1px solid #e4eaf2;border-radius:12px;margin-bottom:17px;overflow-wrap:anywhere}
+.psyDashDeleteParticipant>span{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#68778d}
+.psyDashDeleteParticipant strong{font-size:15px;color:#1f314b}
+.psyDashDeleteParticipant small{font-size:12px;color:#66758c}
+.psyDashDeleteSecurity{display:flex;gap:11px;align-items:flex-start;background:#f0f6ff;border:1px solid #d9e8ff;border-radius:12px;padding:13px;color:#36547d;font-size:13px;line-height:1.5;margin-bottom:15px}
+.psyDashDeleteSecurity svg{flex-shrink:0;color:#3366a9;margin-top:1px}
+.psyDashDeleteDialog .psyDashDeleteSendCode{display:block;width:100%;background:#233f78;color:white;border:1px solid #233f78;font-weight:700;padding:12px;border-radius:10px}
+.psyDashDeleteDialog .psyDashDeleteSendCode:hover:not(:disabled){background:#172f61}
+.psyDashDeleteVerify{display:grid;gap:8px;margin-top:17px}
+.psyDashDeleteVerify label{font-size:13px;font-weight:700;color:#263650}
+.psyDashDeleteVerify input{box-sizing:border-box;width:100%;border:1.5px solid #b9c8dd;border-radius:11px;background:#fff;padding:13px 15px;font-size:25px;font-weight:700;letter-spacing:12px;text-align:center;color:#1e365b;outline:none}
+.psyDashDeleteVerify input:focus{border-color:#376db8;box-shadow:0 0 0 3px rgba(55,109,184,.13)}
+.psyDashDeleteVerify small{font-size:12px;color:#64748b;line-height:1.45}
+.psyDashDeleteFeedback{padding:11px 13px;margin:14px 0 0!important;border:1px solid #d9e4f3;background:#f5f8fd;color:#38547c;border-radius:9px;font-size:13px;line-height:1.5}
+.psyDashDeleteActions{display:flex;justify-content:flex-end;gap:10px;margin:0;padding:18px 26px 22px;border-top:1px solid #eef0f4}
+.psyDashDeleteDialog .psyDashDeleteActions button{border-radius:10px;padding:12px 16px;font-weight:700;font-size:13px}
+.psyDashDeleteDialog .psyDashDeleteCancel{background:white;color:#4c5a70;border:1px solid #cbd5e1}
+.psyDashDeleteDialog .psyDashDeleteConfirm{background:#b42318;color:white;border:1px solid #b42318}
+.psyDashDeleteDialog .psyDashDeleteConfirm:hover:not(:disabled){background:#941c14}
+.psyDashDeleteDialog button:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:520px){.psyDashDeleteOverlay{padding:10px}.psyDashDeleteHeader{padding:17px}.psyDashDeleteBody{padding:18px 17px 12px}.psyDashDeleteActions{padding:15px 17px;flex-direction:column-reverse}.psyDashDeleteActions button{width:100%}.psyDashDeleteHeader h3{font-size:19px}}
+
+
+/* Detalle empresarial en ventana modal */
+.psyDashCompanyModalOverlay { position: fixed; inset: 0; z-index: 10020; background: rgba(9, 22, 47, .66); display: flex; align-items: center; justify-content: center; padding: 22px; overflow: auto; backdrop-filter: blur(3px); }
+.psyDashCompanyModal { position: relative; width: min(1180px, 100%); max-height: min(92vh, 1000px); overflow-y: auto; overscroll-behavior: contain; margin: auto; background: #fff; box-shadow: 0 25px 85px rgba(0, 0, 0, .3); border-radius: 18px; }
+.psyDashCompanyModalClose { position: absolute; right: 12px; top: 10px; z-index: 2; border: 1px solid #d7deeb; background: #fff; border-radius: 9px; width: 35px; height: 35px; font-size: 25px; line-height: 1; cursor: pointer; color: #32415c; }
+.psyDashCompanyModalClose:hover { background: #f2f5fb; }
+.psyDashCompanyModal > header { padding-right: 50px; }
+.psyDashCompanyActions > .psyDashCompanyIconBtn, .psyDashCompanyActions > .psyDashBtn[aria-label^="Ver empresa"] { display: inline-flex; justify-content: center; align-items: center; width: 38px; height: 38px; padding: 0; border-radius: 10px; }
+@media (max-width: 640px) { .psyDashCompanyModalOverlay { padding: 8px; } .psyDashCompanyModal { max-height: 96vh; border-radius: 12px; } }

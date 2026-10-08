@@ -1032,6 +1032,63 @@ const GroupInterpretationPanel = ({
    COMPONENTE PRINCIPAL
 ========================================================= */
 
+
+const PSY_COLUMNS = [
+  { id: "participante", label: "Participante" },
+  { id: "empresa", label: "Empresa / sección" },
+  { id: "vincular", label: "Vincular empresa" },
+  { id: "genero", label: "Género" },
+  { id: "edad", label: "Rango etario" },
+  { id: "animodo", label: "Animodo" },
+  { id: "comunicacion", label: "Comunicación" },
+  { id: "cerebro", label: "Cerebro" },
+  { id: "negociacion", label: "Negociación" },
+  { id: "vak", label: "VAK" },
+  { id: "persistencia", label: "Persistencia" },
+  { id: "productividad", label: "Productividad" },
+  { id: "fecha", label: "Finalización" }
+];
+const PSY_DEFAULT_ORDER = ["fecha", ...PSY_COLUMNS.map(c => c.id).filter(id => id !== "fecha")];
+const psyOrderKey = () => {
+    try {
+        const token = localStorage.getItem("token") || "";
+        const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));
+        return `idrmind.psychometric.participants.columns.v1.${payload?.user?.id || "default"}`;
+    } catch { return "idrmind.psychometric.participants.columns.v1.default"; }
+};
+const loadPsyOrder = () => {
+    try {
+        const stored = JSON.parse(localStorage.getItem(psyOrderKey()));
+        if (Array.isArray(stored) && stored.length === PSY_DEFAULT_ORDER.length &&
+            PSY_DEFAULT_ORDER.every(id => stored.includes(id))) return stored;
+    } catch { /* storage no disponible */ }
+    return PSY_DEFAULT_ORDER;
+};
+const psyValue = (row, id) => {
+    switch(id) {
+        case "participante": return row.participante?.nombreCompleto;
+        case "empresa": return row.empresa?.nombre || row.empresa?.razonSocial;
+        case "vincular": return row.empresa?.nombre;
+        case "genero": return row.participante?.genero;
+        case "edad": return row.participante?.rangoEtario;
+        case "animodo": return row.resultado?.animodo;
+        case "comunicacion": return row.resultado?.comunicacion;
+        case "cerebro": return row.resultado?.cerebro;
+        case "negociacion": return row.resultado?.negociacion;
+        case "vak": return row.resultado?.vak;
+        case "persistencia": return row.resultado?.persistenciaPuntaje;
+        case "productividad": return row.resultado?.productividadPorcentaje;
+        case "fecha": return row.fechaFinalizacion;
+        default: return "";
+    }
+};
+const psyCompare = (a, b, key) => {
+    const x = psyValue(a,key), y = psyValue(b,key);
+    if (key === "fecha") return (new Date(x || 0).getTime() || 0) - (new Date(y || 0).getTime() || 0);
+    if (typeof x === "number" || typeof y === "number") return Number(x || 0) - Number(y || 0);
+    return String(x ?? "").localeCompare(String(y ?? ""), "es", {numeric:true,sensitivity:"base"});
+};
+
 const PsychometricDashboard = () => {
     const {
         filters,
@@ -1096,6 +1153,341 @@ const PsychometricDashboard = () => {
         clearCompanyAccessFeedback,
     } =
         usePsychometricDashboard();
+    const [psyColumnOrder, setPsyColumnOrder] = useState(loadPsyOrder);
+    const [psySort, setPsySort] = useState({ id: "fecha", direction: "desc" });
+    const [psyDragging, setPsyDragging] = useState(null);
+    const [psyDelete, setPsyDelete] = useState(null);
+    const [psyDeleteCode, setPsyDeleteCode] = useState("");
+    const [psyDeleteStatus, setPsyDeleteStatus] = useState("");
+    const [psyDeleteBusy, setPsyDeleteBusy] = useState(false);
+    const [psyDeleteExpires, setPsyDeleteExpires] = useState(null);
+    useEffect(() => { try { localStorage.setItem(psyOrderKey(), JSON.stringify(psyColumnOrder)); } catch {} }, [psyColumnOrder]);
+    const psyRows = useMemo(() => [...(participants?.data || [])].sort((a,b) => {
+        const result = psyCompare(a,b,psySort.id);
+        return psySort.direction === "asc" ? result : -result;
+    }), [participants?.data,psySort]);
+    const psyMoveColumn = (from,to) => {
+        if (!from || from === to) return;
+        setPsyColumnOrder(previous => {
+            const next = [...previous]; next.splice(next.indexOf(from),1);
+            next.splice(next.indexOf(to),0,from); return next;
+        });
+    };
+    const psyCell = (row, id) => {
+        switch(id) {
+            case "participante": return (<>
+<div className="psyDashParticipantIdentity">
+                                                                <div className="psyDashParticipantIdentity__nameRow">
+                                                                    <strong>
+                                                                        {row.participante?.nombreCompleto || "—"}
+                                                                    </strong>
+                                                                    <div className="psyDashParticipantIconActions">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="psyDashParticipantIconBtn"
+                                                                            onClick={() => loadParticipantDetail(row.evaluationId)}
+                                                                            title="Ver detalle"
+                                                                            aria-label={`Ver detalle de ${row.participante?.nombreCompleto || "participante"}`}
+                                                                        >
+                                                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                                                <circle cx="12" cy="12" r="9" />
+                                                                                <path d="M12 11v5M12 8h.01" />
+                                                                            </svg>
+                                                                        </button>
+                                                                        <a
+                                                                            href={`#/resultado-psicometrico-admin/${row.evaluationId}`}
+                                                                            className="psyDashParticipantIconBtn psyDashParticipantIconBtn--result"
+                                                                            title="Ver resultado"
+                                                                            aria-label={`Ver resultado de ${row.participante?.nombreCompleto || "participante"}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                                                <path d="M2 12s3.7-7 10-7 10 7 10 7-3.7 7-10 7S2 12 2 12Z" />
+                                                                                <circle cx="12" cy="12" r="3" />
+                                                                            </svg>
+                                                                        </a>
+                                                                        <button type="button" className="psyDashParticipantIconBtn psyDashParticipantIconBtn--delete" title="Eliminar evaluación" aria-label="Eliminar evaluación" onClick={() => psyRequestDelete(row)}>
+                                                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v7m4-7v7" /></svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <small>{row.participante?.email || "—"}</small>
+                                                            </div>
+            </>);
+            case "empresa": return (<>
+<strong>
+                                                                {row
+                                                                    .empresa
+                                                                    ?.nombreComercial ||
+                                                                    row
+                                                                        .empresa
+                                                                        ?.razonSocial ||
+                                                                    (
+                                                                        row.tipoParticipante ===
+                                                                            "individual"
+                                                                            ? "Individual"
+                                                                            : "—"
+                                                                    )}
+                                                            </strong>
+
+                                                            <small>
+                                                                {
+                                                                    row
+                                                                        .seccion
+                                                                        ?.nombre ||
+                                                                    "—"
+                                                                }
+                                                            </small>
+            </>);
+            case "vincular": return (<>
+<button
+                                                                type="button"
+                                                                className={`psyDashLinkOrgBtn ${
+                                                                    row
+                                                                        .empresa
+                                                                        ?.id
+                                                                        ? "psyDashLinkOrgBtn--linked"
+                                                                        : ""
+                                                                }`}
+                                                                onClick={() =>
+                                                                    openOrganizationLinkModal(
+                                                                        row,
+                                                                    )
+                                                                }
+                                                                title={
+                                                                    row
+                                                                        .empresa
+                                                                        ?.id
+                                                                        ? "Cambiar empresa y sección de esta evaluación"
+                                                                        : "Vincular esta evaluación a una empresa y sección"
+                                                                }
+                                                            >
+                                                                {row
+                                                                    .empresa
+                                                                    ?.id
+                                                                    ? "Cambiar"
+                                                                    : "Vincular"}
+                                                            </button>
+            </>);
+            case "genero": return (<>
+<strong>
+                                                                {
+                                                                    row
+                                                                        .participante
+                                                                        ?.genre ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+            </>);
+            case "edad": return (<>
+<strong>
+                                                                {
+                                                                    row
+                                                                        .participante
+                                                                        ?.rangoEtarioLabel ||
+                                                                    getDisplayValue(
+                                                                        "rangoEtario",
+                                                                        row
+                                                                            .participante
+                                                                            ?.rangoEtario,
+                                                                    ) ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+
+                                                            {row
+                                                                .participante
+                                                                ?.edad !==
+                                                                null &&
+                                                                row
+                                                                    .participante
+                                                                    ?.edad !==
+                                                                undefined && (
+                                                                    <small>
+                                                                        {
+                                                                            row
+                                                                                .participante
+                                                                                ?.edad
+                                                                        }{" "}
+                                                                        años
+                                                                    </small>
+                                                                )}
+            </>);
+            case "animodo": return (<>
+<strong>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.animodoCategoria ||
+                                                                    row
+                                                                        .resultado
+                                                                        ?.animodo ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+
+                                                            {row
+                                                                .resultado
+                                                                ?.animodo &&
+                                                                row
+                                                                    .resultado
+                                                                    ?.animodoCategoria &&
+                                                                row
+                                                                    .resultado
+                                                                    ?.animodo !==
+                                                                row
+                                                                    .resultado
+                                                                    ?.animodoCategoria && (
+                                                                    <small>
+                                                                        {
+                                                                            row
+                                                                                .resultado
+                                                                                ?.animodo
+                                                                        }
+                                                                    </small>
+                                                                )}
+            </>);
+            case "comunicacion": return (<>
+{
+                                                                row
+                                                                    .resultado
+                                                                    ?.comunicacion ||
+                                                                "—"
+                                                            }
+            </>);
+            case "cerebro": return (<>
+<strong>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.cerebro ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+
+                                                            <small>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.cerebroTipo ||
+                                                                    ""
+                                                                }
+                                                            </small>
+            </>);
+            case "negociacion": return (<>
+{
+                                                                row
+                                                                    .resultado
+                                                                    ?.negociacion ||
+                                                                "—"
+                                                            }
+
+                                                            <small>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.negociacionPuntaje ??
+                                                                    "—"
+                                                                }{" "}
+                                                                pts
+                                                            </small>
+            </>);
+            case "vak": return (<>
+<strong>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.vak ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+
+                                                            {row
+                                                                .resultado
+                                                                ?.vakEmpate && (
+                                                                    <small>
+                                                                        Empate:{" "}
+                                                                        {(
+                                                                            row
+                                                                                .resultado
+                                                                                ?.vakEmpates ||
+                                                                            []
+                                                                        ).join(
+                                                                            " / ",
+                                                                        )}
+                                                                    </small>
+                                                                )}
+            </>);
+            case "persistencia": return (<>
+{
+                                                                row
+                                                                    .resultado
+                                                                    ?.persistencia ||
+                                                                "—"
+                                                            }
+
+                                                            <small>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.persistenciaPuntaje ??
+                                                                    "—"
+                                                                }
+                                                                /4
+                                                            </small>
+            </>);
+            case "productividad": return (<>
+<strong>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.productividad ||
+                                                                    "—"
+                                                                }
+                                                            </strong>
+
+                                                            <small>
+                                                                {
+                                                                    row
+                                                                        .resultado
+                                                                        ?.productividadPorcentaje ??
+                                                                    0
+                                                                }
+                                                                %
+                                                            </small>
+            </>);
+            case "fecha": return (<>
+{formatDate(
+                                                                row.fechaFinalizacion,
+                                                            )}
+            </>);
+            default: return "—";
+        }
+    };
+    const psyRequestDelete = async (row) => {
+        setPsyDelete(row); setPsyDeleteCode(""); setPsyDeleteStatus(""); setPsyDeleteExpires(null);
+    };
+    const psySendDeleteCode = async () => {
+        if (!psyDelete || psyDeleteBusy) return;
+        setPsyDeleteBusy(true); setPsyDeleteStatus("");
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/psychometric/dashboard/participants/${psyDelete.evaluationId}/delete-code`, {}, getConfigToken());
+            setPsyDeleteExpires(Date.now() + 5*60*1000);
+            setPsyDeleteStatus("Código enviado al correo del administrador. Válido durante 5 minutos.");
+        } catch(e) { setPsyDeleteStatus(e.response?.data?.message || "No se pudo enviar el código."); }
+        finally { setPsyDeleteBusy(false); }
+    };
+    const psyConfirmDelete = async () => {
+        if (!psyDelete || psyDeleteBusy || !/^\d{6}$/.test(psyDeleteCode)) return;
+        setPsyDeleteBusy(true); setPsyDeleteStatus("");
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/psychometric/dashboard/participants/${psyDelete.evaluationId}/confirm-delete`, {code:psyDeleteCode}, getConfigToken());
+            setPsyDelete(null); setPsyDeleteCode(""); await loadDashboard();
+        } catch(e) { setPsyDeleteStatus(e.response?.data?.message || "No se pudo eliminar la evaluación."); }
+        finally { setPsyDeleteBusy(false); }
+    };
+
 
     const [
         view,
@@ -1514,6 +1906,15 @@ const PsychometricDashboard = () => {
 
         clearCompanyAccessFeedback();
     };
+
+    useEffect(() => {
+        if (!selectedCompanyId) return;
+        const onEscape = (event) => {
+            if (event.key === "Escape") handleCompanyClose();
+        };
+        window.addEventListener("keydown", onEscape);
+        return () => window.removeEventListener("keydown", onEscape);
+    }, [selectedCompanyId]);
 
     /* =====================================================
        VINCULAR PARTICIPANTE A EMPRESA / SECCIÓN
@@ -3471,7 +3872,11 @@ const PsychometricDashboard = () => {
                                     )}
 
                                 {selectedCompany && (
-                                    <article className="psyDashCompany psyDashCompany--selected">
+                                    <div className="psyDashCompanyModalOverlay" onMouseDown={(event) => {
+                                        if (event.target === event.currentTarget) handleCompanyClose();
+                                    }}>
+                                    <article className="psyDashCompany psyDashCompany--selected psyDashCompanyModal" role="dialog" aria-modal="true" aria-label={`Detalle empresarial: ${selectedCompany.nombre}`}>
+                                        <button type="button" className="psyDashCompanyModalClose" onClick={handleCompanyClose} title="Cerrar ventana" aria-label="Cerrar ventana">×</button>
                                         <header>
                                             <div>
                                                 <span className="psyDashEyebrow">
@@ -3687,6 +4092,7 @@ const PsychometricDashboard = () => {
                                             />
                                         </section>
                                     </article>
+                                    </div>
                                 )}
 
                                 {(
@@ -3757,8 +4163,10 @@ const PsychometricDashboard = () => {
                                                                     company.id,
                                                                 )
                                                             }
+                                                            title="Ver información y resultados de la empresa"
+                                                            aria-label={`Ver empresa ${company.nombre}`}
                                                         >
-                                                            Ver empresa
+                                                            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M3 21h18M9 7h2M9 11h2M9 15h2M17 9h2a2 2 0 0 1 2 2v10"/></svg>
                                                         </button>
 
                                                         <button
@@ -3779,22 +4187,9 @@ const PsychometricDashboard = () => {
                                                             title="Generar un nuevo enlace y enviarlo al correo de la empresa."
                                                             aria-label="Enviar acceso por correo"
                                                         >
-                                                            ✉
+                                                            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m3 6 9 7 9-7"/></svg>
                                                         </button>
 
-                                                        <button
-                                                            type="button"
-                                                            className="psyDashCompanyIconBtn"
-                                                            onClick={() =>
-                                                                handleCompanyOpen(
-                                                                    company.id,
-                                                                )
-                                                            }
-                                                            title="Abrir empresa para consultar, activar o desactivar su acceso."
-                                                            aria-label="Consultar estado del acceso"
-                                                        >
-                                                            ◉
-                                                        </button>
 
                                                         <button
                                                             type="button"
@@ -3814,7 +4209,7 @@ const PsychometricDashboard = () => {
                                                             {generatingCompanyPdfId ===
                                                                 company.id
                                                                 ? "..."
-                                                                : "PDF"}
+                                                                : <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>}
                                                         </button>
                                                     </div>
 
@@ -4032,419 +4427,40 @@ const PsychometricDashboard = () => {
                                     </div>
                                 </div>
 
+
+                                {psyDelete && <div className="psyDashDeleteOverlay" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget && !psyDeleteBusy) setPsyDelete(null); }}>
+                                    <div className="psyDashDeleteDialog" role="dialog" aria-modal="true" aria-labelledby="psyDashDeleteTitle" aria-describedby="psyDashDeleteDescription">
+                                        <div className="psyDashDeleteHeader">
+                                            <span className="psyDashDeleteWarningIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v5M12 17h.01"/></svg></span>
+                                            <div><span className="psyDashDeleteEyebrow">Acción irreversible</span><h3 id="psyDashDeleteTitle">Eliminar evaluación</h3></div>
+                                            <button type="button" className="psyDashDeleteClose" title="Cerrar" aria-label="Cerrar ventana" disabled={psyDeleteBusy} onClick={() => setPsyDelete(null)}>×</button>
+                                        </div>
+                                        <div className="psyDashDeleteBody">
+                                            <p id="psyDashDeleteDescription">Estás a punto de eliminar la evaluación y sus respuestas. <strong>Esta acción no se puede deshacer.</strong></p>
+                                            <div className="psyDashDeleteParticipant"><span>Participante</span><strong>{psyDelete.participante?.nombreCompleto || "Este participante"}</strong><small>{psyDelete.participante?.email || ""}</small></div>
+                                            <div className="psyDashDeleteSecurity"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Para proteger los registros, enviaremos un código al correo del superadministrador autenticado.</span></div>
+                                            <button type="button" className="psyDashDeleteSendCode" onClick={psySendDeleteCode} disabled={psyDeleteBusy}>{psyDeleteBusy ? "Procesando…" : psyDeleteExpires ? "Enviar nuevo código" : "Enviar código de verificación"}</button>
+                                            {psyDeleteExpires && <div className="psyDashDeleteVerify"><label htmlFor="psyDashDeleteCode">Código de verificación (6 dígitos)</label><input id="psyDashDeleteCode" inputMode="numeric" pattern="[0-9]*" maxLength={6} autoComplete="one-time-code" value={psyDeleteCode} onChange={e => setPsyDeleteCode(e.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="••••••"/><small>El código caduca 5 minutos después de su emisión. Si ha caducado, solicita uno nuevo.</small></div>}
+                                            {psyDeleteStatus && <p className="psyDashDeleteFeedback" role="status">{psyDeleteStatus}</p>}
+                                        </div>
+                                        <div className="psyDashDeleteActions"><button type="button" className="psyDashDeleteCancel" disabled={psyDeleteBusy} onClick={() => setPsyDelete(null)}>Cancelar</button><button type="button" className="psyDashDeleteConfirm" disabled={psyDeleteBusy || !psyDeleteExpires || psyDeleteCode.length !== 6 || Date.now() >= psyDeleteExpires} onClick={psyConfirmDelete}>{psyDeleteBusy ? "Procesando…" : "Eliminar definitivamente"}</button></div>
+                                    </div>
+                                </div>}
                                 <div className="psyDashTableWrap">
 
+                                    <div className="psyDashColumnTools"><span>Arrastra los encabezados para mover columnas. Pulsa para ordenar.</span><button type="button" onClick={() => {setPsyColumnOrder([...PSY_DEFAULT_ORDER]);setPsySort({id:"fecha",direction:"desc"});}}>Restablecer columnas</button></div>
                                     <table className="psyDashTable">
-
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    Participante
-                                                </th>
-
-                                                <th>
-                                                    Empresa /
-                                                    sección
-                                                </th>
-
-                                                <th>
-                                                    Vincular
-                                                    empresa
-                                                </th>
-
-                                                <th>
-                                                    Género
-                                                </th>
-
-                                                <th>
-                                                    Rango etario
-                                                </th>
-
-                                                <th>
-                                                    Animodo
-                                                </th>
-
-                                                <th>
-                                                    Comunicación
-                                                </th>
-
-                                                <th>
-                                                    Cerebro
-                                                </th>
-
-                                                <th>
-                                                    Negociación
-                                                </th>
-
-                                                <th>
-                                                    VAK
-                                                </th>
-
-                                                <th>
-                                                    Persistencia
-                                                </th>
-
-                                                <th>
-                                                    Productividad
-                                                </th>
-
-                                                <th>
-                                                    Finalización
-                                                </th>
-
-                                                <th />
-                                            </tr>
-                                        </thead>
-
+                                        <thead><tr>{psyColumnOrder.map(id => {
+                                            const column = PSY_COLUMNS.find(c=>c.id===id);
+                                            return <th key={id} draggable onDragStart={e => {setPsyDragging(id);e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",id);}} onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();psyMoveColumn(e.dataTransfer.getData("text/plain") || psyDragging,id);setPsyDragging(null);}} onDragEnd={()=>setPsyDragging(null)} className="psyDashMovableHeader">
+                                                <button type="button" onClick={()=>setPsySort(prev=>({id,direction:prev.id===id && prev.direction==="asc"?"desc":"asc"}))} title={`Ordenar por ${column.label}`}>
+                                                    <span>{column.label}</span><span aria-hidden="true">{psySort.id===id ? (psySort.direction==="asc" ? " ↑" : " ↓") : " ↕"}</span>
+                                                </button>
+                                            </th>;
+                                        })}</tr></thead>
                                         <tbody>
-
-                                            {(
-                                                participants
-                                                    ?.data ||
-                                                []
-                                            ).map(
-                                                (
-                                                    row,
-                                                ) => (
-                                                    <tr
-                                                        key={
-                                                            row.evaluationId
-                                                        }
-                                                    >
-
-                                                        <td>
-                                                            <strong>
-                                                                {
-                                                                    row
-                                                                        .participante
-                                                                        ?.nombreCompleto ||
-                                                                    "—"
-                                                                }
-                                                            </strong>
-
-                                                            <small>
-                                                                {
-                                                                    row
-                                                                        .participante
-                                                                        ?.email ||
-                                                                    "—"
-                                                                }
-                                                            </small>
-                                                        </td>
-
-                                                        <td>
-                                                            <strong>
-                                                                {row
-                                                                    .empresa
-                                                                    ?.nombreComercial ||
-                                                                    row
-                                                                        .empresa
-                                                                        ?.razonSocial ||
-                                                                    (
-                                                                        row.tipoParticipante ===
-                                                                            "individual"
-                                                                            ? "Individual"
-                                                                            : "—"
-                                                                    )}
-                                                            </strong>
-
-                                                            <small>
-                                                                {
-                                                                    row
-                                                                        .seccion
-                                                                        ?.nombre ||
-                                                                    "—"
-                                                                }
-                                                            </small>
-                                                        </td>
-
-                                                        <td>
-                                                            <button
-                                                                type="button"
-                                                                className={`psyDashLinkOrgBtn ${
-                                                                    row
-                                                                        .empresa
-                                                                        ?.id
-                                                                        ? "psyDashLinkOrgBtn--linked"
-                                                                        : ""
-                                                                }`}
-                                                                onClick={() =>
-                                                                    openOrganizationLinkModal(
-                                                                        row,
-                                                                    )
-                                                                }
-                                                                title={
-                                                                    row
-                                                                        .empresa
-                                                                        ?.id
-                                                                        ? "Cambiar empresa y sección de esta evaluación"
-                                                                        : "Vincular esta evaluación a una empresa y sección"
-                                                                }
-                                                            >
-                                                                {row
-                                                                    .empresa
-                                                                    ?.id
-                                                                    ? "Cambiar"
-                                                                    : "Vincular"}
-                                                            </button>
-                                                        </td>
-
-                                                        <td>
-                                                            <strong>
-                                                                {
-                                                                    row
-                                                                        .participante
-                                                                        ?.genre ||
-                                                                    "—"
-                                                                }
-                                                            </strong>
-                                                        </td>
-
-                                                        <td>
-                                                            <strong>
-                                                                {
-                                                                    row
-                                                                        .participante
-                                                                        ?.rangoEtarioLabel ||
-                                                                    getDisplayValue(
-                                                                        "rangoEtario",
-                                                                        row
-                                                                            .participante
-                                                                            ?.rangoEtario,
-                                                                    ) ||
-                                                                    "—"
-                                                                }
-                                                            </strong>
-
-                                                            {row
-                                                                .participante
-                                                                ?.edad !==
-                                                                null &&
-                                                                row
-                                                                    .participante
-                                                                    ?.edad !==
-                                                                undefined && (
-                                                                    <small>
-                                                                        {
-                                                                            row
-                                                                                .participante
-                                                                                ?.edad
-                                                                        }{" "}
-                                                                        años
-                                                                    </small>
-                                                                )}
-                                                        </td>
-
-                                                        <td>
-                                                            <strong>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.animodoCategoria ||
-                                                                    row
-                                                                        .resultado
-                                                                        ?.animodo ||
-                                                                    "—"
-                                                                }
-                                                            </strong>
-
-                                                            {row
-                                                                .resultado
-                                                                ?.animodo &&
-                                                                row
-                                                                    .resultado
-                                                                    ?.animodoCategoria &&
-                                                                row
-                                                                    .resultado
-                                                                    ?.animodo !==
-                                                                row
-                                                                    .resultado
-                                                                    ?.animodoCategoria && (
-                                                                    <small>
-                                                                        {
-                                                                            row
-                                                                                .resultado
-                                                                                ?.animodo
-                                                                        }
-                                                                    </small>
-                                                                )}
-                                                        </td>
-
-                                                        <td>
-                                                            {
-                                                                row
-                                                                    .resultado
-                                                                    ?.comunicacion ||
-                                                                "—"
-                                                            }
-                                                        </td>
-
-                                                        <td>
-                                                            <strong>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.cerebro ||
-                                                                    "—"
-                                                                }
-                                                            </strong>
-
-                                                            <small>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.cerebroTipo ||
-                                                                    ""
-                                                                }
-                                                            </small>
-                                                        </td>
-
-                                                        <td>
-                                                            {
-                                                                row
-                                                                    .resultado
-                                                                    ?.negociacion ||
-                                                                "—"
-                                                            }
-
-                                                            <small>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.negociacionPuntaje ??
-                                                                    "—"
-                                                                }{" "}
-                                                                pts
-                                                            </small>
-                                                        </td>
-
-                                                        <td>
-                                                            <strong>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.vak ||
-                                                                    "—"
-                                                                }
-                                                            </strong>
-
-                                                            {row
-                                                                .resultado
-                                                                ?.vakEmpate && (
-                                                                    <small>
-                                                                        Empate:{" "}
-                                                                        {(
-                                                                            row
-                                                                                .resultado
-                                                                                ?.vakEmpates ||
-                                                                            []
-                                                                        ).join(
-                                                                            " / ",
-                                                                        )}
-                                                                    </small>
-                                                                )}
-                                                        </td>
-
-                                                        <td>
-                                                            {
-                                                                row
-                                                                    .resultado
-                                                                    ?.persistencia ||
-                                                                "—"
-                                                            }
-
-                                                            <small>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.persistenciaPuntaje ??
-                                                                    "—"
-                                                                }
-                                                                /4
-                                                            </small>
-                                                        </td>
-
-                                                        <td>
-                                                            <strong>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.productividad ||
-                                                                    "—"
-                                                                }
-                                                            </strong>
-
-                                                            <small>
-                                                                {
-                                                                    row
-                                                                        .resultado
-                                                                        ?.productividadPorcentaje ??
-                                                                    0
-                                                                }
-                                                                %
-                                                            </small>
-                                                        </td>
-
-                                                        <td>
-                                                            {formatDate(
-                                                                row.fechaFinalizacion,
-                                                            )}
-                                                        </td>
-
-                                                        <td>
-                                                            <div className="psyDashRowActions">
-
-                                                                <button
-                                                                    type="button"
-                                                                    className="psyDashDetailBtn"
-                                                                    onClick={() =>
-                                                                        loadParticipantDetail(
-                                                                            row.evaluationId,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    Detalle
-                                                                </button>
-
-                                                                <a
-                                                                    href={`#/resultado-psicometrico-admin/${row.evaluationId}`}
-                                                                    className="psyDashResultBtn"
-                                                                    title="Ver resultado completo"
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                >
-                                                                    Ver resultado
-                                                                </a>
-
-                                                            </div>
-                                                        </td>
-
-                                                    </tr>
-                                                ),
-                                            )}
-
-                                            {(
-                                                participants
-                                                    ?.data ||
-                                                []
-                                            ).length ===
-                                                0 && (
-                                                    <tr>
-                                                        <td
-                                                            colSpan={
-                                                                14
-                                                            }
-                                                        >
-                                                            <div className="psyDashEmpty">
-                                                                No existen
-                                                                participantes
-                                                                para los filtros
-                                                                actuales.
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                )}
-
+                                            {psyRows.map(row=><tr key={row.evaluationId}>{psyColumnOrder.map(id=><td key={id}>{psyCell(row,id)}</td>)}</tr>)}
+                                            {psyRows.length===0 && <tr><td colSpan={psyColumnOrder.length}><div className="psyDashEmpty">No existen participantes para los filtros actuales.</div></td></tr>}
                                         </tbody>
                                     </table>
 
