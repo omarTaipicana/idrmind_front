@@ -1754,3 +1754,70 @@
     transition: none !important;
   }
 }
+/* Landing 2026: navegación, Proyecto Pensar, alianzas y trayectoria */
+.lp-nav-dropdown{position:relative;display:flex;align-items:center}.lp-nav-dropdown__toggle{white-space:nowrap}.lp-nav-dropdown__menu{position:absolute;top:calc(100% + 15px);left:0;width:220px;background:#fff;box-shadow:0 14px 38px #071b3f2b;border:1px solid #e1e9f4;border-radius:13px;padding:8px;display:grid;z-index:10020}.navbar_links_lp .lp-nav-dropdown__menu button{font-size:14px;text-align:left;padding:11px 12px;border-radius:8px}.navbar_links_lp .lp-nav-dropdown__menu button:hover{background:#edf5ff}.lp-mobile-submenu{display:grid;padding:6px 18px;background:#edf5ff}.pensar-section{padding:65px 5% 75px;scroll-margin-top:105px}.pensar-section__heading{text-align:center;margin:0 auto 34px;max-width:700px;color:#0b2750}.pensar-section__heading span,.lp-section-intro span,.lp-collaboration__intro span{color:#167cc5;font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:12px}.pensar-section__heading h2,.lp-section-intro h2{font-size:clamp(29px,3vw,43px);margin:8px 0}.lp-aval{margin-top:25px;scroll-margin-top:115px}.lp-aval h3{color:#123f77;font-size:23px}.lp-logos-section{padding:78px max(22px,5vw);background:linear-gradient(155deg,#f5f9ff,#fff);scroll-margin-top:105px}.lp-logos-section--trust{background:#eef5fc}.lp-section-intro{text-align:center;max-width:760px;margin:0 auto 36px;color:#193b62}.lp-section-intro p{line-height:1.65}.lp-logo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:18px;max-width:1150px;margin:auto}.lp-logo-card{background:#fff;border:1px solid #dfe9f4;border-radius:16px;min-height:165px;padding:19px 13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;box-shadow:0 8px 26px #123b6210;transition:transform .2s,box-shadow .2s}.lp-logo-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px #123b6224}.lp-logo-card img{height:94px;width:100%;object-fit:contain}.lp-logo-card span{font-size:12px;color:#43546b;text-align:center;font-weight:600}.lp-collaboration{max-width:1150px;margin:55px auto 0;display:grid;grid-template-columns:.85fr 1.15fr;gap:35px;align-items:center;background:#0b254b;border-radius:24px;padding:clamp(22px,4vw,45px);color:white}.lp-collaboration__intro h3{font-size:clamp(27px,3vw,40px);margin:12px 0}.lp-collaboration__intro p{line-height:1.8;color:#dce9fa}.lp-collaboration__form{background:#fff;color:#203c5e;border-radius:16px;padding:25px;display:grid;gap:15px}.lp-collaboration__form label{font-size:13px;font-weight:700;display:grid;gap:7px}.lp-collaboration__form input,.lp-collaboration__form select,.lp-collaboration__form textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd8e6;border-radius:9px;font:inherit;background:#fff;color:#102b49}.lp-collaboration__form input:focus,.lp-collaboration__form select:focus,.lp-collaboration__form textarea:focus{outline:2px solid #4a9ee7;outline-offset:1px}.lp-form-pair{display:grid;grid-template-columns:1fr 1fr;gap:13px}.lp-collaboration__form button{background:#1677bf;color:#fff;border:0;border-radius:10px;padding:14px;font-weight:800;cursor:pointer}.lp-collaboration__form button:disabled{opacity:.6;cursor:wait}.lp-form-success{color:#117548}.lp-form-error{color:#b12635}.lp-honeypot{position:absolute!important;left:-10000px!important;opacity:0!important;pointer-events:none!important}.navbar_links_lp{gap:clamp(5px,1vw,16px);width:auto;flex:1;margin:0 18px}.navbar_links_lp button{font-size:clamp(12px,.95vw,15px);white-space:nowrap}.topbar-right{min-width:145px;width:auto;gap:7px}.logo_navbar{height:4.8rem}
+@media(max-width:1000px){.lp-collaboration{grid-template-columns:1fr}.navbar_links_lp{gap:3px}.navbar_links_lp button{font-size:12px;padding:5px}.logo_navbar{height:4rem}}
+@media(max-width:768px){.lp-form-pair{grid-template-columns:1fr}.lp-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.lp-logo-card{min-height:135px;padding:12px}.lp-logo-card img{height:75px}.lp-collaboration{padding:18px}.lp-collaboration__form{padding:18px}.pensar-section{padding:42px 15px}}
+
+/* ==========================================================
+   Mejora de contraste visual — Landing / Proyecto Pensar
+   Solo estilos: sin cambios en estructura ni funcionalidad.
+   ========================================================== */
+.app .navbar {
+  background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(246,249,254,.97));
+  border-bottom: 1px solid rgba(16,51,99,.12);
+  box-shadow: 0 5px 24px rgba(7,27,63,.12);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.app .navbar_links_lp button,
+.app .topbar-link {
+  color: #102a52;
+  text-shadow: none;
+}
+.app .navbar_links_lp button:hover,
+.app .topbar-link:hover {
+  color: #0869b5;
+}
+.app .pensar-section {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(180deg, rgba(4,19,45,.88) 0%, rgba(5,25,56,.90) 22%, rgba(6,27,62,.96) 100%);
+}
+.app .pensar-section__heading {
+  position: relative;
+  z-index: 1;
+  max-width: 850px;
+  padding: 18px 20px 8px;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,.32);
+}
+.app .pensar-section__heading > span {
+  color: #7ed2ff;
+  font-size: clamp(12px, 1.15vw, 15px);
+  letter-spacing: .14em;
+  font-weight: 800;
+}
+.app .pensar-section__heading h2 {
+  color: #fff;
+  font-size: clamp(34px, 4.1vw, 54px);
+  font-weight: 850;
+  line-height: 1.12;
+  text-shadow: 0 3px 18px rgba(0,0,0,.4);
+}
+.app .pensar-section__heading p {
+  color: #e5f2ff;
+  font-size: clamp(16px, 1.55vw, 20px);
+  line-height: 1.6;
+  font-weight: 500;
+  text-shadow: 0 2px 9px rgba(0,0,0,.35);
+}
+.app .proyecto-pensar__notice {
+  color: rgba(255,255,255,.86);
+}
+@media (max-width: 768px) {
+  .app .navbar { background: rgba(255,255,255,.98); }
+  .app .pensar-section__heading { padding: 8px 6px 4px; }
+  .app .pensar-section__heading h2 { font-size: clamp(30px, 8vw, 42px); }
+  .app .pensar-section__heading p { font-size: 16px; }
+}
