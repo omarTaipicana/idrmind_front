@@ -10,7 +10,31 @@ import "./styles/Secretaria.css";
 import useCrud from "../hooks/useCrud";
 import IsLoading from "../components/shared/isLoading";
 import useAuth from "../hooks/useAuth";
+import ImportarCertificadosMDT from "../components/secretaria/ImportarCertificadosMDT";
 const BASEURL = import.meta.env.VITE_API_URL;
+
+
+// Unificar certificados por persona y curso, conservando cada tipo de documento.
+const tipoCertificadoLabel = (tipo) => ({
+  cert_emp: "Empresarial", cert_mdt: "MDT", cert_int: "Internacional",
+})[tipo] || (tipo ? String(tipo).replace(/^cert_/, "").toUpperCase() : "Certificado");
+
+const urlCertificado = (url) => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  const base = (import.meta.env.VITE_API_URL || import.meta.env.PUBLIC_API_URL || "").replace(/\/+$/, "");
+  return base ? `${base}/${String(url).replace(/^\/+/, "")}` : url;
+};
+
+const agruparCertificados = (registros) => {
+  const grupos = new Map();
+  (Array.isArray(registros) ? registros : []).forEach((c) => {
+    const key = `${String(c.cedula || c.inscripcionId || c.id)}::${String(c.curso || "").toLowerCase()}`;
+    if (!grupos.has(key)) grupos.set(key, { ...c, documentos: [] });
+    grupos.get(key).documentos.push(c);
+  });
+  return Array.from(grupos.values());
+};
 
 const Secretaria = () => {
   const [activeSection, setActiveSection] = useState("inscripciones");
@@ -338,7 +362,7 @@ const Secretaria = () => {
   };
   // ----------------------------------------------------------------------------------------------------
   const handleBuscarCertificados = () => {
-    const resultados = certificados.filter((c) => {
+    const resultados = (Array.isArray(certificados) ? certificados : []).filter((c) => {
       const matchCedula =
         cedulaCertificado.trim() !== "" &&
         c.cedula.includes(cedulaCertificado.trim());
@@ -352,7 +376,7 @@ const Secretaria = () => {
       return matchCedula || matchNombre;
     });
 
-    setCertificadosFiltrados(resultados);
+    setCertificadosFiltrados(agruparCertificados(resultados));
   };
 
   // Limpiar filtros
@@ -591,12 +615,12 @@ const Secretaria = () => {
       setSugerenciasCertificados([]);
       return;
     }
-    const sugerencias = certificados.filter((c) =>
+    const sugerencias = (Array.isArray(certificados) ? certificados : []).filter((c) =>
       `${c.nombres} ${c.apellidos}`
         .toLowerCase()
         .includes(nombreCertificado.toLowerCase())
     );
-    setSugerenciasCertificados(sugerencias.slice(0, 5)); // máx 5 sugerencias
+    setSugerenciasCertificados(agruparCertificados(sugerencias).slice(0, 5)); // participantes únicos
   }, [nombreCertificado, certificados]);
 
   // Seleccionar sugerencia
@@ -604,7 +628,7 @@ const Secretaria = () => {
     setNombreCertificado(`${sug.nombres} ${sug.apellidos}`);
     setCedulaCertificado(sug.cedula);
     setSugerenciasCertificados([]);
-    setCertificadosFiltrados([sug]);
+    setCertificadosFiltrados(agruparCertificados((Array.isArray(certificados) ? certificados : []).filter((c) => c.cedula === sug.cedula)));
   };
 
   return (
@@ -1327,6 +1351,8 @@ const Secretaria = () => {
                 <h2 className="secTitle">🎓 Certificados</h2>
               </div>
 
+              <ImportarCertificadosMDT courses={courses || []} onImported={() => getCertificados(PATH_CERTIFICADOS)} />
+
               <div className="inputs_busqueda secFilters">
                 <div className="input_group secInputGroup">
                   <input
@@ -1430,18 +1456,24 @@ const Secretaria = () => {
 
                       <br />
 
-                      {c.url ? (
-                        <a
-                          className="btn_certificado"
-                          href={c.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          🎓 Ver certificado
-                        </a>
-                      ) : (
-                        <p className="pendiente_certificado">📌 Por certificar</p>
-                      )}
+                      <div className="secCertTipos">
+                        {(c.documentos || [c]).map((doc) => (
+                          doc.url ? (
+                            <a
+                              key={doc.id || `${doc.tipo}-${doc.url}`}
+                              className="btn_certificado secCertTipoBtn"
+                              href={urlCertificado(doc.url)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              🎓 Ver certificado {tipoCertificadoLabel(doc.tipo)}
+                            </a>
+                          ) : null
+                        ))}
+                        {!(c.documentos || [c]).some((doc) => doc.url) && (
+                          <p className="pendiente_certificado">📌 Por certificar</p>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

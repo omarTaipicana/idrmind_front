@@ -114,8 +114,8 @@ const ALIANZAS_LOGOS = {
       name: "La Meca",
     },
     {
-      src: "/alianzas/trayectoria/la concepci#U00f2n.jpeg",
-      name: "La Concepci#U00F2N",
+      src: "/alianzas/trayectoria/la concepcion.jpeg",
+      name: "La Concepcions",
     },
     {
       src: "/alianzas/trayectoria/la francey.jfif",
@@ -213,6 +213,68 @@ const LandingPage = () => {
   const nosotrosRef = useRef(null);
   const contactoRef = useRef(null);
   const serviciosRef = useRef(null);
+
+  // Prepara las imágenes de Alianzas y Trayectoria desde que abre la portada.
+  // La decodificación gradual evita concentrar el trabajo durante el scroll.
+  useEffect(() => {
+    let cancelled = false;
+    let idleId = null;
+    let timeoutId = null;
+    const images = [];
+    const sources = [
+      ...ALIANZAS_LOGOS.aliados,
+      ...ALIANZAS_LOGOS.trayectoria,
+    ].map((logo) => encodeURI(logo.src));
+    let nextIndex = 0;
+
+    const prepareNext = async () => {
+      while (!cancelled && nextIndex < sources.length) {
+        const src = sources[nextIndex++];
+        const image = new Image();
+        images.push(image);
+        image.decoding = "async";
+        image.src = src;
+
+        try {
+          if (typeof image.decode === "function") {
+            await image.decode();
+          } else if (!image.complete) {
+            await new Promise((resolve) => {
+              image.onload = resolve;
+              image.onerror = resolve;
+            });
+          }
+        } catch {
+          // Una imagen fallida no impide preparar las demás.
+        }
+      }
+    };
+
+    const start = () => {
+      if (cancelled) return;
+      // Dos procesos en paralelo: precarga sin saturar el hilo principal.
+      void prepareNext();
+      void prepareNext();
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleId = window.requestIdleCallback(start, { timeout: 1200 });
+    } else {
+      timeoutId = window.setTimeout(start, 200);
+    }
+
+    return () => {
+      cancelled = true;
+      if (idleId !== null && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+      images.forEach((image) => {
+        image.onload = null;
+        image.onerror = null;
+      });
+    };
+  }, []);
 
   // Cargar cursos
   useEffect(() => {
@@ -871,8 +933,7 @@ const LandingPage = () => {
         <div className="lp-logo-grid">
           {ALIANZAS_LOGOS.aliados.map((logo) => (
             <div className="lp-logo-card" key={logo.src}>
-              <img src={encodeURI(logo.src)} alt={logo.name} loading="lazy" />
-              <span>{logo.name}</span>
+              <img src={encodeURI(logo.src)} alt={logo.name} loading="eager" decoding="async" />
             </div>
           ))}
         </div>
@@ -1007,8 +1068,7 @@ const LandingPage = () => {
         <div className="lp-logo-grid">
           {ALIANZAS_LOGOS.trayectoria.map((logo) => (
             <div className="lp-logo-card" key={logo.src}>
-              <img src={encodeURI(logo.src)} alt={logo.name} loading="lazy" />
-              <span>{logo.name}</span>
+              <img src={encodeURI(logo.src)} alt={logo.name} loading="eager" decoding="async" />
             </div>
           ))}
         </div>

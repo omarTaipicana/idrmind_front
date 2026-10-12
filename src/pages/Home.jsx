@@ -5,6 +5,24 @@ import EvaluacionCurso from "./EvaluacionCurso";
 import IsLoading from "../components/shared/isLoading";
 import { useNavigate } from "react-router-dom";
 
+
+const certificadoTipo = (tipo) => ({
+  cert_emp: "Empresarial", cert_mdt: "MDT", cert_int: "Internacional",
+})[tipo] || (tipo ? String(tipo).replace(/^cert_/, "").toUpperCase() : "Certificado");
+
+const certificadoUrl = (url) => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  const base = (import.meta.env.VITE_API_URL || import.meta.env.PUBLIC_API_URL || "").replace(/\/+$/, "");
+  return base ? `${base}/${String(url).replace(/^\/+/, "")}` : url;
+};
+
+const certificadosDelCurso = (curso) => {
+  const listado = Array.isArray(curso.certificados) ? curso.certificados : [];
+  if (listado.length) return listado.filter((c) => c?.url);
+  return curso.certificado?.url ? [curso.certificado] : [];
+};
+
 const Home = () => {
   const token = localStorage.getItem("token");
   const [, , , loggedUser, , , , , , , , , , user, setUserLogged] = useAuth();
@@ -292,15 +310,20 @@ const Home = () => {
                       </div>
 
                       <div className="homeListBottom">
-                        {curso.certificado?.url ? (
-                          <a
-                            className="homeLinkCert"
-                            href={curso.certificado.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Ver certificado
-                          </a>
+                        {certificadosDelCurso(curso).length > 0 ? (
+                          <div className="homeCertificadosTipos">
+                            {certificadosDelCurso(curso).map((cert, idx) => (
+                              <a
+                                key={cert.id || `${cert.tipo || "cert"}-${idx}`}
+                                className="homeLinkCert"
+                                href={certificadoUrl(cert.url)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                🎓 Certificado {certificadoTipo(cert.tipo)}
+                              </a>
+                            ))}
+                          </div>
                         ) : (
                           <span className="homeMuted">No hay certificado disponible</span>
                         )}

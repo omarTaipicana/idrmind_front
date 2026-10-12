@@ -111,9 +111,6 @@ const PrincipalHeader = () => {
           <Link to="/home" onClick={onClick}>
             Home
           </Link>
-          <Link to="/instituto" onClick={onClick}>
-            Instituto
-          </Link>
           <Link to="/secre" onClick={onClick}>
             Secretaria
           </Link>
@@ -205,9 +202,6 @@ const PrincipalHeader = () => {
         <>
           <Link to="/home" onClick={onClick}>
             Home
-          </Link>
-          <Link to="/instituto" onClick={onClick}>
-            Instituto
           </Link>
         </>
       );
@@ -290,11 +284,7 @@ const PrincipalHeader = () => {
     }
 
     if (grados.grado6) {
-      return (
-        <Link to="/instituto" onClick={onClick}>
-          Instituto
-        </Link>
-      );
+      return null;
     }
 
     return null;
@@ -352,9 +342,6 @@ const PrincipalHeader = () => {
             {/* Mantener exactamente tus rutas por rol */}
             {grados.grado1 && (
               <>
-                <button type="button" onClick={() => { closeMenu(); navigate("/instituto"); }}>
-                  Instituto
-                </button>
                 <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
                   Secretaria
                 </button>
@@ -428,12 +415,6 @@ const PrincipalHeader = () => {
             {grados.grado5 && (
               <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
                 Secretaria
-              </button>
-            )}
-
-            {grados.grado6 && (
-              <button type="button" onClick={() => { closeMenu(); navigate("/instituto"); }}>
-                Instituto
               </button>
             )}
           </>
