@@ -1233,6 +1233,7 @@ const RegistroAlumnos = () => {
           VISTA 1: VALIDAR CORREO
       ===================================== */}
 
+
       {!userValidacion ? (
         <div className="registro_wrapper registro_wrapper--verifica">
           <div className="registro_intro">

@@ -620,3 +620,140 @@
     max-height: 60vh;
   }
 }
+/* Aviso informativo visible en la ficha de todos los cursos */
+.curso_info_plazo_aviso {
+  margin: 18px 0 22px;
+  padding: 16px 20px;
+  border: 1px solid rgba(186, 218, 255, .65);
+  border-left: 5px solid #7ec8ff;
+  border-radius: 12px;
+  background: rgba(8, 32, 77, .76);
+  color: #fff;
+  box-sizing: border-box;
+}
+.curso_info_plazo_aviso strong { display: block; margin-bottom: 5px; }
+.curso_info_plazo_aviso p { margin: 0; line-height: 1.55; }
+
+
+/* ==========================================================
+   IDR.MIND | Ficha de curso: refinamiento visual y alturas
+   Evita el espacio vacío que producía el estiramiento del PDF.
+   ========================================================== */
+.curso_info_hero {
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+.curso_info_brand { margin-bottom: 1.15rem; }
+.curso_info_container {
+  align-items: start;
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+.curso_info_left,
+.curso_info_right { align-self: start; height: auto; box-sizing: border-box; }
+.curso_info_left {
+  border-radius: 1.35rem;
+  padding: clamp(1.2rem, 2vw, 1.8rem);
+  background: linear-gradient(150deg, rgba(255,255,255,.14), rgba(255,255,255,.065));
+  border-color: rgba(161,211,255,.28);
+}
+.curso_info_badge { margin-bottom: .75rem; font-size: .79rem; letter-spacing: .02em; }
+.curso_info_title { font-size: clamp(1.55rem, 2.35vw, 2.3rem); line-height: 1.15; margin-bottom: .85rem; }
+.curso_info_section { line-height: 1.62; }
+.curso_info_meta { margin: 1.1rem 0; gap: .7rem; }
+.curso_info_meta div { padding: .85rem 1rem; border-radius: .9rem; }
+.curso_info_plazo_aviso {
+  margin: 1.1rem 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(126,200,255,.4);
+  border-left: 4px solid #67c9f7;
+  border-radius: .9rem;
+  background: linear-gradient(120deg, rgba(5,29,75,.9), rgba(12,63,117,.75));
+  box-shadow: 0 8px 22px rgba(0,0,0,.12);
+}
+.curso_info_plazo_aviso strong { color: #a9e6ff; font-size: .94rem; margin-bottom: .35rem; }
+.curso_info_plazo_aviso p { font-size: .91rem; line-height: 1.55; }
+.curso_info_left .button_group { gap: .65rem; }
+.curso_info_left .curso_btn {
+  min-height: 44px;
+  padding: .7rem 1rem;
+  border-radius: .8rem;
+  box-sizing: border-box;
+  font-size: .94rem;
+  line-height: 1.3;
+}
+.curso_info_right {
+  border-radius: 1.35rem;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid rgba(184,210,240,.75);
+  box-shadow: 0 20px 52px rgba(0,0,0,.24);
+}
+.curso_info_right .pdf_card_header { padding: .4rem .35rem .9rem; }
+.curso_info_right .pdf_frame {
+  max-height: min(70vh, 720px);
+  border-radius: .85rem;
+  padding: .7rem;
+  background: #edf4fc;
+  align-items: flex-start;
+}
+.curso_info_right .pagination_controls {
+  padding: .85rem .25rem .15rem;
+  gap: .65rem;
+}
+.curso_info_right .pagination_controls button { border-radius: .7rem; min-height: 40px; }
+@media (max-width: 1050px) {
+  .curso_info_container { align-items: start; }
+  .curso_info_title { font-size: clamp(1.65rem, 4vw, 2.4rem); }
+}
+@media (max-width: 680px) {
+  .curso_info_hero { padding: 1rem .8rem 1.5rem; }
+  .curso_info_brand { margin-bottom: 1rem; }
+  .curso_info_container { gap: 1rem; }
+  .curso_info_left { padding: 1.15rem; }
+  .curso_info_title { font-size: clamp(1.65rem, 7vw, 2.15rem); }
+  .curso_info_meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+  .curso_info_meta div { padding: .75rem; }
+  .curso_info_plazo_aviso { margin: 1rem 0; padding: .9rem 1rem; }
+  .curso_info_right { padding: .8rem; }
+  .curso_info_right .pdf_frame { max-height: 60vh; padding: .4rem; display: block; }
+  .curso_info_right .pagination_controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .55rem;
+  }
+  .curso_info_right .pagination_controls span { grid-column: 1 / -1; order: -1; }
+}
+@media (max-width: 390px) {
+  .curso_info_meta { grid-template-columns: 1fr; }
+  .curso_info_right .pdf_frame { max-height: 55vh; }
+}
+
+/* IDR.MIND: barra de acciones independiente debajo de ambas columnas */
+.curso_info_actions {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1600px;
+  margin: 1.35rem auto 0;
+  padding: clamp(1.1rem, 2vw, 1.7rem);
+  border-radius: 1.4rem;
+  background: #fff;
+  border: 1px solid #d8e4f3;
+  box-shadow: 0 18px 42px rgba(3, 20, 52, .18);
+  box-sizing: border-box;
+}
+.curso_info_actions_heading {display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.15rem;}
+.curso_info_actions_eyebrow {color:#2681c5;font-size:.72rem;font-weight:800;letter-spacing:.11em;}
+.curso_info_actions_heading h2 {margin:.25rem 0 .15rem;color:#142f57;font-size:clamp(1.2rem,2vw,1.65rem);font-weight:900;}
+.curso_info_actions_heading p {margin:0;color:#60738c;font-size:.9rem;}
+.curso_info_actions_emblem {width:48px;height:48px;color:#2365b6;flex-shrink:0;}
+.curso_info_actions_grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;}
+.curso_info_action {display:flex;align-items:center;justify-content:center;gap:.7rem;min-height:70px;padding:.8rem .65rem;border-radius:.9rem;box-sizing:border-box;text-align:center;text-decoration:none!important;font-size:clamp(.85rem,1vw,1rem);font-weight:800;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;}
+.curso_info_action svg {width:25px;height:25px;flex-shrink:0;}
+.curso_info_action_primary {background:linear-gradient(135deg,#279bda,#1452a0);color:#fff!important;box-shadow:0 7px 16px rgba(17,95,175,.18);}
+.curso_info_action_aula {background:linear-gradient(135deg,#254c9c,#163e92);color:#fff!important;box-shadow:0 7px 16px rgba(17,65,145,.18);}
+.curso_info_action_light {background:#eaf2fc;color:#17375d!important;border:1px solid #d7e6f7;}
+.curso_info_action:hover {transform:translateY(-2px);box-shadow:0 10px 22px rgba(9,38,85,.18);}
+.curso_info_action:focus-visible {outline:3px solid #57bdf1;outline-offset:3px;}
+@media(max-width:760px){.curso_info_actions_grid{grid-template-columns:repeat(2,minmax(0,1fr));}.curso_info_actions{margin-top:1rem;}.curso_info_action{min-height:64px;}}
+@media(max-width:390px){.curso_info_actions{padding:.9rem;}.curso_info_actions_grid{gap:.55rem;}.curso_info_action{flex-direction:column;gap:.35rem;padding:.65rem .3rem;font-size:.82rem;}.curso_info_action svg{width:23px;height:23px;}.curso_info_actions_emblem{width:35px;height:35px;}}

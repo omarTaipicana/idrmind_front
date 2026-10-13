@@ -34,8 +34,7 @@ const urlBase =
 const BASEURL =
   import.meta.env.VITE_API_URL;
 
-const SUPERADMIN =
-  import.meta.env.VITE_CI_SUPERADMIN;
+
 
 const PATH_PAGOS = "/pagos";
 const PATH_VARIABLES = "/variables";

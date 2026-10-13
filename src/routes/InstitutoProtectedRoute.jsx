@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth";
 
 const InstitutoProtectedRoute = () => {
     const[, , , loggedUser, , , , , , , , , , user,,] = useAuth();
-    const superAdmin = import.meta.env.VITE_CI_SUPERADMIN;
+    
 
 
     useEffect(() => {
@@ -14,7 +14,7 @@ const InstitutoProtectedRoute = () => {
     if (user) {
         if (
             user?.role?.slice(0, 9) === "instituto" ||
-            user?.cI === superAdmin
+            user?.isSuperAdmin === true
         ) {
             return <Outlet />;
         } else {

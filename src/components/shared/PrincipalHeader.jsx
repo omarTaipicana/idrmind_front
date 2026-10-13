@@ -8,7 +8,7 @@ import useAuth from "../../hooks/useAuth";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const PrincipalHeader = () => {
-  const superAdmin = import.meta.env.VITE_CI_SUPERADMIN;
+  
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -35,21 +35,20 @@ const PrincipalHeader = () => {
     const role = user?.role;
 
     setGrados({
-      grado1: ci === superAdmin, // Superadmin (acceso total)
+      grado1: user?.isSuperAdmin === true, // Superadmin (acceso total)
       grado2: role === "Administrador",
       grado3: role === "Sub-Administrador",
       grado4: role === "Validador",
       grado5: role === "Secretaria",
       grado6: role?.slice(0, 9) === "instituto",
-      grado7: ![
-        superAdmin,
+      grado7: user?.isSuperAdmin !== true && ![
         "Administrador",
         "Sub-Administrador",
         "Validador",
         "Secretaria",
       ].includes(role),
     });
-  }, [user, superAdmin]);
+  }, [user]);
 
   // Validar token
   useEffect(() => {
@@ -340,18 +339,10 @@ const PrincipalHeader = () => {
             </button>
 
             {/* Mantener exactamente tus rutas por rol */}
-            {grados.grado1 && (
-              <>
-                <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
+            {(grados.grado1 || grados.grado2) && (
+              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
                   Secretaria
                 </button>
-              </>
-            )}
-
-            {grados.grado2 && (
-              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
-                Secretaria
-              </button>
             )}
 
             {grados.grado3 && (

@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth";
 
 const SuperAdminProtectedRoute = () => {
     const [, , , loggedUser, , , , , , , , , , user, ,] = useAuth();
-    const superAdmin = import.meta.env.VITE_CI_SUPERADMIN;
+    
 
 
     useEffect(() => {
@@ -13,7 +13,7 @@ const SuperAdminProtectedRoute = () => {
 
     if (user) {
         if (
-            user?.isSuperAdmin === true || user?.cI === superAdmin
+            user?.isSuperAdmin === true || user?.isSuperAdmin === true
         ) {
             return <Outlet />;
         } else {

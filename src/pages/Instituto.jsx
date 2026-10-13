@@ -6,7 +6,7 @@ import "./styles/Instituto.css";
 import useAuth from "../hooks/useAuth";
 
 const Instituto = () => {
-  const superAdmin = import.meta.env.VITE_CI_SUPERADMIN;
+  
   const [, , , loggedUser, , , , , , , , , , user] = useAuth();
   const [filtroCurso, setFiltroCurso] = useState("");
 
@@ -14,13 +14,13 @@ const Instituto = () => {
     if (!user) return "";
 
     // SUPERADMIN → toma del select
-    if (user.cI === superAdmin) {
+    if (user.isSuperAdmin === true) {
       return filtroCurso || "";
     }
 
     // USUARIO NORMAL → toma del rol
     return user?.role?.replace("instituto_", "") || "";
-  }, [user, filtroCurso, superAdmin]);
+  }, [user, filtroCurso]);
 
   const PATH_CERTIFICADOS = rolePath
     ? `/instituto/certificados/${rolePath}`
@@ -241,7 +241,7 @@ const Instituto = () => {
                 <IsLoading />
               ) : listaArchivos.length > 0 ? (
                 <>
-                  {user.cI === superAdmin && (
+                  {user.isSuperAdmin === true && (
                     <div className="input_group secInputGroup">
                       <select
                         value={filtroCurso}
