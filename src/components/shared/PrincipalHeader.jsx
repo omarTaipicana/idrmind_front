@@ -380,7 +380,7 @@ const PrincipalHeader = () => {
               </>
             )}
 
-            {grados.grado2 && (
+            {grados.grado2 && !grados.grado1 && (
               <>
                 <button type="button" onClick={() => { closeMenu(); navigate("/dashboard"); }}>
                   Dashboard

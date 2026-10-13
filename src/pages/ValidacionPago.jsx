@@ -3269,8 +3269,7 @@ const ValidacionPago = () => {
                 ❌ Eliminar filtros
               </button>
 
-              {SUPERADMIN ===
-                user?.cI && (
+              {user?.isSuperAdmin === true && (
                   <button
                     className="secBtnPrimary"
                     onClick={
@@ -3282,8 +3281,7 @@ const ValidacionPago = () => {
                   </button>
                 )}
 
-              {SUPERADMIN ===
-                user?.cI && (
+              {user?.isSuperAdmin === true && (
                   <button
                     className="secBtnPrimary"
                     onClick={
