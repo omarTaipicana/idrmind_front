@@ -1,3 +1,4 @@
+import CouponBenefit from "../CouponBenefit";
 import React, { useEffect, useState } from "react";
 import useCrud from "../../hooks/useCrud";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,7 @@ export const RegistroPagos = () => {
   const [cursoActual, setCursoActual] = useState(null);
   const [inscrito, setInscrito] = useState(null);
   const [pagoExistente, setPagoExistente] = useState(null);
+  const [couponBenefit, setCouponBenefit] = useState(null);
   const [total, setTotal] = useState(0);
   const [fileName, setFileName] = useState("");
 
@@ -128,11 +130,11 @@ const obtenerCertificadosPagados = (pagos = []) => ({
 
   useEffect(() => {
     if (total > 0) {
-      setValue("valorDepositado", total.toFixed(2));
+      setValue("valorDepositado", Number(couponBenefit?.saldoPendiente ?? total).toFixed(2));
     } else {
       setValue("valorDepositado", "");
     }
-  }, [total, setValue]);
+  }, [total, couponBenefit, setValue]);
 
   useEffect(() => {
     if (newValidate) {
@@ -440,9 +442,11 @@ const obtenerCertificadosPagados = (pagos = []) => ({
                 </div>
 
                 <div className="pagos_col pagos_col_pago">
+                  <CouponBenefit inscripcionId={inscrito?.id} seleccion={[cert_emp && "cert_emp",cert_mdt && "cert_mdt",cert_int && "cert_int"].filter(Boolean)} onApplied={setCouponBenefit}/>
+                  {!couponBenefit?.cubierto && <>
                   <div className="pagos_total">
                     <span>Total a pagar</span>
-                    <strong>${Number(total || 0).toFixed(2)}</strong>
+                    <strong>${Number(couponBenefit?.saldoPendiente ?? total ?? 0).toFixed(2)}</strong>
                   </div>
 
                   <label className="pagos_label">
@@ -455,7 +459,7 @@ const obtenerCertificadosPagados = (pagos = []) => ({
                         <input
                           type="file"
                           {...register("archivo", {
-                            required: "Debes subir el comprobante de pago.",
+                            required: couponBenefit?.cubierto ? false : "Debes subir el comprobante de pago.",
                           })}
                         />
                       </label>
@@ -477,7 +481,7 @@ const obtenerCertificadosPagados = (pagos = []) => ({
                       step="0.01"
                       min="0"
                       {...register("valorDepositado", {
-                        required: "Debes ingresar el valor depositado.",
+                        required: couponBenefit?.cubierto ? false : "Debes ingresar el valor depositado.",
                       })}
                     />
                   </label>
@@ -511,6 +515,7 @@ const obtenerCertificadosPagados = (pagos = []) => ({
                   <button className="pagos_btn pagos_btn_full" type="submit">
                     Confirmar pago
                   </button>
+                  </>}
                 </div>
               </form>
             )}

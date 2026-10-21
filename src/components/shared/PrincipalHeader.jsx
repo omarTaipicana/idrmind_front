@@ -120,7 +120,7 @@ const PrincipalHeader = () => {
             Validacion
           </Link>
           <Link to="/edit_user" onClick={onClick}>
-            Gestion Per. Emp. 
+            Gestión Admin 
           </Link>
           <Link to="/evaluacion-docente" onClick={onClick}>
             Inf. Satisfacción
@@ -236,7 +236,7 @@ const PrincipalHeader = () => {
             Validacion
           </Link>
           <Link to="/edit_user" onClick={onClick}>
-            Gestion Per. Emp. 
+            Gestión Admin 
           </Link>
           <Link to="/evaluacion-docente" onClick={onClick}>
             Inf. Satisfacción
@@ -372,7 +372,7 @@ const PrincipalHeader = () => {
                   Validacion
                 </button>
                 <button type="button" onClick={() => { closeMenu(); navigate("/edit_user"); }}>
-                  Gestion Per. Emp. 
+                  Gestión Admin 
                 </button>
                 <button type="button" onClick={() => { closeMenu(); navigate("/evaluacion-docente"); }}>
                   Inf. Satisfacción

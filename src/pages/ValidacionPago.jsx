@@ -1,3 +1,5 @@
+import CouponApplications from "../components/admin/CouponApplications";
+import {CouponSummary} from "../components/CouponBenefit";
 import React, {
   useEffect,
   useLayoutEffect,
@@ -2052,6 +2054,7 @@ const ValidacionPago = () => {
                           </td>
 
                           <td>
+                            <CouponSummary coupon={p.coupon}/>
                             {papelera ? (
                               `$${p.valorDepositado || "0.00"}`
                             ) : isEditing ? (
@@ -3460,20 +3463,8 @@ const ValidacionPago = () => {
          INSCRITOS
       ===================================================== */
 
-      case "listaInscritos":
-        return (
-          <section className="secCard">
-            <div className="secCardHeader">
-              <h2 className="secTitle">
-                📋 Lista de Inscritos
-              </h2>
-            </div>
-
-            <p className="secEmpty">
-              📌 Próximamente…
-            </p>
-          </section>
-        );
+      case "listaCupones":
+        return <CouponApplications onPayments={() => setActiveSection("validarPagos")} />;
 
       default:
         return null;
@@ -4040,18 +4031,18 @@ const ValidacionPago = () => {
 
           <button
             className={`secMenuBtn ${activeSection ===
-              "listaInscritos"
+              "listaCupones"
               ? "active"
               : ""
               }`}
             onClick={() =>
               setActiveSection(
-                "listaInscritos",
+                "listaCupones",
               )
             }
             type="button"
           >
-            📋 Lista Inscritos
+            🎟️ Lista de Cupones
           </button>
         </nav>
 

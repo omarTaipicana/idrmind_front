@@ -1,3 +1,4 @@
+import CouponBenefit from "../components/CouponBenefit";
 import {
   useEffect,
   useMemo,
@@ -24,6 +25,7 @@ const PATH_COURSES =
 const ProyectoPensarPago = () => {
   const navigate = useNavigate();
 
+  const [couponBenefit, setCouponBenefit] = useState(null);
   const { token } =
     useParams();
 
@@ -248,6 +250,8 @@ const ProyectoPensarPago = () => {
     accessData?.course ||
     null;
 
+  useEffect(() => { if(couponBenefit) setValorDepositado(Number(couponBenefit.saldoPendiente).toFixed(2)); }, [couponBenefit]);
+  const payablePrice = couponBenefit ? Number(couponBenefit.saldoPendiente) : coursePrice;
   const payment =
     accessData?.payment ||
     null;
@@ -421,8 +425,8 @@ const ProyectoPensarPago = () => {
   const priceWasModified =
     useMemo(() => {
       if (
-        !coursePrice ||
-        coursePrice <= 0
+        !payablePrice ||
+        payablePrice <= 0
       ) {
         return false;
       }
@@ -441,12 +445,12 @@ const ProyectoPensarPago = () => {
       return (
         current.toFixed(2) !==
         Number(
-          coursePrice
+          payablePrice
         ).toFixed(2)
       );
     }, [
       valorDepositado,
-      coursePrice,
+      payablePrice,
     ]);
 
   /* =======================================================
@@ -456,15 +460,15 @@ const ProyectoPensarPago = () => {
   const restoreCoursePrice =
     () => {
       if (
-        !coursePrice ||
-        coursePrice <= 0
+        !payablePrice ||
+        payablePrice <= 0
       ) {
         return;
       }
 
       setValorDepositado(
         Number(
-          coursePrice
+          payablePrice
         ).toFixed(2)
       );
 
@@ -846,6 +850,7 @@ const ProyectoPensarPago = () => {
             </div>
           )}
 
+          {accessData?.coupon && <p>Pago con descuento: cupón {accessData.coupon.codigo}. Saldo registrado: ${Number(accessData.coupon.saldoPendiente).toFixed(2)}.</p>}
           {!verified && (
             <div className="ppago__notice ppago__notice--info">
               Una vez validado el pago recibirás un
@@ -908,7 +913,7 @@ const ProyectoPensarPago = () => {
                 DATOS DE PAGO
             ================================= */}
 
-            <section className="ppago__bankCard">
+            {!couponBenefit?.cubierto && <section className="ppago__bankCard">
               <div className="ppago__bankHeader">
                 <div>
                   <span className="ppago__eyebrow">
@@ -970,7 +975,7 @@ const ProyectoPensarPago = () => {
                   de enviar el comprobante.
                 </p>
               </div>
-            </section>
+            </section>}
 
         <div className="ppago__grid">
           {/* =================================
@@ -1039,7 +1044,7 @@ const ProyectoPensarPago = () => {
 
               <div className="ppago__infoItem ppago__infoItem--price">
                 <span>
-                  Valor del curso
+                  Precio de los resultados
                 </span>
 
                 <strong>
@@ -1066,7 +1071,7 @@ const ProyectoPensarPago = () => {
                 </span>
 
                 <p>
-                  Registra tu comprobante.
+                  {couponBenefit?.cubierto ? "Cupón aplicado." : "Aplica un cupón o registra tu comprobante."}
                 </p>
               </div>
 
@@ -1104,16 +1109,16 @@ const ProyectoPensarPago = () => {
               </span>
 
               <h2>
-                Registra tu pago
+                {couponBenefit?.cubierto ? "Resultados autorizados con cupón" : "Registra tu pago"}
               </h2>
 
               <p>
-                Completa la información y adjunta una
-                imagen o PDF del comprobante.
+                {couponBenefit?.cubierto ? "Ya puedes consultar tus resultados sin comprobante." : "Aplica un cupón o registra el comprobante del saldo a pagar."}
               </p>
             </div>
 
-            <form
+            <CouponBenefit token={token} onApplied={setCouponBenefit}/>
+            {!couponBenefit?.cubierto && <form
               className="ppago__form"
               onSubmit={
                 handleSubmit
@@ -1304,7 +1309,7 @@ const ProyectoPensarPago = () => {
                 El comprobante se asociará únicamente a
                 esta evaluación.
               </p>
-            </form>
+            </form>}
           </section>
         </div>
       </section>

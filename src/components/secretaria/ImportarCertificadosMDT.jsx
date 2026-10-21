@@ -3,7 +3,7 @@ import axios from "axios";
 import "./ImportarCertificadosMDT.css";
 
 const BASE = String(import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-const ROOT = `${BASE}/secretaria/certificados/mdt`;
+const ROOT = `${BASE}/secretaria/certificados`;
 const END = new Set(["completed", "done", "failed", "admin_email_failed", "finished", "error"]);
 const phaseNames = {
   queued: "En cola", processing: "Validando y registrando certificados",
@@ -15,6 +15,9 @@ const auth = () => ({ Authorization: `Bearer ${localStorage.getItem("token") || 
 const percent = (done, total) => total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0;
 
 export default function ImportarCertificadosMDT({ courses = [], onImported }) {
+  const [tipo, setTipo] = useState("cert_mdt");
+  const mountedRef = useRef(true);
+  useEffect(()=>{mountedRef.current=true;return()=>{mountedRef.current=false}},[]);
   const [courseId, setCourseId] = useState("");
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -70,6 +73,7 @@ export default function ImportarCertificadosMDT({ courses = [], onImported }) {
     if (!/\.zip$/i.test(file.name)) { setError("Seleccione un archivo ZIP."); return; }
     setError(""); setJob(null); setActiveJobId(null); setUploadPercent(0); setUploading(true);
     const form = new FormData();
+    form.append("tipo", tipo);
     form.append("courseId", courseId);
     form.append("zip", file);
     try {
@@ -84,7 +88,7 @@ export default function ImportarCertificadosMDT({ courses = [], onImported }) {
       if (!data?.id) throw new Error("El backend no devolvió el identificador de importación.");
       setActiveJobId(data.id);
     } catch (e) {
-      setError(e.response?.data?.message || e.message || "No se pudo iniciar la importación MDT.");
+      setError(e.response?.data?.message || e.message || "No se pudo iniciar la importación de certificados.");
     } finally { if (mountedRef.current) setUploading(false); }
   };
 
@@ -99,14 +103,19 @@ export default function ImportarCertificadosMDT({ courses = [], onImported }) {
   const toNotify = Number(job?.toNotify) || 0;
 
   return (
-    <section className="mdtImporter" aria-label="Importación de certificados MDT">
+    <section className="mdtImporter" aria-label="Importación de certificados">
       <div className="mdtImporter__heading">
-        <h3>Importar certificados MDT</h3>
-        <p>Seleccione el curso y un ZIP con los PDF firmados. El backend verificará la matrícula, el pago MDT y los duplicados antes de registrarlos.</p>
+        <h3>Importar certificados</h3>
+        <p>Seleccione Ministerio o Internacional, el curso y un ZIP con los PDF. Se verifican matrícula, aprobación académica y pago validado o cupón para el tipo elegido. Un descuento parcial requiere validar el pago del saldo.</p>
       </div>
       <form onSubmit={start} className="mdtImporter__form">
+        <label>Tipo de certificado
+          <select value={tipo} onChange={e=>{setTipo(e.target.value);setCourseId("");setFile(null);setJob(null);setError("");}} disabled={uploading || processing} required>
+            <option value="cert_mdt">Ministerio de Trabajo</option><option value="cert_int">Internacional</option>
+          </select>
+        </label>
         <label>Curso
-          <select value={courseId} onChange={e => setCourseId(e.target.value)} disabled={uploading || processing} required>
+          <select value={courseId} onChange={e => {setCourseId(e.target.value);setFile(null);}} disabled={uploading || processing} required>
             <option value="">Seleccione un curso</option>
             {courses.filter(c => c.tipo !== "test_psicotecnico").map(c => (
               <option key={c.id} value={c.id}>{c.nombre || c.fullname || c.sigla} {c.sigla ? `(${c.sigla})` : ""}</option>
@@ -114,9 +123,9 @@ export default function ImportarCertificadosMDT({ courses = [], onImported }) {
           </select>
         </label>
         <label>Archivo comprimido (.zip)
-          <input type="file" accept=".zip,application/zip,application/x-zip-compressed" onChange={e => setFile(e.target.files?.[0] || null)} disabled={uploading || processing} required />
+          <input key={`${tipo}-${courseId}`} type="file" accept=".zip,application/zip,application/x-zip-compressed" onChange={e => setFile(e.target.files?.[0] || null)} disabled={!courseId || uploading || processing} required />
         </label>
-        <button type="submit" disabled={!courseId || !file || uploading || processing}>{uploading ? "Subiendo ZIP…" : processing ? "Procesando…" : "Importar certificados MDT"}</button>
+        <button type="submit" disabled={!courseId || !file || uploading || processing}>{uploading ? "Subiendo ZIP…" : processing ? "Procesando…" : "Importar certificados"}</button>
       </form>
       {(uploading || job) && (
         <div className="mdtImporter__progress" aria-live="polite">

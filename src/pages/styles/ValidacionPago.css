@@ -2309,3 +2309,19 @@
     min-width: 120px;
   }
 }
+/* Tablas de Validación de Pagos: navegación, lectura y acciones consistentes. */
+.secContent.vpContent{min-width:0}
+.vpContent .secTableWrap{transform:none;overflow:auto;max-height:70vh;border:1px solid #dbe3ee;border-radius:12px;scrollbar-width:thin;scrollbar-color:#9eb2cc #f1f5fa}
+.vpContent .secTable{transform:none;border-collapse:separate;border-spacing:0;width:100%;font-variant-numeric:tabular-nums}
+.vpContent .secTable thead th{position:sticky;top:0;z-index:3;padding:13px 14px;background:#193b6b;color:#fff;border:0;border-bottom:1px solid #284c7d;font-size:11px;font-weight:800;letter-spacing:.025em;text-align:left;white-space:nowrap}
+.vpContent .secTable tbody td{padding:13px 14px;border:0;border-bottom:1px solid #e3eaf3;font-size:12px;line-height:1.55;vertical-align:middle;white-space:normal}
+.vpContent .secTable tbody tr{background:#fff;transition:background-color .15s}
+.vpContent .secTable tbody tr:nth-child(even){background:#f7f9fc}
+.vpContent .secTable tbody tr:hover{background:#edf4ff}
+.vpContent .secTable tbody tr:focus-within{background:#edf4ff;outline:2px solid #9bbce8;outline-offset:-2px}
+.vpContent .secTable tbody tr:last-child td{border-bottom:0}
+.vpContent .secTable button{margin:3px;min-height:32px;vertical-align:middle}
+.vpContent .secTable input:not([type=checkbox]),.vpContent .secTable select{min-height:34px;max-width:220px;border-radius:7px}
+.vpContent .secTable input[type=checkbox]{width:17px;height:17px;accent-color:#193b6b;cursor:pointer}
+.vpContent .secTable a:focus-visible,.vpContent .secTable button:focus-visible{outline:3px solid #8bb1e7;outline-offset:2px}
+@media(max-width:700px){.vpContent .secTableWrap{max-height:65vh}.vpContent .secTable thead th,.vpContent .secTable tbody td{padding:11px 10px}.vpContent .secTable button{min-height:36px}}

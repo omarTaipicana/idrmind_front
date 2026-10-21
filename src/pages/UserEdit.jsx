@@ -10,6 +10,7 @@ import React, {
 import axios from "axios";
 
 import "./styles/UserEdit.css";
+import CouponAdmin from "../components/admin/CouponAdmin";
 
 import useCrud from "../hooks/useCrud";
 import IsLoading from "../components/shared/isLoading";
@@ -2755,6 +2756,9 @@ const UserEdit = () => {
                 </small>
               </span>
             </button>
+            <button type="button" className={`ue_menuBtn ${activeSection === "cupones" ? "active" : ""}`} onClick={() => handleSelectSection("cupones")}>
+              <span className="ue_menuIcon">🎟️</span><span><strong>Cupones</strong><small>Beneficios y cupos</small></span>
+            </button>
           </div>
 
           <div className="ue_menuSummary">
@@ -2776,6 +2780,7 @@ const UserEdit = () => {
 
           {activeSection === "empresas" &&
             renderEmpresas()}
+          {activeSection === "cupones" && <CouponAdmin />}
         </main>
       </div>
 
