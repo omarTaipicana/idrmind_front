@@ -1,3 +1,4 @@
+import { resolveReferral } from "../services/affiliateReferral";
 import {
   useEffect,
   useMemo,
@@ -1088,7 +1089,7 @@ const ProyectoPensarRegistro = () => {
      REGISTRAR
   ======================================================= */
 
-  const handleSubmit = (
+  const handleSubmit = async (
     event
   ) => {
     event.preventDefault();
@@ -1202,6 +1203,7 @@ const ProyectoPensarRegistro = () => {
       courseId:
         psychometricCourse.id,
 
+      referralToken: await resolveReferral(),
       aceptacion: true,
     };
 

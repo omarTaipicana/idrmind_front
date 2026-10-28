@@ -411,6 +411,8 @@ const PrincipalHeader = () => {
           </>
         )}
 
+        <button type="button" onClick={()=>{closeMenu();navigate("/afiliados")}}>Afiliados / Mi negocio</button>
+        {(grados.grado1||grados.grado2)&&<button type="button" onClick={()=>{closeMenu();navigate("/admin-afiliados")}}>Red de Afiliados</button>}
         {/* Auth */}
         <div className="navbar_mobile_divider" />
 
@@ -465,6 +467,8 @@ const PrincipalHeader = () => {
 
         {/* Links (centro) */}
         <div className="navbar_links">
+          <Link to="/afiliados" onClick={closeMenu}>{token?"Afiliados / Mi negocio":"Afíliate"}</Link>
+          {(grados.grado1||grados.grado2)&&<Link to="/admin-afiliados" onClick={closeMenu}>Red de Afiliados</Link>}
           {/* si no hay token, puedes dejar vacío o poner "Inicio" (como Landing pone Inicio) */}
           {!token ? (
             <button type="button" className="navbtn" onClick={() => navigate("/")}>

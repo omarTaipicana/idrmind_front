@@ -1,3 +1,6 @@
+import AffiliatePortal from "./pages/AffiliatePortal";
+import AffiliateAdmin from "./pages/AffiliateAdmin";
+import AffiliateReferralCapture from "./components/AffiliateReferralCapture";
 import {
   Route,
   Routes,
@@ -177,6 +180,7 @@ const App = () => {
   return (
     <div>
       <SessionActivityManager />
+      <AffiliateReferralCapture />
       {/* =================================================
           HEADER
       ================================================= */}
@@ -197,6 +201,8 @@ const App = () => {
         }
       >
         <Routes>
+          <Route path="/afiliados" element={<AffiliatePortal/>}/>
+          <Route path="/admin-afiliados" element={<AffiliateAdmin/>}/>
           {/* =============================================
               LANDING
           ============================================= */}

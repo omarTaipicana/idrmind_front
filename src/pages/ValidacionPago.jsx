@@ -1,3 +1,4 @@
+import RefundPanel from "../components/affiliates/RefundPanel";
 import CouponApplications from "../components/admin/CouponApplications";
 import {CouponSummary} from "../components/CouponBenefit";
 import React, {
@@ -616,6 +617,7 @@ const ValidacionPago = () => {
     );
 
     reset({
+      iva: p.iva ?? 0,
       valorDepositado:
         p.valorDepositado ||
         "",
@@ -1563,7 +1565,7 @@ const ValidacionPago = () => {
                 Cargando resumen...
               </p>
             ) : (
-              <div className="vpResumenGrid">
+              <div className="vpResumenGrid"><div className="vpStatCard"><div className="vpStatLabel">Devoluciones realizadas</div><div className="vpStatValue">${Number(pagoDashboard.devoluciones?.devuelto||0).toFixed(2)}</div><small>Reservado pendiente: ${Number(pagoDashboard.devoluciones?.reservado||0).toFixed(2)} · Neto cobrado: ${Number(pagoDashboard.devoluciones?.neto??pagoDashboard.totalPagos??0).toFixed(2)}</small></div>
                 <div className="vpStatCard">
                   <div className="vpStatLabel">
                     Total Pagos /
@@ -2054,10 +2056,11 @@ const ValidacionPago = () => {
                           </td>
 
                           <td>
-                            <CouponSummary coupon={p.coupon}/>
+                            <CouponSummary coupon={p.coupon}/>{p.refund?.devuelto>0&&<small className="vpInfoDanger">{p.refund.devuelto>=Number(p.valorDepositado)?"Devuelto totalmente":"Devuelto parcialmente"}: ${Number(p.refund.devuelto).toFixed(2)}</small>}
                             {papelera ? (
                               `$${p.valorDepositado || "0.00"}`
                             ) : isEditing ? (
+                              <>
                               <input
                                 type="number"
                                 step="0.01"
@@ -2066,6 +2069,9 @@ const ValidacionPago = () => {
                                 )}
                                 className="vpMiniInput"
                               />
+                              <label style={{display:"block",fontSize:11,marginTop:8}}>IVA incluido (0 si no aplica)
+                                <input type="number" min="0" step="0.01" readOnly={!!p.verificado} {...register("iva")} className="vpMiniInput"/>
+                              </label></>
                             ) : (
                               `$${p.valorDepositado || "0.00"}`
                             )}
@@ -3463,6 +3469,9 @@ const ValidacionPago = () => {
          INSCRITOS
       ===================================================== */
 
+      case "devoluciones":
+        return <RefundPanel/>;
+
       case "listaCupones":
         return <CouponApplications onPayments={() => setActiveSection("validarPagos")} />;
 
@@ -4044,6 +4053,7 @@ const ValidacionPago = () => {
           >
             🎟️ Lista de Cupones
           </button>
+          <button className={`secMenuBtn ${activeSection==="devoluciones"?"active":""}`} onClick={()=>setActiveSection("devoluciones")} type="button">Devoluciones</button>
         </nav>
 
         <main

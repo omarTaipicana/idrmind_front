@@ -1,3 +1,4 @@
+import { resolveReferral } from "../../services/affiliateReferral";
 import React, {
   useEffect,
   useMemo,
@@ -804,7 +805,7 @@ const RegistroAlumnos = () => {
      REGISTRAR INSCRIPCIÓN
   ========================================= */
 
-  const submit = (data) => {
+  const submit = async (data) => {
     const nombreFormateado =
       data.nombres
         ? capitalizeWords(
@@ -1042,6 +1043,7 @@ const RegistroAlumnos = () => {
     ===================================== */
 
     const body = {
+      referralToken: await resolveReferral(),
       ...data,
 
       cedula:

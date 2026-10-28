@@ -415,6 +415,7 @@ const LandingPage = () => {
         </div>
 
         <div className="navbar_links_lp">
+          <button type="button" onClick={()=>navigate("/afiliados")}>{token?"Mi negocio":"Afíliate"}</button>
           <button type="button" onClick={() => scrollToSection(inicioRef)}>
             Inicio
           </button>
@@ -513,6 +514,7 @@ const LandingPage = () => {
         className={`navbar_mobile_menu ${menuOpen ? "navbar_mobile_menu--open" : ""}`}
       >
         <button onClick={() => scrollToSection(inicioRef)}>Inicio</button>
+        <button type="button" onClick={()=>{closeMenu();navigate("/afiliados")}}>Afiliados / Mi negocio</button>
         <button
           onClick={() => setServicesOpen((v) => !v)}
           aria-expanded={servicesOpen}

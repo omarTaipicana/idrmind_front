@@ -1,3 +1,4 @@
+import { resolveReferral } from "../services/affiliateReferral";
 import CouponBenefit from "../components/CouponBenefit";
 import {
   useEffect,
@@ -613,6 +614,8 @@ const ProyectoPensarPago = () => {
       try {
         const formData =
           new FormData();
+        const referral = await resolveReferral();
+        if(referral) formData.append("referralToken",referral);
 
         formData.append(
           "imagePago",
