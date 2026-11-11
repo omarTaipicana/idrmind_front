@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./styles/PrincipalHeader.css";
 import { useDispatch } from "react-redux";
 import { showAlert } from "../../store/states/alert.slice";
@@ -12,43 +12,40 @@ const PrincipalHeader = () => {
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const { key: locationKey } = useLocation();
   const dispatch = useDispatch();
 
   const [, , , loggedUser, , , , , , , , , , user, setUserLogged] = useAuth();
 
+  const headerRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [grados, setGrados] = useState({
-    grado1: false,
-    grado2: false,
-    grado3: false,
-    grado4: false,
-    grado5: false,
-    grado6: false,
-    grado7: false,
-  });
+  const [activeGroup, setActiveGroup] = useState(null);
+  const role = token ? user?.role : null;
+  const superAdmin = !!role && user.isSuperAdmin === true;
+  const admin = role === "Administrador";
+  const subAdmin = role === "Sub-Administrador";
+  const canValidate = superAdmin || admin || subAdmin || role === "Validador";
+  const canSecretary = superAdmin || admin || subAdmin || role === "Secretaria";
 
-  // Configurar grados según CI o rol
-  useEffect(() => {
-    if (!user?.role) return;
-
-    const ci = user?.cI;
-    const role = user?.role;
-
-    setGrados({
-      grado1: user?.isSuperAdmin === true, // Superadmin (acceso total)
-      grado2: role === "Administrador",
-      grado3: role === "Sub-Administrador",
-      grado4: role === "Validador",
-      grado5: role === "Secretaria",
-      grado6: role?.slice(0, 9) === "instituto",
-      grado7: user?.isSuperAdmin !== true && ![
-        "Administrador",
-        "Sub-Administrador",
-        "Validador",
-        "Secretaria",
-      ].includes(role),
-    });
-  }, [user]);
+  const navGroups = [
+    { id: "inicio", label: "Inicio", items: [{ to: token ? "/home" : "/", label: "Inicio" }] },
+    { id: "operaciones", label: "Operaciones", items: [
+      canSecretary && { to: "/secre", label: "Secretaría" },
+      canValidate && { to: "/validacion", label: "Validación" },
+    ] },
+    { id: "reportes", label: "Reportes", items: [
+      (superAdmin || admin) && { to: "/dashboard", label: "Dashboard" },
+      superAdmin && { to: "/evaluacion-docente", label: "Informe de satisfacción" },
+    ] },
+    { id: "afiliados", label: token ? "Afiliados" : "Afíliate", items: [
+      { to: "/afiliados", label: "Mi negocio" },
+      (superAdmin || admin) && { to: "/admin-afiliados", label: "Red de afiliados" },
+    ], directLabel: token ? "Afiliados" : "Afíliate" },
+    { id: "admin", label: "Administración", items: [
+      superAdmin && { to: "/edit_user", label: "Administración" },
+    ] },
+  ];
 
   // Validar token
   useEffect(() => {
@@ -68,14 +65,43 @@ const PrincipalHeader = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  // Cerrar menú si se agranda a desktop
   useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth > 768 && menuOpen) setMenuOpen(false);
+    setMenuOpen(false);
+    setActiveGroup(null);
+  }, [locationKey, token, role]);
+
+  useEffect(() => {
+    const breakpoint = window.matchMedia("(max-width: 960px)");
+    const reset = () => { setMenuOpen(false); setActiveGroup(null); };
+    breakpoint.addEventListener("change", reset);
+    return () => breakpoint.removeEventListener("change", reset);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen && !activeGroup) return;
+    const onPointerDown = (event) => {
+      if (!headerRef.current?.contains(event.target)) {
+        setMenuOpen(false);
+        setActiveGroup(null);
+      }
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [menuOpen]);
+    const onKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      if (activeGroup) {
+        headerRef.current?.querySelector(".ph-nav-toggle[aria-expanded='true']")?.focus();
+        setActiveGroup(null);
+      } else {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen, activeGroup]);
 
   const handleLogout = () => {
     if (user) {
@@ -97,197 +123,40 @@ const PrincipalHeader = () => {
     navigate("/");
   };
 
-  const toggleMenu = () => setMenuOpen((prev) => !prev);
-  const closeMenu = () => setMenuOpen(false);
-
-  /** LINKS SEGÚN ROL (misma lógica) */
-  const renderRoleLinks = (onClick) => {
-    if (!token) return null;
-
-    if (grados.grado1) {
-      return (
-        <>
-          <Link to="/home" onClick={onClick}>
-            Home
-          </Link>
-          <Link to="/secre" onClick={onClick}>
-            Secretaria
-          </Link>
-          <Link to="/dashboard" onClick={onClick}>
-            Dashboard
-          </Link>
-          <Link to="/validacion" onClick={onClick}>
-            Validacion
-          </Link>
-          <Link to="/edit_user" onClick={onClick}>
-            Gestión Admin 
-          </Link>
-          <Link to="/evaluacion-docente" onClick={onClick}>
-            Inf. Satisfacción
-          </Link>
-        </>
-      );
-    }
-
-    if (grados.grado2) {
-      return (
-        <>
-          <Link to="/home" onClick={onClick}>
-            Home
-          </Link>
-          <Link to="/secre" onClick={onClick}>
-            Secretaria
-          </Link>
-          <Link to="/dashboard" onClick={onClick}>
-            Dashboard
-          </Link>
-          <Link to="/validacion" onClick={onClick}>
-            Validacion
-          </Link>
-        </>
-      );
-    }
-
-    if (grados.grado3) {
-      return (
-        <>
-          <Link to="/home" onClick={onClick}>
-            Home
-          </Link>
-          <Link to="/validacion" onClick={onClick}>
-            Validacion
-          </Link>
-          <Link to="/secre" onClick={onClick}>
-            Secretaria
-          </Link>
-        </>
-      );
-    }
-
-    if (grados.grado4) {
-      return (
-
-
-        <>
-          <Link to="/home" onClick={onClick}>
-            Home
-          </Link>
-          <Link to="/validacion" onClick={onClick}>
-            Validacion
-          </Link>
-        </>
-
-
-      );
-    }
-    if (grados.grado5) {
-      return (
-
-
-        <>
-          <Link to="/home" onClick={onClick}>
-            Home
-          </Link>
-          <Link to="/secre" onClick={onClick}>
-            Secretaria
-          </Link>
-        </>
-      );
-    }
-    if (grados.grado6) {
-      return (
-
-
-        <>
-          <Link to="/home" onClick={onClick}>
-            Home
-          </Link>
-        </>
-      );
-    }
-
-    if (grados.grado7) {
-      return (
-        <>
-          <Link to="/home" onClick={onClick}>
-            Home
-          </Link>
-
-        </>
-      );
-    }
-
-
-
-    return null;
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setActiveGroup(null);
   };
 
-  /** LINKS DE ACCIONES (misma lógica que tu renderAuthDesktop) */
-  const renderAuthActions = (onClick) => {
-    if (!token) return null;
-
-    if (grados.grado1) {
-      return (
-        <>
-          <Link to="/dashboard" onClick={onClick}>
-            Dashboard
-          </Link>
-          <Link to="/validacion" onClick={onClick}>
-            Validacion
-          </Link>
-          <Link to="/edit_user" onClick={onClick}>
-            Gestión Admin 
-          </Link>
-          <Link to="/evaluacion-docente" onClick={onClick}>
-            Inf. Satisfacción
-          </Link>
-        </>
-      );
+  const renderNav = (surface) => navGroups.map(({ id, label, items, directLabel }) => {
+    const available = items.filter(Boolean);
+    if (!available.length) return null;
+    if (available.length === 1) {
+      const [item] = available;
+      return <Link key={id} to={item.to} onClick={closeMenu}>{directLabel || item.label}</Link>;
     }
 
-    if (grados.grado2) {
-      return (
-        <>
-          <Link to="/dashboard" onClick={onClick}>
-            Dashboard
-          </Link>
-          <Link to="/validacion" onClick={onClick}>
-            Validacion
-          </Link>
-        </>
-      );
-    }
-
-    if (grados.grado3) {
-      return (
-        <Link to="/secre" onClick={onClick}>
-          Secretaria
-        </Link>
-      );
-    }
-
-    if (grados.grado4) {
-      return (
-        <Link to="/validacion" onClick={onClick}>
-          Validacion
-        </Link>
-      );
-    }
-
-    if (grados.grado5) {
-      return (
-        <Link to="/secre" onClick={onClick}>
-          Secretaria
-        </Link>
-      );
-    }
-
-    if (grados.grado6) {
-      return null;
-    }
-
-    return null;
-  };
+    const groupId = `ph-${surface}-${id}`;
+    const open = activeGroup === groupId;
+    return (
+      <div className="ph-nav-group" key={id}>
+        <button
+          type="button"
+          className="ph-nav-toggle"
+          aria-expanded={open}
+          aria-controls={groupId}
+          onClick={() => setActiveGroup((current) => current === groupId ? null : groupId)}
+        >
+          {label} <span aria-hidden="true">▾</span>
+        </button>
+        <div className="ph-nav-submenu" id={groupId} hidden={!open}>
+          {available.map((item) => (
+            <Link key={item.to} to={item.to} onClick={closeMenu}>{item.label}</Link>
+          ))}
+        </div>
+      </div>
+    );
+  });
 
   /** AUTH A LA DERECHA (igual LandingPage) */
   const renderAuthRight = () => {
@@ -330,89 +199,8 @@ const PrincipalHeader = () => {
   /** MENÚ MOBILE (igual LandingPage: links + auth dentro) */
   const renderMobileMenu = () => {
     return (
-      <div className={`navbar_mobile_menu ${menuOpen ? "navbar_mobile_menu--open" : ""}`}>
-        {/* Links (roles) */}
-        {token ? (
-          <>
-            <button type="button" onClick={() => { closeMenu(); navigate("/home"); }}>
-              Home
-            </button>
-
-            {/* Mantener exactamente tus rutas por rol */}
-            {(grados.grado1 || grados.grado2) && (
-              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
-                  Secretaria
-                </button>
-            )}
-
-            {grados.grado3 && (
-              <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
-                Validacion
-              </button>
-            )}
-          </>
-        ) : (
-          <>
-            <button type="button" onClick={() => { closeMenu(); navigate("/"); }}>
-              Inicio
-            </button>
-          </>
-        )}
-
-        {/* Acciones (derecha desktop) */}
-        {token && (
-          <>
-
-            {grados.grado1 && (
-              <>
-                <button type="button" onClick={() => { closeMenu(); navigate("/dashboard"); }}>
-                  Dashboard
-                </button>
-                <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
-                  Validacion
-                </button>
-                <button type="button" onClick={() => { closeMenu(); navigate("/edit_user"); }}>
-                  Gestión Admin 
-                </button>
-                <button type="button" onClick={() => { closeMenu(); navigate("/evaluacion-docente"); }}>
-                  Inf. Satisfacción
-                </button>
-              </>
-            )}
-
-            {grados.grado2 && !grados.grado1 && (
-              <>
-                <button type="button" onClick={() => { closeMenu(); navigate("/dashboard"); }}>
-                  Dashboard
-                </button>
-                <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
-                  Validacion
-                </button>
-              </>
-            )}
-
-            {grados.grado3 && (
-              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
-                Secretaria
-              </button>
-            )}
-
-            {grados.grado4 && (
-              <button type="button" onClick={() => { closeMenu(); navigate("/validacion"); }}>
-                Validacion
-              </button>
-            )}
-
-            {grados.grado5 && (
-              <button type="button" onClick={() => { closeMenu(); navigate("/secre"); }}>
-                Secretaria
-              </button>
-            )}
-          </>
-        )}
-
-        <button type="button" onClick={()=>{closeMenu();navigate("/afiliados")}}>Afiliados / Mi negocio</button>
-        {(grados.grado1||grados.grado2)&&<button type="button" onClick={()=>{closeMenu();navigate("/admin-afiliados")}}>Red de Afiliados</button>}
+      <div id="ph-mobile-navigation" className={`navbar_mobile_menu ${menuOpen ? "navbar_mobile_menu--open" : ""}`} hidden={!menuOpen}>
+        {menuOpen && renderNav("mobile")}
         {/* Auth */}
         <div className="navbar_mobile_divider" />
 
@@ -447,8 +235,8 @@ const PrincipalHeader = () => {
   };
 
   return (
-    <header className="header_nav">
-      <nav className="navbar">
+    <header className="header_nav ph-header" ref={headerRef}>
+      <nav className="navbar" aria-label="Navegación principal">
         {/* Logo izquierda (igual Landing) */}
         <img
           src="/images/idrmind_logo_sf.png"
@@ -461,26 +249,19 @@ const PrincipalHeader = () => {
         />
 
         {/* Hamburguesa (mobile) */}
-        <div className="menu_icon" onClick={toggleMenu} aria-label="Abrir menú">
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </div>
+        <button
+          type="button"
+          ref={menuButtonRef}
+          className="menu_icon"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={menuOpen}
+          aria-controls="ph-mobile-navigation"
+          onClick={() => { if (menuOpen) closeMenu(); else { setActiveGroup(null); setMenuOpen(true); } }}
+        >
+          {menuOpen ? <FaTimes aria-hidden="true" /> : <FaBars aria-hidden="true" />}
+        </button>
 
-        {/* Links (centro) */}
-        <div className="navbar_links">
-          <Link to="/afiliados" onClick={closeMenu}>{token?"Afiliados / Mi negocio":"Afíliate"}</Link>
-          {(grados.grado1||grados.grado2)&&<Link to="/admin-afiliados" onClick={closeMenu}>Red de Afiliados</Link>}
-          {/* si no hay token, puedes dejar vacío o poner "Inicio" (como Landing pone Inicio) */}
-          {!token ? (
-            <button type="button" className="navbtn" onClick={() => navigate("/")}>
-              Inicio
-            </button>
-          ) : (
-            <>
-              {/* conservas tu lógica exacta con Links */}
-              {renderRoleLinks(closeMenu)}
-            </>
-          )}
-        </div>
+        <div className="navbar_links">{renderNav("desktop")}</div>
 
         {/* Auth derecha (mismo div que navbar, igual Landing) */}
         <div className="topbar-right">{renderAuthRight()}</div>

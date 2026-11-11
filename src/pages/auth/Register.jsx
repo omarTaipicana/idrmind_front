@@ -3,12 +3,15 @@ import "./styles/Register.css";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import IsLoading from "../../components/shared/isLoading";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showAlert } from "../../store/states/alert.slice";
 
+import { readAffiliateInvitation, withAffiliateInvitation } from "../../services/affiliateInvitation";
+
 const Register = () => {
   const navigate = useNavigate();
+  const invitation = readAffiliateInvitation(useLocation().search);
   const dispatch = useDispatch();
   const [hidePassword, setHidePassword] = useState(true);
   const [hidePasswordVerify, setHidePasswordVerify] = useState(true);
@@ -28,8 +31,8 @@ const Register = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) navigate("/login");
-  }, [navigate]);
+    if (token) navigate(withAffiliateInvitation("/login", invitation));
+  }, [navigate, invitation]);
 
   useEffect(() => {
     if (error) {
@@ -50,9 +53,9 @@ const Register = () => {
           alertType: 2,
         })
       );
-      navigate("/login");
+      navigate(withAffiliateInvitation("/login", invitation));
     }
-  }, [userRegister, dispatch, navigate]);
+  }, [userRegister, dispatch, navigate, invitation]);
 
   const capitalizeWords = (str) =>
     str
@@ -62,7 +65,8 @@ const Register = () => {
       .join(" ");
 
   const submit = (data) => {
-    const frontBaseUrl = `${location.protocol}//${location.host}/#/verify`;
+    const verifyPath = invitation === null ? "/verify" : "/verify-invitation/" + (invitation || "-");
+    const frontBaseUrl = `${location.protocol}//${location.host}/#${verifyPath}`;
     const nombreFormateado = capitalizeWords(data.firstName);
     const apellidoFormateado = capitalizeWords(data.lastName);
     const emailFormateado = data.email.trim().toLowerCase();

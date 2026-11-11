@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./styles/Login.css";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { showAlert } from "../../store/states/alert.slice";
 import IsLoading from "../../components/shared/isLoading";
 import useCrud from "../../hooks/useCrud";
+
+import { readAffiliateInvitation, withAffiliateInvitation } from "../../services/affiliateInvitation";
 
 const Login = () => {
   const token = localStorage.getItem("token");
@@ -16,6 +18,7 @@ const Login = () => {
   const [isNewLogin, setIsNewLogin] = useState(false);
   const [isInfoComplete, setIsInfoComplete] = useState(false);
   const navigate = useNavigate();
+  const invitation = readAffiliateInvitation(useLocation().search);
   const dispatch = useDispatch();
   const [userEdit, setUserEdit] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
@@ -153,9 +156,9 @@ const Login = () => {
       );
       setPrevUser(userLogged);
       setIsNewLogin(false);
-      navigate("/home");
+      navigate(invitation === null ? "/home" : withAffiliateInvitation("/afiliados", invitation));
     }
-  }, [userLogged, prevUser, isNewLogin, dispatch, lastCreds]);
+  }, [userLogged, prevUser, isNewLogin, dispatch, lastCreds, invitation, navigate]);
 
   useEffect(() => {
     if (userUpdate) {

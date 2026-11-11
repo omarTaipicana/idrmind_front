@@ -5,10 +5,13 @@ import { useDispatch } from "react-redux";
 import { showAlert } from "../../store/states/alert.slice";
 import "./styles/Verify.css";
 
+import { readAffiliateInvitation, withAffiliateInvitation } from "../../services/affiliateInvitation";
+
 const Verify = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { code } = useParams();
+  const { code, affiliateInvitation } = useParams();
+  const invitation = affiliateInvitation === undefined ? null : readAffiliateInvitation("?invita=" + encodeURIComponent(affiliateInvitation));
 
   const [
     ,
@@ -84,7 +87,7 @@ const Verify = () => {
 
               <button
                 className="verifyBtn"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate(withAffiliateInvitation("/login", invitation))}
               >
                 Iniciar sesión <span>➜</span>
               </button>

@@ -274,6 +274,8 @@ const App = () => {
             }
           />
 
+          <Route path="/verify-invitation/:affiliateInvitation/:code" element={<Verify />} />
+
           <Route
             path="/reset_password"
             element={
