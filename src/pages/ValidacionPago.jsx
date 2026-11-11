@@ -13,6 +13,7 @@ import { io } from "socket.io-client";
 import "./styles/ValidacionPago.css";
 
 import useCrud from "../hooks/useCrud";
+import { affiliateApi } from "../services/affiliateApi";
 
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -617,7 +618,6 @@ const ValidacionPago = () => {
     );
 
     reset({
-      iva: p.iva ?? 0,
       valorDepositado:
         p.valorDepositado ||
         "",
@@ -694,9 +694,9 @@ const ValidacionPago = () => {
         }
       }
 
-      await updatePago(
-        PATH_PAGOS,
-        pagoId,
+      await affiliateApi(
+        PATH_PAGOS + "/" + pagoId,
+        "put",
         {
           ...data,
 
@@ -727,7 +727,7 @@ const ValidacionPago = () => {
       dispatch(
         showAlert({
           message:
-            "❌ Error al guardar los cambios.",
+            error?.response?.data?.message || "❌ Error al guardar los cambios.",
           alertType: 1,
         })
       );
@@ -1149,6 +1149,11 @@ const ValidacionPago = () => {
           e.response?.data ||
           e.message,
         );
+        const invoiceError = e.response?.data?.error;
+        dispatch(showAlert({
+          message: typeof invoiceError === "string" ? invoiceError : "No se pudo emitir la factura.",
+          alertType: 1,
+        }));
       } finally {
         setIsEmitiendoFactura(
           false,
@@ -2069,12 +2074,11 @@ const ValidacionPago = () => {
                                 )}
                                 className="vpMiniInput"
                               />
-                              <label style={{display:"block",fontSize:11,marginTop:8}}>IVA incluido (0 si no aplica)
-                                <input type="number" min="0" step="0.01" readOnly={!!p.verificado} {...register("iva")} className="vpMiniInput"/>
-                              </label></>
+                              {!p.verificado&&<small style={{display:"block",marginTop:8}}>El IVA incluido se calcula al validar según la configuración de Afiliados.</small>}</>
                             ) : (
                               `$${p.valorDepositado || "0.00"}`
                             )}
+                            {p.verificado&&p.iva!=null&&<small style={{display:"block"}}>IVA incluido: ${Number(p.iva).toFixed(2)}{p.subtotal!=null&&<> · Base: ${Number(p.subtotal).toFixed(2)}</>}</small>}
                           </td>
 
                           <td className="vpTdWrap">
