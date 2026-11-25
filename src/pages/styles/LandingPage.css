@@ -1889,3 +1889,21 @@
     outline-offset: 2px;
   }
 }
+
+
+/* Video de presentación */
+.app .header .lp-hero-video { position: relative; overflow: hidden; min-width: 0; background: #081a3f; isolation: isolate; aspect-ratio: 16 / 9; }
+.lp-hero-video__poster, .lp-hero-video__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; display: block; }
+.lp-hero-video__poster { cursor: pointer; background: transparent; color: white; }
+.lp-hero-video__poster img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lp-hero-video__poster::after { content: ""; position: absolute; inset: 0; background: #05102233; pointer-events: none; }
+.lp-hero-video__play { position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); width: clamp(56px, 7vw, 88px); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: #1b326b; border: 2px solid white; color: white; font-size: clamp(20px, 3vw, 32px); animation: lp-hero-play-pulse 2.4s ease-in-out infinite; }
+.lp-hero-video__play svg { margin-left: 4px; }
+.lp-hero-video__poster:hover .lp-hero-video__play { background: #3155b5; }
+.lp-hero-video__label { position: absolute; z-index: 1; top: calc(50% + clamp(32px, 4vw, 50px)); left: 50%; transform: translateX(-50%); background: #081a3fdd; color: white; padding: .35rem .8rem; border-radius: 999px; font-weight: 700; white-space: nowrap; }
+.lp-hero-video__close { position: absolute; z-index: 2; top: 8px; right: 8px; width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid #ffffff80; border-radius: 50%; background: #081a3fee; color: white; cursor: pointer; }
+.app .lp-hero-video__external { position: absolute; z-index: 2; top: 8px; left: 8px; background: #081a3fee; color: white; padding: .4rem .65rem; border-radius: 8px; font-size: .75rem; }
+.lp-hero-video__poster:focus-visible, .lp-hero-video__close:focus-visible, .lp-hero-video__external:focus-visible { outline: 3px solid white; outline-offset: -4px; }
+@keyframes lp-hero-play-pulse { 0%, 100% { box-shadow: 0 0 0 6px #ffffff35, 0 8px 24px #0006; } 50% { box-shadow: 0 0 0 13px #ffffff15, 0 8px 24px #0006; } }
+@media (max-width: 768px) { .app .header .lp-hero-video { flex: none; } }
+@media (prefers-reduced-motion: reduce) { .lp-hero-video__play { animation: none; box-shadow: 0 0 0 6px #ffffff35; } }

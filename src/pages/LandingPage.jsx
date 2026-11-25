@@ -11,6 +11,7 @@ import {
   FaTimes,
   FaTiktok,
   FaMapMarkerAlt,
+  FaPlay,
 } from "react-icons/fa";
 
 import { motion } from "framer-motion";
@@ -186,6 +187,7 @@ const LandingPage = () => {
   const [, , postApi, , , , isLoading, newReg, , ,] = useCrud();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [heroVideoPlaying, setHeroVideoPlaying] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -620,14 +622,30 @@ const LandingPage = () => {
           </a>
         </div>
 
-        <motion.img
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.8 }}
-          src="/images/IMG-20240801-WA0001.jpg"
-          alt="Logo iDr.Mind."
-          className="header_img"
-        />
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
+          transition={{ duration: 0.8 }} className="header_img lp-hero-video">
+          {heroVideoPlaying ? (
+            <>
+              <iframe className="lp-hero-video__frame"
+                src="https://www.youtube-nocookie.com/embed/vcNoEU2jl9E?autoplay=1&playsinline=1&rel=0"
+                title="Video de presentación de iDr.Mind"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+              <button type="button" className="lp-hero-video__close" aria-label="Cerrar video"
+                onClick={() => setHeroVideoPlaying(false)}><FaTimes aria-hidden="true" /></button>
+              <a className="lp-hero-video__external" href="https://youtu.be/vcNoEU2jl9E"
+                target="_blank" rel="noopener noreferrer">Ver en YouTube</a>
+            </>
+          ) : (
+            <button type="button" className="lp-hero-video__poster"
+              aria-label="Reproducir video de presentación de iDr.Mind"
+              onClick={() => setHeroVideoPlaying(true)}>
+              <img src="/images/IMG-20240801-WA0001.jpg" alt="Logo iDr.Mind." />
+              <span className="lp-hero-video__play" aria-hidden="true"><FaPlay /></span>
+              <span className="lp-hero-video__label">Ver video</span>
+            </button>
+          )}
+        </motion.div>
       </header>
 
       <section className="pensar-section" ref={pensarRef} id="proyecto-pensar">
