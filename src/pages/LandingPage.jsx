@@ -602,8 +602,8 @@ const LandingPage = () => {
           </motion.h1>
 
           <p>
-            A través de <strong>Proyecto Pensar</strong>, ofrecemos evaluaciones
-            psicotécnicas integrales que permiten identificar habilidades,
+            A través de <strong>Proyecto Pensar</strong>, ofrecemos diagnóstico
+            psicotécnico integrales que permiten identificar habilidades,
             competencias, estilos de comportamiento y oportunidades de mejora
             del talento humano. Transformamos los resultados en información
             estratégica para que las empresas puedan{" "}
@@ -650,7 +650,7 @@ const LandingPage = () => {
 
       <section className="pensar-section" ref={pensarRef} id="proyecto-pensar">
         <div className="pensar-section__heading">
-          <span>Evaluación psicotécnica</span>
+          <span>Diagnóstico Psicotécnico</span>
           <h2>Proyecto Pensar</h2>
           <p>
             Conoce tus habilidades, fortalezas y oportunidades de desarrollo.
@@ -684,7 +684,7 @@ const LandingPage = () => {
 
             <div className="proyecto-pensar__information">
               <span className="proyecto-pensar__badge">
-                Evaluación de Habilidades Blandas
+                Diagnóstico de Habilidades Blandas
               </span>
 
               <h3 className="proyecto-pensar__title">
@@ -718,7 +718,7 @@ const LandingPage = () => {
               </button>
 
               <p className="proyecto-pensar__notice">
-                Una evaluación diseñada para conocerte mejor y potenciar tu
+                Un diagnóstico diseñado para conocerte mejor y potenciar tu
                 desarrollo personal y profesional.
               </p>
             </div>
